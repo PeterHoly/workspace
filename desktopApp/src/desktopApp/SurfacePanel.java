@@ -85,7 +85,7 @@ public class SurfacePanel implements PaintListener {
 	Render r = new Render(d);
 	
 	public void paintControl(PaintEvent e) {
-		
+		// Oprava chyby v SWT.
 		e.gc.setLineAttributes(new LineAttributes(1,SWT.CAP_FLAT,SWT.JOIN_MITER));
 		
 		r.draw(m.car, e,shell);
