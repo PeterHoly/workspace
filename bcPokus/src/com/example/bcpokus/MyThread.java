@@ -1,7 +1,9 @@
 package com.example.bcpokus;
 
+import com.example.bclib.Car;
 import com.example.bclib.Game;
 import com.example.bclib.Logic;
+import com.example.bclib.Client;
 
 import android.graphics.Canvas;
 import android.util.Log;
@@ -15,6 +17,7 @@ public class MyThread extends Thread {
 	private Game myGame;
 	private Object o = new Object();
 	private Logic myLogic = new Logic();
+	public Client myClient = new Client();
 	
 	public MyThread(SurfaceHolder holder, Game game, SurfacePanel panel) {
 		this.mySurfacePanel = panel;
@@ -30,7 +33,7 @@ public class MyThread extends Thread {
 
 	@Override
 	public void run()
-	{
+	{	
 		while(mRun)
 		{
 			
@@ -41,11 +44,11 @@ public class MyThread extends Thread {
 			{
 				try {
 					
-					myLogic.increaseValue(myGame);
+					myLogic.increaseValue(myGame, myClient);
 					mySurfacePanel.doDraw(mcanvas);
 					
 					synchronized (o) {
-						o.wait(100);
+						o.wait(40);
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();

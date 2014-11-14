@@ -7,6 +7,7 @@ public class Map {
 	
 	public List <Obstacle> obstacles;
 	public List <Obstacle> visibleObstacles;
+	public List <Car> cars;
 	public Car car;
 	private Display display;
 	
@@ -15,8 +16,8 @@ public class Map {
 		this.display = display;
 		
 		visibleObstacles = new ArrayList<Obstacle>();
-		
 		obstacles = new ArrayList <Obstacle>();
+		cars = new ArrayList<Car>();
 		
 		car = new Car(150, 100, 40, 20);		
 		
@@ -25,6 +26,7 @@ public class Map {
 		//vkladat serazene podle Y
 		//y - niz
 		//y2 - vys
+		
 		obstacles.add(new Obstacle(15, 30, 40, 170, 1));
 		obstacles.add(new Obstacle(215, 30, 240, 170, 1));
 		

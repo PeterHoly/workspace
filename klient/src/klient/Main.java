@@ -18,15 +18,10 @@ public class Main {
 		
 		try {
 			s = new Socket(InetAddress.getLocalHost(), 8096);
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
-		try {
 			dos = new DataOutputStream(s.getOutputStream());
 			dis = new DataInputStream(s.getInputStream());
+		} catch (UnknownHostException e1) {
+			e1.printStackTrace();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

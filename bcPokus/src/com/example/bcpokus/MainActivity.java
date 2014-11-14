@@ -21,7 +21,6 @@ public class MainActivity extends Activity {
 		
 		
 		//layoutParams = new LayoutParams(313, 420);
-		
 		sp = new  SurfacePanel(this);
 		
 		//sp.setLayoutParams(layoutParams);

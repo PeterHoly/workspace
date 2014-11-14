@@ -2,9 +2,11 @@ package com.example.bcpokus;
 
 import java.awt.font.TextAttribute;
 
+import com.example.bclib.Car;
 import com.example.bclib.Display;
 import com.example.bclib.Game;
 import com.example.bclib.Map;
+import com.example.bclib.Menu;
 import com.example.bclib.Obstacle;
 
 import android.content.Context;
@@ -21,6 +23,7 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	private MyThread mythread;
 	private Game myGame = new Game(new Display(0,0,320,430));
 	private GameUI gameUI = new GameUI();
+	private Menu menu;
 	
 	public SurfacePanel(Context context) {
 		super(context);
@@ -38,16 +41,17 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		
-		mythread = new MyThread(holder, myGame, this);
+		this.mythread = new MyThread(holder, myGame, this);
+		//this.menu = new Menu(this.mythread.myClient);
 
-		mythread.setRunning(true);
+		this.mythread.setRunning(true);
 
-		mythread.start();
+		this.mythread.start();
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		mythread.setRunning(false);
+		this.mythread.setRunning(false);
 
 		boolean retry = true;
 
@@ -55,7 +59,7 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		{
 			try
 			{
-				mythread.join();
+				this.mythread.join();
 				retry = false;
 			}
 
@@ -108,10 +112,11 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	{
 		canvas.drawColor(Color.WHITE);
 		
-		r.draw(m.car, canvas);
+		for(Car c : m.cars){
+			r.draw(c, canvas);
+		}
 		
-		for (Obstacle o : m.obstacles)
-		{
+		for (Obstacle o : m.obstacles){
 			r.draw(o, canvas);
 		}
 		

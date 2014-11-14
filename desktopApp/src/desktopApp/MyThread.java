@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.example.bclib.Game;
 import com.example.bclib.Logic;
+import com.example.bclib.Client;
 
 public class MyThread extends Thread{
 	private SurfacePanel surfacePanel;
@@ -16,6 +17,7 @@ public class MyThread extends Thread{
 	private Display myDisplay;
 	private Logic myLogic = new Logic();
 	private Object o = new Object();
+	public Client myClient = new Client();
 	
 	
 	public MyThread(SurfacePanel sp, Game myGame, Shell shell, Display display) {
@@ -44,11 +46,12 @@ public class MyThread extends Thread{
 						@Override
 						public void run() {
 							synchronized (myGame) {
-							
-								myLogic.increaseValue(myGame);
-								//myGame.getMap().car.setNewAngle();
+								//long cas = System.currentTimeMillis();
+								myLogic.increaseValue(myGame, myClient);
+								
 								myShell.redraw();	
 								myShell.update();
+								//System.out.println(System.currentTimeMillis()-cas);
 							}
 						}
 					});
@@ -56,9 +59,8 @@ public class MyThread extends Thread{
 					System.out.println("null");
 				}
 							
-				
 				synchronized (o) {
-					o.wait(100);
+					o.wait(40);
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
