@@ -3,9 +3,13 @@ package server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+
+import com.example.bclib.CommandClass;
 
 public class Main {
 
@@ -28,12 +32,14 @@ public class Main {
 				final Socket s = server.accept();
 				System.out.println("connected");
 				
-				DataInputStream dis = new DataInputStream(s.getInputStream());
-				DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+				OutputStream os = s.getOutputStream();
+				InputStream is = s.getInputStream();
+				DataInputStream dis = new DataInputStream(is);
+				DataOutputStream dos = new DataOutputStream(os);
 				
-				String command = dis.readUTF();
+				int command = is.read();
 				
-				if(command.equals("create"))
+				if(command==CommandClass.cmdCreate)
 				{
 					Game myGame = new Game(createdGame.size());
 					final Player p = new Player(s, myGame);
@@ -50,7 +56,7 @@ public class Main {
 					
 					t.start();
 				}
-				else if(command.equals("join")){
+				else if(command==CommandClass.cmdJoin){
 					Game myGame = createdGame.get(dis.readInt());
 					final Player p = new Player(s, myGame);
 					myGame.addPlayer(p);
@@ -65,13 +71,13 @@ public class Main {
 					
 					t.start();
 				}
-				else if(command.equals("getGames")){
+				else if(command==CommandClass.cmdGetGame){
 					dos.writeUTF(getIdGames(createdGame));
 					dos.flush();
 					s.close();
 				}
 				
-				if(command.equals("exit")){
+				if(command==CommandClass.cmdExit){
 					break;
 				}
 				

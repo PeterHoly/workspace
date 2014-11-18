@@ -3,7 +3,11 @@ package server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
+
+import com.example.bclib.CommandClass;
 
 public class Player {
 	public Socket socket;
@@ -24,22 +28,26 @@ public class Player {
 		
 		while(!socket.isClosed()){
 			
-			String command = null;
+			int command = -1;
+			OutputStream os = null;
+			InputStream is = null;
 			DataInputStream dis = null;
 			DataOutputStream dos = null;
 			
 			try {
-				dis = new DataInputStream(socket.getInputStream());
-				dos = new DataOutputStream(socket.getOutputStream());
-				command = dis.readUTF();
+				os = socket.getOutputStream();
+				is = socket.getInputStream();
+				dos = new DataOutputStream(os);
+				dis = new DataInputStream(is);
+				command = is.read();
 			
-				if(command.equals("setPos"))
+				if(command==CommandClass.cmdSetPos)
 				{
 					positionX = dis.readDouble();
 					positionY = dis.readDouble();
 					angle = dis.readDouble();
 				}
-				else if(command.equals("getPos"))
+				else if(command==CommandClass.cmdGetPos)
 				{
 					int j = dis.readInt();
 					Player p = game.getPlayer((ID+j+1) % game.getCountPlayers());
@@ -48,15 +56,15 @@ public class Player {
 					dos.writeDouble(p.positionY);
 					dos.writeDouble(p.angle);
 				}
-				else if(command.equals("getCountPlayers"))
+				else if(command==CommandClass.cmdGetCountPlayers)
 				{
 					dos.writeInt(game.getCountPlayers());
 				}
-				else if(command.equals("getIter"))
+				else if(command==CommandClass.cmdGetIter)
 				{
 					dos.writeInt(game.getIDiterace());
 				}
-				else if(command.equals("setIter"))
+				else if(command==CommandClass.cmdSetIter)
 				{
 					IDiterace = dis.readInt();
 					game.setIDiterace(IDiterace);

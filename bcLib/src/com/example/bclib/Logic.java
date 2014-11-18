@@ -11,13 +11,10 @@ public class Logic {
 	int idIterace = 1;
 	
 	public void increaseValue(Game myGame, Client client){
-		
-		try {
-			
+					
 			while(b){
-				client.dos.writeUTF("getCountPlayers");
-				client.dos.flush();
-				int countPlayers = client.dis.readInt();
+			
+				int countPlayers = client.getCountPlayers();
 				if(countPlayers > 1)
 				{
 					myGame.createCars(countPlayers-1);
@@ -68,22 +65,14 @@ public class Logic {
 				}
 			}
 			
-			client.dos.writeUTF("setPos");
-			client.dos.writeDouble(myGame.getMap().car.getX());
-			client.dos.writeDouble(myGame.getMap().car.getY());
-			client.dos.writeDouble(myGame.getMap().car.getAngle());
-			client.dos.flush();
+			client.setPos(myGame.getMap().car);
 			
-			client.dos.writeUTF("setIter");
-			client.dos.writeInt(idIterace);
-			client.dos.flush();
+			client.setIter(idIterace);
 			
 			int serverIDiter;
-			while(true){
-				client.dos.writeUTF("getIter");
-				client.dos.flush();
+			/*while(true){
 				
-				serverIDiter = client.dis.readInt();
+				serverIDiter = client.getIter();
 				if(idIterace == serverIDiter){
 					break;
 				}
@@ -92,33 +81,19 @@ public class Logic {
 						/*System.out.print("Cekam na signal! ");
 						System.out.print(idIterace);
 						System.out.print(", ");
-						System.out.println(serverIDiter);*/
+						System.out.println(serverIDiter);* /
 						Thread.sleep(5);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
-			}
+			}*/
 			
 			for(int i=0; i<myGame.getMap().cars.size(); i++){
-				client.dos.writeUTF("getPos");
-				client.dos.writeInt(i);
-				client.dos.flush();
-				double positionEnemyX = client.dis.readDouble();
-				double positionEnemyY = client.dis.readDouble();
-				double angleEnemy = client.dis.readDouble();
-				
-				
+				client.getPos(i , myGame.getMap().cars.get(i));
+
 				//testovat kolizi
-				
-				myGame.getMap().cars.get(i).setX(positionEnemyX);
-				myGame.getMap().cars.get(i).setY(positionEnemyY);
-				myGame.getMap().cars.get(i).setAngle(angleEnemy);
 			}
-			
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
 		
 		idIterace++;
 	}

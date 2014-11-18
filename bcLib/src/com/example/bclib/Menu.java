@@ -12,29 +12,24 @@ public class Menu {
 			
 			switch (z) {
 			case '1':{
-				client.dos.writeUTF("create");
-				break;}
+					client.createGame();
+					break;
+				}
 			case '2':{
-				client.dos.writeUTF("getGames");
-				client.games = client.dis.readUTF();
-				System.out.println(client.games);
-				
-				break;}
+					System.out.println(client.getGame());
+					break;
+				}
 			case '3':{
-				System.out.println("Choose id game!");
-				char u = (char) System.in.read();
-				System.in.read();
-				
-				client.dos.writeUTF("join");
-				client.dos.writeInt(Character.getNumericValue(u));
-				
-				break;}
-
+					System.out.println("Choose id game!");
+					char u = (char) System.in.read();
+					System.in.read();
+					
+					client.joinGame(u);
+					break;
+				}
 			default:
-				break;
+					break;
 			}
-
-			client.dos.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
