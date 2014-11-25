@@ -14,4 +14,18 @@ public class Car extends Vehicle {
 		this.HP -= 1;
 	}
 	
+	public boolean setPositionAndAngle(double angle2){
+		if(angle2 != 0)
+		{
+			this.setNewPosition(angle2);
+			this.setNewAngle();
+			return true;
+		}	
+		else{
+			this.setNewPosition();
+			this.setNewAngle();
+			return false;
+		}
+	}
+	
 }

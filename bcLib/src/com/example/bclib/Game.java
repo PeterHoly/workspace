@@ -7,7 +7,7 @@ public class Game {
 	
 	public Game(Display display){
 		this.display = display;
-		this.map = new Map(this.display);
+		this.map = new Map();
 	}
 	
 	public Display getDisplay(){

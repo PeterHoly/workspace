@@ -5,13 +5,13 @@ import java.io.IOException;
 
 public class Logic {
 	
-	double angle = 0;
 	double angle2 = 0;
 	boolean b = true;
 	int idIterace = 1;
 	
 	public void increaseValue(Game myGame, Client client){
 					
+			//cekani na pripojeni hracu
 			while(b){
 			
 				int countPlayers = client.getCountPlayers();
@@ -27,50 +27,29 @@ public class Logic {
 				}
 			}
 			
-			if(this.angle2 != 0)
-			{
-				myGame.getMap().car.setNewPosition(this.angle2);
+			//aktualizace pozice a uhlu
+			if(myGame.getMap().car.setPositionAndAngle(angle2)){
 				this.angle2 = 0;
-				this.angle = 0;
-			}	
-			else{
-				myGame.getMap().car.setNewPosition();
 			}
 			
+			//aktualizace displeje
 			myGame.getDisplay().update(myGame.getMap().car.getIncrementY());
 			
-			myGame.getMap().car.setNewAngle();
-			
-			Obstacle o = myGame.getMap().testVisibleObstacle();
-			
-			if(o != null){
-				
-				myGame.getMap().car.reductionHP();//snizeni HP
-				
-				Vector v = new Vector();
-				
-				Vector v1 = v.getVectorByObstacle(o);
-				Vector v2 = v.getVectorByCar(myGame.getMap().car);
-				
-				this.angle = v1.getAngle(v2);
-				
-				// c3=a1b2-a2b1
-				double smer = v1.getX()*v2.getY()-v1.getY()*v2.getX();
-				
-				if(smer < 0){
-					this.angle2 = o.getAngle() + this.angle;
-				}
-				else{
-					this.angle2 = o.getAngle() - this.angle;
-				}
+			//test kolizi
+			double col = Collision.TestCollision(myGame.getMap(),myGame.getDisplay(),myGame.getMap().car);
+			if(col != -1){
+				this.angle2 = col;
 			}
 			
+			//poslani vlastní pozice
 			client.setPos(myGame.getMap().car);
 			
+			//poslani id iterace
 			client.setIter(idIterace);
 			
-			int serverIDiter;
-			/*while(true){
+			//synchronizace iteraci
+			/*int serverIDiter;
+			while(true){
 				
 				serverIDiter = client.getIter();
 				if(idIterace == serverIDiter){
@@ -78,23 +57,24 @@ public class Logic {
 				}
 				else{
 					try {
-						/*System.out.print("Cekam na signal! ");
+						System.out.print("Cekam na signal! ");
 						System.out.print(idIterace);
 						System.out.print(", ");
-						System.out.println(serverIDiter);* /
-						Thread.sleep(5);
+						System.out.println(serverIDiter);
+						Thread.sleep(2);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
 			}*/
 			
-			for(int i=0; i<myGame.getMap().cars.size(); i++){
-				client.getPos(i , myGame.getMap().cars.get(i));
-
-				//testovat kolizi
-			}
+			//nastaveni pozic vsem autum
+			myGame.getMap().setAllCars(myGame, client);
 		
 		idIterace++;
+	}
+	
+	public void increaseValue2(Game myGame, Client client){
+		myGame.getMap().setAllCars(myGame, client);
 	}
 }

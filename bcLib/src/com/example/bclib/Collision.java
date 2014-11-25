@@ -67,4 +67,32 @@ public class Collision {
 			return true;
 		}
 	}
+	
+	public static double TestCollision(Map map, Display display, Car car){
+		Obstacle o = map.testVisibleObstacle(display, car);
+		
+		if(o != null){
+			
+			double angle = 0;
+			
+			Vector v = new Vector();
+			
+			Vector v1 = v.getVectorByObstacle(o);
+			Vector v2 = v.getVectorByCar(car);
+			
+			angle = v1.getAngle(v2);
+			
+			// c3=a1b2-a2b1
+			double smer = v1.getX()*v2.getY()-v1.getY()*v2.getX();
+			
+			if(smer < 0){
+				return o.getAngle() + angle;
+			}
+			else{
+				return o.getAngle() - angle;
+			}
+		}
+		
+		return -1;
+	}
 }

@@ -9,17 +9,12 @@ public class Map {
 	public List <Obstacle> visibleObstacles;
 	public List <Car> cars;
 	public Car car;
-	private Display display;
 	
-	public Map(Display display){
-		
-		this.display = display;
+	public Map(){
 		
 		visibleObstacles = new ArrayList<Obstacle>();
 		obstacles = new ArrayList <Obstacle>();
 		cars = new ArrayList<Car>();
-		
-		car = new Car(150, 100, 40, 20);		
 		
 		//obstacles = 320, 430;
 			
@@ -41,14 +36,14 @@ public class Map {
 
 	}
 	
-	private List<Obstacle> getVisibleObstacle(){
+	private List<Obstacle> getVisibleObstacle(Display display){
 		
-		if(obstacles.get(obstacles.size()-1).getY2() > this.display.getBottom()){
+		if(obstacles.get(obstacles.size()-1).getY2() > display.getBottom()){
 			visibleObstacles.clear();
 
 			for(Obstacle obs : obstacles){
-				if(obs.getY() > this.display.getBottom() || obs.getY2() > this.display.getBottom()
-						|| obs.getY() < this.display.getTop() || obs.getY2() < this.display.getTop()){
+				if(obs.getY() > display.getBottom() || obs.getY2() > display.getBottom()
+						|| obs.getY() < display.getTop() || obs.getY2() < display.getTop()){
 					visibleObstacles.add(obs);
 				}
 			}
@@ -56,10 +51,10 @@ public class Map {
 		return visibleObstacles;
 	}
 	
-	private void addAndRemoveObstacle(){
+	private void addAndRemoveObstacle(Display display){
 		if(visibleObstacles.size() > 0){
 			for(int i=0; i<visibleObstacles.size(); i++){
-				if(visibleObstacles.get(i).getY2() < this.display.getBottom()){
+				if(visibleObstacles.get(i).getY2() < display.getBottom()){
 					visibleObstacles.remove(i--);
 				}
 			}
@@ -69,7 +64,7 @@ public class Map {
 				int indexLast = obstacles.indexOf(visibleObstacles.get(visibleObstacles.size()-1));
 				
 				for(int i = 0; i<obstacles.size()-indexLast-1; i++){
-					if(obstacles.get(indexLast+1+i).getY() < this.display.getTop()){
+					if(obstacles.get(indexLast+1+i).getY() < display.getTop()){
 						visibleObstacles.add(obstacles.get(indexLast+1+i));
 					}
 					else{
@@ -81,13 +76,13 @@ public class Map {
 	}
 	
 	//boolean
-	public Obstacle testVisibleObstacle(){
+	public Obstacle testVisibleObstacle(Display display, Car car){
 
 		if(visibleObstacles.size() == 0){
-			visibleObstacles = getVisibleObstacle();
+			visibleObstacles = getVisibleObstacle(display);
 		}
 		else{
-			addAndRemoveObstacle();
+			addAndRemoveObstacle(display);
 		}
 			
 		
@@ -104,5 +99,13 @@ public class Map {
 		
 		//return false
 		return null;
+	}
+	
+	public void setAllCars(Game myGame, Client client){
+		for(int i=0; i<myGame.getMap().cars.size(); i++){
+			client.getPos(i , myGame.getMap().cars.get(i));
+
+			//testovat kolizi
+		}
 	}
 }

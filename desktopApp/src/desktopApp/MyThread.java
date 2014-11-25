@@ -47,10 +47,13 @@ public class MyThread extends Thread{
 						public void run() {
 							synchronized (myGame) {
 								//long cas = System.currentTimeMillis();
-								myLogic.increaseValue(myGame, myClient);
+								
+								//myLogic.increaseValue(myGame, myClient);
+								myLogic.increaseValue2(myGame, myClient);
 								
 								myShell.redraw();	
 								myShell.update();
+								
 								//System.out.println(System.currentTimeMillis()-cas);
 							}
 						}

@@ -41,11 +41,20 @@ public class Main {
 				
 				if(command==CommandClass.cmdCreate)
 				{
-					Game myGame = new Game(createdGame.size());
-					final Player p = new Player(s, myGame);
+					final Game myGame = new Game(createdGame.size());
+					
+					double width = dis.readDouble();
+					double height = dis.readDouble();
+					int countPlay = dis.readInt();
+					
+					myGame.setCountPlay(countPlay);
+					
+					final Player p = new Player(s, myGame, width, height);
 					myGame.addPlayer(p);
 					createdGame.add(myGame);
+					
 					System.out.println("created!");
+					
 					
 					Thread t = new Thread (new Runnable() {
 						@Override
@@ -54,12 +63,32 @@ public class Main {
 						}
 					});
 					
-					t.start();
+					Thread t2 = new Thread (new Runnable() {
+						@Override
+						public void run() {
+							myGame.run();
+						}
+					});
+					
+					System.out.println(myGame.getCountPlay());
+					System.out.println(",");
+					System.out.println(myGame.getCountPlayers());
+					
+					if(myGame.getCountPlay() == myGame.getCountPlayers()){
+						t.start();
+						t2.start();
+						System.out.println("jooooooo");
+					}
 				}
 				else if(command==CommandClass.cmdJoin){
-					Game myGame = createdGame.get(dis.readInt());
-					final Player p = new Player(s, myGame);
+					final Game myGame = createdGame.get(dis.readInt());
+					
+					double width = dis.readDouble();
+					double height = dis.readDouble();
+					
+					final Player p = new Player(s, myGame, width, height);
 					myGame.addPlayer(p);
+					
 					System.out.println("join!");
 					
 					Thread t = new Thread (new Runnable() {
@@ -69,7 +98,17 @@ public class Main {
 						}
 					});
 					
-					t.start();
+					Thread t2 = new Thread (new Runnable() {
+						@Override
+						public void run() {
+							myGame.run();
+						}
+					});
+					
+					if(myGame.getCountPlay() == myGame.getCountPlayers()){
+						t.start();
+						t2.start();
+					}
 				}
 				else if(command==CommandClass.cmdGetGame){
 					dos.writeUTF(getIdGames(createdGame));

@@ -11,4 +11,9 @@ public class CommandClass {
 	public static final int cmdJoin = 7;
 	public static final int cmdGetGame = 8;
 	public static final int cmdExit = 9;
+	
+	public static final int cmdLeftPush = 10;
+	public static final int cmdRightPush = 11;
+	public static final int cmdRelease = 12;
+
 }

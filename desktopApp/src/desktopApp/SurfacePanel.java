@@ -52,7 +52,7 @@ public class SurfacePanel implements PaintListener {
 	
 	private void OnCreate(){
 		this.myThread = new MyThread(this,myGame,shell,display);
-		this.menu = new Menu(this.myThread.myClient);
+		this.menu = new Menu(this.myThread.myClient, d, myGame);
 		
 		myThread.setRunning(true);
 		myThread.start();
@@ -66,10 +66,12 @@ public class SurfacePanel implements PaintListener {
 				pressed = true;
 				synchronized (myGame) {
 					if(e.keyCode == SWT.ARROW_LEFT){
-						myGame.getMap().car.setIncrement(0.09f, 0.79f);//0.79
+						//myGame.getMap().car.setIncrement(0.09f, 0.79f);//0.79
+						myThread.myClient.leftPush();
 					}
 					else if(e.keyCode == SWT.ARROW_RIGHT){
-						myGame.getMap().car.setIncrement(-0.09f, 0.79f);
+						//myGame.getMap().car.setIncrement(-0.09f, 0.79f);
+						myThread.myClient.rightPush();
 					}
 				}
 			
@@ -80,7 +82,8 @@ public class SurfacePanel implements PaintListener {
 		{
 			pressed = false;
 			synchronized (myGame) {
-				myGame.getMap().car.setIncrement(0.09f, 0f);
+				//myGame.getMap().car.setIncrement(0.09f, 0f);
+				myThread.myClient.release();
 			}
 		}
 	};
@@ -92,8 +95,6 @@ public class SurfacePanel implements PaintListener {
 	public void paintControl(PaintEvent e) {
 
 		e.gc.setLineAttributes(new LineAttributes(1,SWT.CAP_FLAT,SWT.JOIN_MITER));
-		
-		r.draw(m.car, e,shell);
 		
 		for(Car c : m.cars){
 			r.draw(c, e,shell);

@@ -101,10 +101,13 @@ public class Client {
 		}
 	}
 	
-	public void createGame(){
+	public void createGame(Display display, int countPlay){
 		try {
 			os.write(CommandClass.cmdCreate);
-			os.flush();
+			dos.writeDouble(display.getWidth());
+			dos.writeDouble(display.getHeight());
+			dos.writeInt(countPlay);
+			dos.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -121,11 +124,40 @@ public class Client {
 		return this.games;
 	}
 	
-	public void joinGame(char u){
+	public void joinGame(char u, Display display){
 		try {			
 			os.write(CommandClass.cmdJoin);
 			dos.writeInt(Character.getNumericValue(u));
+			dos.writeDouble(display.getWidth());
+			dos.writeDouble(display.getHeight());
 			dos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void leftPush(){
+		try {			
+			os.write(CommandClass.cmdLeftPush);
+			os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void rightPush(){
+		try {			
+			os.write(CommandClass.cmdRightPush);
+			os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void release(){
+		try {			
+			os.write(CommandClass.cmdRelease);
+			os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

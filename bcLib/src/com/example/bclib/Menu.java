@@ -3,7 +3,9 @@ package com.example.bclib;
 import java.io.IOException;
 
 public class Menu {
-	public Menu(Client client){
+	
+	public int idGame;
+	public Menu(Client client, Display display, Game game){
 		try {
 			
 			System.out.println("Choose one: 1)Create 2)GetGames 3)Join");
@@ -12,7 +14,14 @@ public class Menu {
 			
 			switch (z) {
 			case '1':{
-					client.createGame();
+					System.out.println("Write count players.");
+					int u = Character.getNumericValue(System.in.read());
+					System.in.read();
+					
+					game.createCars(u);
+				
+					client.createGame(display, u);
+					
 					break;
 				}
 			case '2':{
@@ -24,7 +33,7 @@ public class Menu {
 					char u = (char) System.in.read();
 					System.in.read();
 					
-					client.joinGame(u);
+					client.joinGame(u,display);
 					break;
 				}
 			default:
