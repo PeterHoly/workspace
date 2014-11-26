@@ -51,22 +51,23 @@ public class Player {
 			
 				if(command==CommandClass.cmdSetPos)
 				{
-					/*positionX = dis.readDouble();
-					positionY = dis.readDouble();
-					angle = dis.readDouble();*/
 					
 					myCar.setX(dis.readDouble());
 					myCar.setY(dis.readDouble());
 					myCar.setAngle(dis.readDouble());
 				}
+				else if(command == CommandClass.cmdGetPoses){
+					for(Player p : game.getPlayers()){
+						dos.writeDouble(p.myCar.getX());
+						dos.writeDouble(p.myCar.getY());
+						dos.writeDouble(p.myCar.getAngle());
+					}
+				}
 				else if(command==CommandClass.cmdGetPos)
 				{
 					int j = dis.readInt();
-					Player p = game.getPlayer((ID+j+1) % game.getCountPlayers());
-					
-					/*dos.writeDouble(p.positionX);
-					dos.writeDouble(p.positionY);
-					dos.writeDouble(p.angle);*/
+					//Player p = game.getPlayer((ID+j+1) % game.getCountPlayers());
+					Player p = game.getPlayer(j);
 					
 					dos.writeDouble(p.myCar.getX());
 					dos.writeDouble(p.myCar.getY());

@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
 
 public class Client {
 	private Socket s = null;
@@ -82,32 +83,54 @@ public class Client {
 		return serverIDiter;
 	}
 	
-	public void getPos(int i, Car car){
+	public void getPoses(List <Car> cars){
 		try {
-			os.write(CommandClass.cmdGetPos);
-			dos.writeInt(i);
+			os.write(CommandClass.cmdGetPoses);
 			dos.flush();
 			
-			double positionEnemyX = dis.readDouble();
-			double positionEnemyY = dis.readDouble();
-			double angleEnemy = dis.readDouble();
-			
-			car.setX(positionEnemyX);
-			car.setY(positionEnemyY);
-			car.setAngle(angleEnemy);
+			for(Car car : cars){
+				double positionX = dis.readDouble();
+				double positionY = dis.readDouble();
+				double angle = dis.readDouble();
+				
+				car.setX(positionX);
+				car.setY(positionY);
+				car.setAngle(angle);
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void createGame(Display display, int countPlay){
+	public void getPos(int i, Car car){
+		try {
+			os.write(CommandClass.cmdGetPos);
+			dos.writeInt(i);
+			dos.flush();
+			
+			double positionX = dis.readDouble();
+			double positionY = dis.readDouble();
+			double angle = dis.readDouble();
+			
+			car.setX(positionX);
+			car.setY(positionY);
+			car.setAngle(angle);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void createGame(Display display, int countPlay, Game game){
 		try {
 			os.write(CommandClass.cmdCreate);
 			dos.writeDouble(display.getWidth());
 			dos.writeDouble(display.getHeight());
 			dos.writeInt(countPlay);
 			dos.flush();
+			game.setIDplayer(dis.readInt());
+		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -124,15 +147,21 @@ public class Client {
 		return this.games;
 	}
 	
-	public void joinGame(char u, Display display){
+	public int joinGame(char u, Display display, Game game){
 		try {			
 			os.write(CommandClass.cmdJoin);
 			dos.writeInt(Character.getNumericValue(u));
 			dos.writeDouble(display.getWidth());
 			dos.writeDouble(display.getHeight());
 			dos.flush();
+			
+			game.setIDplayer(dis.readInt());
+			
+			return dis.readInt();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
+			return -1;
 		}
 	}
 	

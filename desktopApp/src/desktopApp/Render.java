@@ -50,6 +50,7 @@ public class Render {
 					e.gc.setTransform(null);
 					
 					t.dispose();
+					
 				}
 			}
 		}

@@ -4,6 +4,7 @@ public class Game {
 
 	private Display display;
 	private Map map;
+	private int IDplayer;
 	
 	public Game(Display display){
 		this.display = display;
@@ -20,7 +21,15 @@ public class Game {
 	
 	public void createCars(int count){
 		for(int i=0; i<count; i++){
-			this.map.cars.add(new Car(150, 100, 40, 20));
+			map.cars.add(new Car(150, 100, 40, 20));
 		}
+	}
+	
+	public int getIDplayer() {
+		return IDplayer;
+	}
+	
+	public void setIDplayer(int iDplayer) {
+		IDplayer = iDplayer;
 	}
 }

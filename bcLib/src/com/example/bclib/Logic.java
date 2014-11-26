@@ -75,6 +75,12 @@ public class Logic {
 	}
 	
 	public void increaseValue2(Game myGame, Client client){
+		double y = myGame.getMap().cars.get(myGame.getIDplayer()).getY();
+		
 		myGame.getMap().setAllCars(myGame, client);
+		
+		y = myGame.getMap().cars.get(myGame.getIDplayer()).getY() - y;
+		
+		myGame.getDisplay().update(y);
 	}
 }

@@ -46,17 +46,21 @@ public class Main {
 					double width = dis.readDouble();
 					double height = dis.readDouble();
 					int countPlay = dis.readInt();
-					
+				
 					myGame.setCountPlay(countPlay);
 					
 					final Player p = new Player(s, myGame, width, height);
+					
+					dos.writeInt(p.ID);
+					dos.flush();
+					
 					myGame.addPlayer(p);
 					createdGame.add(myGame);
 					
 					System.out.println("created!");
 					
 					
-					Thread t = new Thread (new Runnable() {
+					final Thread t = new Thread (new Runnable() {
 						@Override
 						public void run() {
 							p.run();
@@ -66,19 +70,23 @@ public class Main {
 					Thread t2 = new Thread (new Runnable() {
 						@Override
 						public void run() {
+							while(myGame.getCountPlay() != myGame.getCountPlayers()){
+								
+								try {
+									Thread.sleep(100);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+							
+							t.start();
 							myGame.run();
 						}
 					});
 					
-					System.out.println(myGame.getCountPlay());
-					System.out.println(",");
-					System.out.println(myGame.getCountPlayers());
+					t2.start();
+				
 					
-					if(myGame.getCountPlay() == myGame.getCountPlayers()){
-						t.start();
-						t2.start();
-						System.out.println("jooooooo");
-					}
 				}
 				else if(command==CommandClass.cmdJoin){
 					final Game myGame = createdGame.get(dis.readInt());
@@ -89,9 +97,13 @@ public class Main {
 					final Player p = new Player(s, myGame, width, height);
 					myGame.addPlayer(p);
 					
+					dos.writeInt(p.ID);
+					dos.writeInt(myGame.getCountPlay());
+					dos.flush();
+					
 					System.out.println("join!");
 					
-					Thread t = new Thread (new Runnable() {
+					final Thread t = new Thread (new Runnable() {
 						@Override
 						public void run() {
 							p.run();
@@ -101,14 +113,20 @@ public class Main {
 					Thread t2 = new Thread (new Runnable() {
 						@Override
 						public void run() {
-							myGame.run();
+							while(myGame.getCountPlay() != myGame.getCountPlayers()){
+								
+								try {
+									Thread.sleep(100);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+							
+							t.start();
 						}
 					});
 					
-					if(myGame.getCountPlay() == myGame.getCountPlayers()){
-						t.start();
-						t2.start();
-					}
+					t2.start();
 				}
 				else if(command==CommandClass.cmdGetGame){
 					dos.writeUTF(getIdGames(createdGame));

@@ -1,6 +1,7 @@
 package server;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.bclib.Collision;
 import com.example.bclib.Display;
@@ -23,20 +24,28 @@ public class Game {
 	
 	public void run(){
 		while(true){
-			for(Player p : players){
-				//aktualizace pozice a uhlu
-				if(p.myCar.setPositionAndAngle(angle2)){
-					this.angle2 = 0;
-				}
-							
-				//aktualizace displeje
-				p.display.update(p.myCar.getIncrementY());
+			synchronized (players) {
 				
-				//test kolizi
-				double col = Collision.TestCollision(map, p.display, p.myCar);
-				if(col != -1){
-					this.angle2 = col;
+				for(Player p : players){
+					//aktualizace pozice a uhlu
+					if(p.myCar.setPositionAndAngle(angle2)){
+						this.angle2 = 0;
+					}
+								
+					//aktualizace displeje
+					p.display.update(p.myCar.getIncrementY());
+					
+					//test kolizi
+					double col = Collision.TestCollision(map, p.display, p.myCar);
+					if(col != -1){
+						this.angle2 = col;
+					}
 				}
+			}
+			try {
+				Thread.sleep(40);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -80,5 +89,9 @@ public class Game {
 		if(a){
 			IDiterace = iDiterace;
 		}	
+	}
+	
+	public List<Player> getPlayers(){
+		return players;
 	}
 }

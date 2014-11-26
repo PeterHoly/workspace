@@ -62,28 +62,32 @@ public class SurfacePanel implements PaintListener {
 	{	
 		public void keyPressed(KeyEvent e)
 		{
-			if(!pressed) {
-				pressed = true;
-				synchronized (myGame) {
-					if(e.keyCode == SWT.ARROW_LEFT){
-						//myGame.getMap().car.setIncrement(0.09f, 0.79f);//0.79
-						myThread.myClient.leftPush();
+			synchronized (myThread.myClient) {
+				if(!pressed) {
+					pressed = true;
+					synchronized (myGame) {
+						if(e.keyCode == SWT.ARROW_LEFT){
+							//myGame.getMap().car.setIncrement(0.09f, 0.79f);//0.79
+							myThread.myClient.leftPush();
+						}
+						else if(e.keyCode == SWT.ARROW_RIGHT){
+							//myGame.getMap().car.setIncrement(-0.09f, 0.79f);
+							myThread.myClient.rightPush();
+						}
 					}
-					else if(e.keyCode == SWT.ARROW_RIGHT){
-						//myGame.getMap().car.setIncrement(-0.09f, 0.79f);
-						myThread.myClient.rightPush();
-					}
+				
 				}
-			
 			}
 		}
 		
 		public void keyReleased(KeyEvent e)
 		{
-			pressed = false;
-			synchronized (myGame) {
-				//myGame.getMap().car.setIncrement(0.09f, 0f);
-				myThread.myClient.release();
+			synchronized (myThread.myClient) {
+				pressed = false;
+				synchronized (myGame) {
+					//myGame.getMap().car.setIncrement(0.09f, 0f);
+					myThread.myClient.release();
+				}
 			}
 		}
 	};

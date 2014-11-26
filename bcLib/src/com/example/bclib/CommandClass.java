@@ -15,5 +15,7 @@ public class CommandClass {
 	public static final int cmdLeftPush = 10;
 	public static final int cmdRightPush = 11;
 	public static final int cmdRelease = 12;
+	public static final int cmdGetPoses = 13;
+	
 
 }

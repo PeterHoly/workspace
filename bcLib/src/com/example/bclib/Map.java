@@ -36,6 +36,10 @@ public class Map {
 
 	}
 	
+	public int getCountCars(){
+		return cars.size();
+	}
+	
 	private List<Obstacle> getVisibleObstacle(Display display){
 		
 		if(obstacles.get(obstacles.size()-1).getY2() > display.getBottom()){
@@ -102,10 +106,8 @@ public class Map {
 	}
 	
 	public void setAllCars(Game myGame, Client client){
-		for(int i=0; i<myGame.getMap().cars.size(); i++){
-			client.getPos(i , myGame.getMap().cars.get(i));
-
-			//testovat kolizi
+		synchronized (client) {
+			client.getPoses(myGame.getMap().cars);
 		}
 	}
 }

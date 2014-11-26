@@ -20,7 +20,7 @@ public class Menu {
 					
 					game.createCars(u);
 				
-					client.createGame(display, u);
+					client.createGame(display, u, game);
 					
 					break;
 				}
@@ -33,7 +33,8 @@ public class Menu {
 					char u = (char) System.in.read();
 					System.in.read();
 					
-					client.joinGame(u,display);
+					game.createCars(client.joinGame(u, display, game));
+					
 					break;
 				}
 			default:
