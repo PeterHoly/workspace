@@ -1,5 +1,7 @@
 package com.example.bclib;
 
+import java.util.ArrayList;
+
 
 public class Collision {
 		
@@ -94,5 +96,23 @@ public class Collision {
 		}
 		
 		return -1;
+	}
+	
+	public static void TestCollisionBetweenCars(Car car, Car car2){
+		
+		Point[] points = new Point[4];
+		points[0] = new Point(car2.getLeft(),car2.getBottom());
+		points[1] = new Point(car2.getRight(),car2.getBottom());
+		points[2] = new Point(car2.getLeft(),car2.getTop());
+		points[3] = new Point(car2.getRight(),car2.getTop());
+		
+		for(Point p : points){
+			p.rotate(car2.angle, car2.x, car2.y);
+			p.rotate(-car.angle, car.x, car.y);
+			
+			if(p.getX() >= car.getLeft() && p.getX() <= car.getRight() && p.getY() >= car.getBottom() && p.getY() <= car.getTop()){
+				System.out.println("kolize!!!!");
+			}
+		}
 	}
 }

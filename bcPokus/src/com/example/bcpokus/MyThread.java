@@ -44,7 +44,9 @@ public class MyThread extends Thread {
 			{
 				try {
 					
-					myLogic.increaseValue(myGame, myClient);
+					//myLogic.increaseValue(myGame, myClient);
+					myLogic.increaseValue2(myGame, myClient);
+					
 					mySurfacePanel.doDraw(mcanvas);
 					
 					synchronized (o) {

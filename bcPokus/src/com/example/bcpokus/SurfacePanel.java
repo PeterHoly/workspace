@@ -42,11 +42,11 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	public void surfaceCreated(SurfaceHolder holder) {
 		
 		this.mythread = new MyThread(holder, myGame, this);
-		//this.menu = new Menu(this.mythread.myClient);
-
+		this.menu = new Menu(mythread.myClient, d, myGame, 'm');
+		
 		this.mythread.setRunning(true);
-
 		this.mythread.start();
+		
 	}
 
 	@Override
@@ -77,28 +77,34 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		if(event.getAction() == MotionEvent.ACTION_MOVE){
 			if(gameUI.getButtonLeft().contains((int)event.getX(), (int)event.getY()))
 			{		
-				m.car.setIncrement(0.09f, 0.79f);
+				//m.car.setIncrement(0.09f, 0.79f);
+				mythread.myClient.leftPush();
 			}
 			else if(gameUI.getButtonRight().contains((int)event.getX(), (int)event.getY()))
 			{		
-				m.car.setIncrement(-0.09f, 0.79f);
+				//m.car.setIncrement(-0.09f, 0.79f);
+				mythread.myClient.rightPush();
 			}
 			else{
-				m.car.setIncrement(0.09f, 0f);
+				//m.car.setIncrement(0.09f, 0f);
+				mythread.myClient.release();
 			}
 		}
 		else if(event.getAction() == MotionEvent.ACTION_DOWN){
 				if(gameUI.getButtonLeft().contains((int)event.getX(), (int)event.getY()))
 				{			
-					m.car.setIncrement(0.09f, 0.79f);
+					//m.car.setIncrement(0.09f, 0.79f);
+					mythread.myClient.leftPush();
 				}
 				else if(gameUI.getButtonRight().contains((int)event.getX(), (int)event.getY()))
 				{					
-					m.car.setIncrement(-0.09f, 0.79f);
+					//m.car.setIncrement(-0.09f, 0.79f);
+					mythread.myClient.rightPush();
 				}
 		}
 		else if(event.getAction() == MotionEvent.ACTION_UP) {
-			m.car.setIncrement(0.09f, 0f);
+			//m.car.setIncrement(0.09f, 0f);
+			mythread.myClient.release();
 		}
 		
 		return true;

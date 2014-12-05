@@ -52,7 +52,7 @@ public class SurfacePanel implements PaintListener {
 	
 	private void OnCreate(){
 		this.myThread = new MyThread(this,myGame,shell,display);
-		this.menu = new Menu(this.myThread.myClient, d, myGame);
+		this.menu = new Menu(this.myThread.myClient, d, myGame, 'd');
 		
 		myThread.setRunning(true);
 		myThread.start();

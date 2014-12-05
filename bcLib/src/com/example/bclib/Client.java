@@ -22,7 +22,7 @@ public class Client {
 	public Client(){
 		
 		try {
-			s = new Socket(InetAddress.getLocalHost(), 8096);
+			s = new Socket("192.168.0.21", 8096);
 			os = s.getOutputStream();
 			is = s.getInputStream();
 			dos = new DataOutputStream(os);

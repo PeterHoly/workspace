@@ -14,8 +14,6 @@ public class Game {
 	private int countPlayers;
 	private Map map;
 	
-	double angle2 = 0;
-	
 	public Game(int id){
 		this.ID=id;
 		this.IDiterace=0;
@@ -28,8 +26,8 @@ public class Game {
 				
 				for(Player p : players){
 					//aktualizace pozice a uhlu
-					if(p.myCar.setPositionAndAngle(angle2)){
-						this.angle2 = 0;
+					if(p.myCar.setPositionAndAngle(p.myCar.getAngle2())){
+						p.myCar.setAngle2(0);
 					}
 								
 					//aktualizace displeje
@@ -38,9 +36,18 @@ public class Game {
 					//test kolizi
 					double col = Collision.TestCollision(map, p.display, p.myCar);
 					if(col != -1){
-						this.angle2 = col;
+						p.myCar.setAngle2(col);
 					}
 				}
+				
+				for(int i=0; i<players.size(); i++){
+					for(int j=0; j<players.size(); j++){
+						if(i==j) continue;
+						
+						Collision.TestCollisionBetweenCars(players.get(i).myCar, players.get(j).myCar);
+					}
+				}
+				
 			}
 			try {
 				Thread.sleep(40);

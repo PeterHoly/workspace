@@ -5,59 +5,52 @@ import java.io.IOException;
 public class Menu {
 	
 	public int idGame;
-	public Menu(Client client, Display display, Game game){
-		try {
-			
-			System.out.println("Choose one: 1)Create 2)GetGames 3)Join");
-			char z = (char) System.in.read();
-			System.in.read();
-			
-			switch (z) {
-			case '1':{
-					System.out.println("Write count players.");
-					int u = Character.getNumericValue(System.in.read());
-					System.in.read();
-					
-					game.createCars(u);
+	
+	public Menu(Client client, Display display, Game game, char device){
+		if(device == 'd'){
+			try {
 				
-					client.createGame(display, u, game);
+				System.out.println("Choose one: 1)Create 2)GetGames 3)Join");
+				char z = (char) System.in.read();
+				System.in.read();
+				
+				switch (z) {
+				case '1':{
+						System.out.println("Write count players.");
+						int u = Character.getNumericValue(System.in.read());
+						System.in.read();
+						
+						game.createCars(u);
 					
-					break;
+						client.createGame(display, u, game);
+						
+						break;
+					}
+				case '2':{
+						System.out.println(client.getGame());
+						break;
+					}
+				case '3':{
+						System.out.println("Choose id game!");
+						char u = (char) System.in.read();
+						System.in.read();
+						
+						game.createCars(client.joinGame(u, display, game));
+						
+						break;
+					}
+				default:
+						break;
 				}
-			case '2':{
-					System.out.println(client.getGame());
-					break;
-				}
-			case '3':{
-					System.out.println("Choose id game!");
-					char u = (char) System.in.read();
-					System.in.read();
-					
-					game.createCars(client.joinGame(u, display, game));
-					
-					break;
-				}
-			default:
-					break;
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-		
-		/*int increment = 0;
-		int idEnemy = 0;
-		try {
-			System.out.println("Set increment");
-			char ic = (char) System.in.read();
-			System.in.read();
-			increment = Character.getNumericValue(ic);
+		else{
+			game.createCars(2);
 			
-			System.out.println("Set enemy");
-			char ie = (char) System.in.read();
-			System.in.read();
-			idEnemy = Character.getNumericValue(ie);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}*/
+			client.createGame(display, 2, game);
+			
+		}
 	}
 }
