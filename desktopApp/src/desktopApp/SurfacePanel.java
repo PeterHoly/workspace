@@ -22,13 +22,14 @@ public class SurfacePanel implements PaintListener {
 	private MyThread myThread;
 	private Shell shell;
 	private Display display;
-	private Menu menu;
+	private DesktopMenu menu;
+	//private Menu menu;
 	private Game myGame = new Game(new com.example.bclib.Display(0,0,314,429-31));
 	
 	public SurfacePanel() {
 		
 		display = new Display();
-		shell = new Shell(display);
+		shell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN);
 		shell.setSize(320,430);
 		shell.setMinimumSize(320, 430);
 		
@@ -46,14 +47,18 @@ public class SurfacePanel implements PaintListener {
 			if(!display.readAndDispatch()) display.sleep();
 		}
 		display.dispose();
-		shell.dispose();
 		myThread.setRunning(false);
 	}
 	
 	private void OnCreate(){
 		this.myThread = new MyThread(this,myGame,shell,display);
-		this.menu = new Menu(this.myThread.myClient, d, myGame, 'd');
+		this.menu = new DesktopMenu(display, shell, this.myThread.myClient, d, myGame, this);
+		//this.menu = new Menu(this.myThread.myClient,d,myGame,'d');
 		
+		//this.Start();
+	}
+	
+	public void Start(){
 		myThread.setRunning(true);
 		myThread.start();
 	}

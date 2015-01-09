@@ -27,7 +27,7 @@ public class Menu {
 						break;
 					}
 				case '2':{
-						System.out.println(client.getGame());
+						System.out.println(client.getGames());
 						break;
 					}
 				case '3':{

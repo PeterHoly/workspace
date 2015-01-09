@@ -11,6 +11,9 @@ import java.net.UnknownHostException;
 import java.util.List;
 
 public class Client {
+	private String ip;
+	int port;
+	
 	private Socket s = null;
 	private OutputStream os = null;
 	private InputStream is = null;
@@ -19,21 +22,27 @@ public class Client {
 	
 	private String games;
 	
-	public Client(){
-		
-		try {
-			s = new Socket("192.168.0.21", 8096);
-			os = s.getOutputStream();
-			is = s.getInputStream();
-			dos = new DataOutputStream(os);
-			dis = new DataInputStream(is);
-			
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+	public Client(String ip, int port) {
+		this.ip = ip;
+		this.port = port;
+	}
+	
+	private void initSocket() {
+		if(s == null) {
+			try {
+				s = new Socket(ip, port);
+				
+				os = s.getOutputStream();
+				is = s.getInputStream();
+				dos = new DataOutputStream(os);
+				dis = new DataInputStream(is);
+				
+			} catch (UnknownHostException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
-		
 	}
 	
 	public int getCountPlayers(){
@@ -123,6 +132,8 @@ public class Client {
 	}
 	
 	public void createGame(Display display, int countPlay, Game game){
+		initSocket();
+		
 		try {
 			os.write(CommandClass.cmdCreate);
 			dos.writeDouble(display.getWidth());
@@ -136,21 +147,31 @@ public class Client {
 		}
 	}
 	
-	public String getGame(){
+	public String getGames(){
 		try {
+			Socket s = new Socket(ip, port);
+			
+			OutputStream os = s.getOutputStream();
+			DataInputStream dis = new DataInputStream(s.getInputStream());
+
 			os.write(CommandClass.cmdGetGame);
 			os.flush();
 			this.games = dis.readUTF();
+			
+			s.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		return this.games;
 	}
 	
-	public int joinGame(char u, Display display, Game game){
+	public int joinGame(int u, Display display, Game game){
+		initSocket();
+		
 		try {			
 			os.write(CommandClass.cmdJoin);
-			dos.writeInt(Character.getNumericValue(u));
+			dos.writeInt(u);
 			dos.writeDouble(display.getWidth());
 			dos.writeDouble(display.getHeight());
 			dos.flush();

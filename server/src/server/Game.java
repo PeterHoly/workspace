@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.bclib.Collision;
 import com.example.bclib.Display;
 import com.example.bclib.Map;
+import com.example.bclib.Vector;
 
 public class Game {
 	private ArrayList<Player> players = new ArrayList<Player>();
@@ -33,18 +34,33 @@ public class Game {
 					//aktualizace displeje
 					p.display.update(p.myCar.getIncrementY());
 					
-					//test kolizi
+					//test kolizi mezi autem a prekazkou
 					double col = Collision.TestCollision(map, p.display, p.myCar);
 					if(col != -1){
 						p.myCar.setAngle2(col);
 					}
 				}
 				
+				
+				//test kolizi mezi auty
 				for(int i=0; i<players.size(); i++){
 					for(int j=0; j<players.size(); j++){
 						if(i==j) continue;
 						
-						Collision.TestCollisionBetweenCars(players.get(i).myCar, players.get(j).myCar);
+						if(Collision.TestCollisionBetweenCars(players.get(i).myCar, players.get(j).myCar)){
+							if(players.get(i).myCar.getX() > players.get(j).myCar.getX()){
+								players.get(i).myCar.setX(players.get(i).myCar.getX()+5);
+								players.get(j).myCar.setX(players.get(j).myCar.getX()-5);
+							}
+							else{
+								players.get(i).myCar.setX(players.get(i).myCar.getX()-5);
+								players.get(j).myCar.setX(players.get(j).myCar.getX()+5);
+							}
+							
+							double angle = players.get(i).myCar.getAngle();
+							players.get(i).myCar.setAngle(players.get(j).myCar.getAngle());
+							players.get(j).myCar.setAngle(angle);
+						}
 					}
 				}
 				

@@ -98,7 +98,7 @@ public class Collision {
 		return -1;
 	}
 	
-	public static void TestCollisionBetweenCars(Car car, Car car2){
+	public static boolean TestCollisionBetweenCars(Car car, Car car2){
 		
 		Point[] points = new Point[4];
 		points[0] = new Point(car2.getLeft(),car2.getBottom());
@@ -111,8 +111,10 @@ public class Collision {
 			p.rotate(-car.angle, car.x, car.y);
 			
 			if(p.getX() >= car.getLeft() && p.getX() <= car.getRight() && p.getY() >= car.getBottom() && p.getY() <= car.getTop()){
-				System.out.println("kolize!!!!");
+				return true;
 			}
 		}
+		
+		return false;
 	}
 }

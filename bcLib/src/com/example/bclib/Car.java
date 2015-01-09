@@ -2,10 +2,31 @@ package com.example.bclib;
 
 import java.io.ObjectInputStream.GetField;
 
+import com.example.bclib.components.Absorbers;
+import com.example.bclib.components.Engine;
+import com.example.bclib.components.Exhaust;
+import com.example.bclib.components.Filter;
+import com.example.bclib.components.Nitro;
+import com.example.bclib.components.Wheel;
+
 public class Car extends Vehicle {
 
 	private double HP;
 	private double angle2;
+	
+	//celkova rychlost = y
+	private Engine engine = Engine.engines[0];
+	private Exhaust exhaust = Exhaust.exhausts[3];
+	
+	//ovladani = x
+	private Absorbers absorbers = Absorbers.absorbers[1];
+	private Wheel wheel = Wheel.wheels[2];
+	
+	//zrychleni ze startu po dobu 2s
+	private Filter filter = Filter.filters[2];
+	
+	//po zapnuti zrychleni 2s, pak nelze 15s zapnout
+	private Nitro nitro;
 	
 	public Car(double x, double y, double width, double height) {
 		super(x , y, width, height);
@@ -38,6 +59,55 @@ public class Car extends Vehicle {
 	
 	public void setAngle2(double angle2) {
 		this.angle2 = angle2;
+	}
+	
+	
+	public Engine getEngine() {
+		return engine;
+	}
+	
+	public void setEngine(Engine engine) {
+		this.engine = engine;
+	}
+	
+	public Absorbers getAbsorbers() {
+		return absorbers;
+	}
+	
+	public void setAbsorbers(Absorbers absorbers) {
+		this.absorbers = absorbers;
+	}
+	
+	public Filter getFilter() {
+		return filter;
+	}
+	
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+	
+	public Exhaust getExhaust() {
+		return exhaust;
+	}
+	
+	public void setExhaust(Exhaust exhaust) {
+		this.exhaust = exhaust;
+	}
+	
+	public Nitro getNitro() {
+		return nitro;
+	}
+	
+	public void setNitro(Nitro nitro) {
+		this.nitro = nitro;
+	}
+	
+	public Wheel getWheel() {
+		return wheel;
+	}
+	
+	public void setWheel(Wheel wheel) {
+		this.wheel = wheel;
 	}
 	
 }

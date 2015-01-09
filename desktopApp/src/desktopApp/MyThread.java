@@ -17,7 +17,7 @@ public class MyThread extends Thread{
 	private Display myDisplay;
 	private Logic myLogic = new Logic();
 	private Object o = new Object();
-	public Client myClient = new Client();
+	public Client myClient = new Client("192.168.0.21", 8096);
 	
 	
 	public MyThread(SurfacePanel sp, Game myGame, Shell shell, Display display) {
@@ -48,11 +48,17 @@ public class MyThread extends Thread{
 							synchronized (myGame) {
 								//long cas = System.currentTimeMillis();
 								
-								//myLogic.increaseValue(myGame, myClient);
-								myLogic.increaseValue2(myGame, myClient);
+								if(myShell.isDisposed()){
+									setRunning(false);
+								}
+								else{
 								
-								myShell.redraw();	
-								myShell.update();
+									//myLogic.increaseValue(myGame, myClient);
+									myLogic.increaseValue2(myGame, myClient);
+									
+									myShell.redraw();	
+									myShell.update();
+								}
 								
 								//System.out.println(System.currentTimeMillis()-cas);
 							}

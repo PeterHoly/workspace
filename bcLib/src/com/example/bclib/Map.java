@@ -33,6 +33,18 @@ public class Map {
 		
 		obstacles.add(new Obstacle(15, 570, 40, 770, 4));
 		obstacles.add(new Obstacle(215, 570, 240, 770, 4));
+		
+		obstacles.add(new Obstacle(40, 770, 40, 970, 5));
+		obstacles.add(new Obstacle(240, 770, 240, 970, 5));
+		
+		obstacles.add(new Obstacle(40, 970, 30, 1270, 6));
+		obstacles.add(new Obstacle(240, 970, 230, 1270, 6));
+		
+		obstacles.add(new Obstacle(30, 1270, 15, 1470, 7));
+		obstacles.add(new Obstacle(230, 1270, 215, 1470, 7));
+		
+		obstacles.add(new Obstacle(15, 1470, 40, 1670, 8));
+		obstacles.add(new Obstacle(215, 1470, 240, 1670, 8));
 
 	}
 	
