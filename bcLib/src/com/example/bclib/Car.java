@@ -1,11 +1,11 @@
 package com.example.bclib;
 
-import java.io.ObjectInputStream.GetField;
-
 import com.example.bclib.components.Absorbers;
+import com.example.bclib.components.Bodywork;
 import com.example.bclib.components.Engine;
 import com.example.bclib.components.Exhaust;
 import com.example.bclib.components.Filter;
+import com.example.bclib.components.Glass;
 import com.example.bclib.components.Nitro;
 import com.example.bclib.components.Wheel;
 
@@ -16,17 +16,21 @@ public class Car extends Vehicle {
 	
 	//celkova rychlost = y
 	private Engine engine = Engine.engines[0];
-	private Exhaust exhaust = Exhaust.exhausts[3];
+	private Exhaust exhaust = Exhaust.exhausts[0];
 	
 	//ovladani = x
-	private Absorbers absorbers = Absorbers.absorbers[1];
-	private Wheel wheel = Wheel.wheels[2];
+	private Absorbers absorbers = Absorbers.absorbers[0];
+	private Wheel wheel = Wheel.wheels[0];
 	
 	//zrychleni ze startu po dobu 2s
-	private Filter filter = Filter.filters[2];
+	private Filter filter = Filter.filters[0];
 	
 	//po zapnuti zrychleni 2s, pak nelze 15s zapnout
-	private Nitro nitro;
+	private Nitro nitro = Nitro.nitrous[0];
+	
+	//vzhled auta
+	private Bodywork bodywork = Bodywork.bodyworks[0];
+	private Glass glass = Glass.glasses[0];
 	
 	public Car(double x, double y, double width, double height) {
 		super(x , y, width, height);
@@ -110,4 +114,25 @@ public class Car extends Vehicle {
 		this.wheel = wheel;
 	}
 	
+	public Bodywork getBodywork() {
+		return bodywork;
+	}
+	
+	public void setBodywork(Bodywork bodywork) {
+		this.bodywork = bodywork;
+		this.height = bodywork.getHeight();
+		this.width = bodywork.getWidth();
+	}
+	
+	public Glass getGlass() {
+		return glass;
+	}
+	
+	public void setGlass(Glass glass) {
+		this.glass = glass;
+	}
+	
+	public String getImgCode() {
+		return this.bodywork.getCode()+this.glass.getCode();
+	}
 }

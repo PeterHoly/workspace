@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Shell;
 import com.example.bclib.Car;
 import com.example.bclib.Game;
 import com.example.bclib.Map;
-import com.example.bclib.Menu;
 import com.example.bclib.Obstacle;
 
 public class SurfacePanel implements PaintListener {
@@ -23,7 +22,6 @@ public class SurfacePanel implements PaintListener {
 	private Shell shell;
 	private Display display;
 	private DesktopMenu menu;
-	//private Menu menu;
 	private Game myGame = new Game(new com.example.bclib.Display(0,0,314,429-31));
 	
 	public SurfacePanel() {

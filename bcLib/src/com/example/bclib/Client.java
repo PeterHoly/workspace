@@ -10,6 +10,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
 
+import com.example.bclib.components.Bodywork;
+import com.example.bclib.components.Glass;
+
 public class Client {
 	private String ip;
 	int port;
@@ -55,6 +58,14 @@ public class Client {
 			e.printStackTrace();
 		}
 		return countPlayers;
+	}
+	
+	public void syncStart(){
+		try {
+			dis.readBoolean();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void setPos(Car car){
@@ -112,6 +123,26 @@ public class Client {
 		}
 	}
 	
+	public void getImgs(List <Car> cars){
+		try {
+			os.write(CommandClass.cmdGetImgs);
+			dos.flush();
+			
+			for(Car car : cars){
+				int bodyworkIndex = dis.readInt();
+				int glassIndex = dis.readInt();
+				
+				System.out.println(bodyworkIndex+", "+glassIndex);
+				
+				car.setBodywork(Bodywork.bodyworks[bodyworkIndex]);
+				car.setGlass(Glass.glasses[glassIndex]);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void getPos(int i, Car car){
 		try {
 			os.write(CommandClass.cmdGetPos);
@@ -131,13 +162,15 @@ public class Client {
 		}
 	}
 	
-	public void createGame(Display display, int countPlay, Game game){
+	public void createGame(Display display, int countPlay, Game game, int indexBodywork, int indexGlass){
 		initSocket();
 		
 		try {
 			os.write(CommandClass.cmdCreate);
 			dos.writeDouble(display.getWidth());
 			dos.writeDouble(display.getHeight());
+			dos.writeInt(indexBodywork);
+			dos.writeInt(indexGlass);
 			dos.writeInt(countPlay);
 			dos.flush();
 			game.setIDplayer(dis.readInt());
@@ -166,7 +199,7 @@ public class Client {
 		return this.games;
 	}
 	
-	public int joinGame(int u, Display display, Game game){
+	public int joinGame(int u, Display display, Game game, int indexBodywork, int indexGlass){
 		initSocket();
 		
 		try {			
@@ -174,6 +207,8 @@ public class Client {
 			dos.writeInt(u);
 			dos.writeDouble(display.getWidth());
 			dos.writeDouble(display.getHeight());
+			dos.writeInt(indexBodywork);
+			dos.writeInt(indexGlass);
 			dos.flush();
 			
 			game.setIDplayer(dis.readInt());

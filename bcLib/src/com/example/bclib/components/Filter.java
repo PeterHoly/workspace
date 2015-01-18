@@ -5,7 +5,7 @@ public class Filter {
 	private int id;
 	private int value;
 	
-	public static Filter[] filters = {new Filter("MANN C2201",1,10), new Filter("MANN C2203",2,12), new Filter("MANN C2301",3,14), new Filter("MANN C2303",4,16)};	
+	public static Filter[] filters = {new Filter("MANN C2201",0,10), new Filter("MANN C2203",1,12), new Filter("MANN C2301",2,14), new Filter("MANN C2303",3,16)};	
 	
 	public Filter(String name, int id, int value){
 		this.name = name;

@@ -1,22 +1,29 @@
 package desktopApp;
 
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
+import com.example.bclib.Car;
 import com.example.bclib.Client;
 import com.example.bclib.Game;
+import com.example.bclib.Obstacle;
 import com.example.bclib.components.Absorbers;
 import com.example.bclib.components.Bodywork;
 import com.example.bclib.components.Engine;
@@ -29,6 +36,16 @@ import com.example.bclib.components.Wheel;
 public class DesktopMenu {
 	
 	public int idGame;
+	public boolean saveAllCarComponents = false;
+	
+	int engineComponent;
+	int exhaustComponent;
+	int wheelComponent;
+	int absorbersComponent;
+	int filterComponent;
+	int nitroComponent;
+	int bodyworkComponent;
+	int glassComponent;
 
     Button newGame;
     Button joinGame;
@@ -54,6 +71,7 @@ public class DesktopMenu {
     Text absorber;
     Text wheel;
     Text nitro;
+    Text loadingText;
     
     Combo engineC;
     Combo exhaustC;
@@ -68,25 +86,30 @@ public class DesktopMenu {
     Combo bodyworkC;
     Combo glassC;
     
+    ProgressBar loading;
+    
     Composite mainMenuComposite;
     Composite newGameComposite;
     Composite joinGameComposite;
     Composite buildCarComposite;
     Composite performanceComposite;
     Composite appearanceComposite;
+    Composite loadingComposite;
+     
+    Label myLabel;
     
-    
-    public DesktopMenu(Display display, Shell shell, final Client client, final com.example.bclib.Display myDisplay, final Game game, final SurfacePanel sp){
-    	
+    public DesktopMenu(final Display display, Shell shell, final Client client, final com.example.bclib.Display myDisplay, final Game game, final SurfacePanel sp){
+ 
         mainMenuComposite = new Composite(shell, SWT.NULL);
         newGameComposite = new Composite(shell, SWT.NULL);
         joinGameComposite = new Composite(shell, SWT.NULL);
         buildCarComposite = new Composite(shell, SWT.NULL);
         performanceComposite = new Composite(buildCarComposite, SWT.NULL);
         appearanceComposite = new Composite(buildCarComposite, SWT.NULL);
+        loadingComposite = new Composite(shell, SWT.NULL);
         
-        org.eclipse.swt.graphics.Color color1 = display.getSystemColor(SWT.COLOR_WHITE);
-        org.eclipse.swt.graphics.Color color2 = display.getSystemColor(SWT.COLOR_BLACK);
+        final org.eclipse.swt.graphics.Color color1 = display.getSystemColor(SWT.COLOR_WHITE);
+        final org.eclipse.swt.graphics.Color color2 = display.getSystemColor(SWT.COLOR_BLACK);
         
         //Menu---------
         mainMenuComposite.setBackground(color1);  
@@ -250,23 +273,42 @@ public class DesktopMenu {
 	  	bodywork = new Text(appearanceComposite, SWT.NULL);
 	  	bodywork.setSize(75, 20);
 	  	bodywork.setText("Bodywork");
-	  	bodywork.setLocation(25, 140);
+	  	bodywork.setLocation(25, 200);
 	  	
 	  	bodyworkC = new Combo(appearanceComposite, SWT.NULL);
 	  	bodyworkC.setSize(200, 20);
-	  	bodyworkC.setLocation(101, 140);
+	  	bodyworkC.setLocation(101, 200);
 	  	
 	  	glass = new Text(appearanceComposite, SWT.NULL);
 	  	glass.setSize(75, 20);
 	  	glass.setText("Glass");
-	  	glass.setLocation(25, 165);
+	  	glass.setLocation(25, 225);
 	  	
 	  	glassC = new Combo(appearanceComposite, SWT.NULL);
 	  	glassC.setSize(200, 20);
-	  	glassC.setLocation(101, 165);
+	  	glassC.setLocation(101, 225);
+	  	
+	  	myLabel = new Label(appearanceComposite, SWT.NONE);
+	  	myLabel.setBackground(color1);
+	  	myLabel.setLocation(110, 110);
 	  	
 	  	addPerformanceComponents();
 	  	addAppearanceComponents();
+	  	
+	  	//Loading----------
+	  	
+	  	loadingComposite.setBackground(color1);
+	  	loadingComposite.setSize(320, 400);
+	  	
+	  	loadingText = new Text(loadingComposite, SWT.NULL);
+	  	loadingText.setText("Waiting for opponents, please wait...");
+	  	loadingText.setSize(240, 40);
+	  	loadingText.setLocation(40, 200);
+	  	
+	  	loading = new ProgressBar(loadingComposite, SWT.HORIZONTAL | SWT.INDETERMINATE);
+	  	loading.setSize(250, 20);
+	  	loading.setLocation(35, 270);
+	  	
         
     	shell.setSize(320,430);
 		shell.setMinimumSize(320, 430);
@@ -286,8 +328,12 @@ public class DesktopMenu {
 		    	  
 		    	  String games = client.getGames();
 		    	  
+		    	  createdGames.removeAll();
+		    	  
 		    	  for(String a: games.split(",")){
-		    		  createdGames.add(a);
+		    		  if(!a.isEmpty()){
+		    			  createdGames.add("Game id: "+a);
+		    		  }
 		    	  }
 		      }
 		 };
@@ -295,6 +341,13 @@ public class DesktopMenu {
 		 Listener buildCarL = new Listener() {
 		      public void handleEvent(Event event) {
 		    	  mainMenuComposite.setVisible(false);
+		    	  if(!saveAllCarComponents){
+		    		  nullCombo();
+		    	  }
+		    	  else{
+		    		  setAllCarComponents();
+		    	  }
+		    	  
 		    	  buildCarComposite.setVisible(true);
 		    	  performance.forceFocus();
 		    	  performanceComposite.setVisible(true);
@@ -314,12 +367,29 @@ public class DesktopMenu {
 		    	  int u = Integer.parseInt(countPlayers.getText());
 		    	  System.out.println("Create game for " + u + " players.");
 		    	  game.createCars(u);
-		    	  client.createGame(myDisplay, u, game);
+		    	  client.createGame(myDisplay, u, game, bodyworkComponent, glassComponent);
+		    	  setComponentsToCar(game);
 		    	  
 		    	  newGameComposite.setVisible(false);
 		    	  
-		    	  sp.Start();
-
+		    	  loadingComposite.setVisible(true);
+		    	  Thread t = new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						client.syncStart();
+						client.getImgs(game.getMap().cars);
+						display.syncExec(new Runnable() {
+							
+							@Override
+							public void run() {
+								loadingComposite.setVisible(false);
+							}
+						});
+						sp.Start();
+					}
+		    	  });
+		    	  t.start();
 		      }
 		 };
 		 
@@ -332,15 +402,33 @@ public class DesktopMenu {
 		 
 		 Listener connectL = new Listener() {
 		      public void handleEvent(Event event) {
-		    	  int u = Integer.parseInt(createdGames.getItem(createdGames.getSelectionIndex()));
+		    	  int u = Integer.parseInt(createdGames.getItem(createdGames.getSelectionIndex()).split(" ")[2]);
 		    	  System.out.println("Selected game: " + u);
 		    	  
-		    	  int cars = client.joinGame(u, myDisplay, game);
-		    	  System.out.println("Cars: " + cars);
+		    	  int cars = client.joinGame(u, myDisplay, game, bodyworkComponent, glassComponent);
 				  game.createCars(cars);
-				  joinGameComposite.setVisible(false);
-				  sp.Start();
+				  setComponentsToCar(game);
 				  
+				  joinGameComposite.setVisible(false);
+				  
+				  loadingComposite.setVisible(true);
+		    	  Thread t = new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						client.syncStart();
+						client.getImgs(game.getMap().cars);
+						display.syncExec(new Runnable() {
+							
+							@Override
+							public void run() {
+								 loadingComposite.setVisible(false);
+							}
+						});
+						sp.Start();
+					}
+		    	  });
+		    	  t.start();
 		      }
 		 };
 		 
@@ -352,9 +440,8 @@ public class DesktopMenu {
 		 };
 		 
 		 Listener saveL = new Listener() {
-		      public void handleEvent(Event event) {
-		    	  
-		    	  
+		      public void handleEvent(Event event) {		    	  
+		    	  saveAllCarComponents = saveAllCarComponents();
 		      }
 		 };
 		 
@@ -362,7 +449,6 @@ public class DesktopMenu {
 		      public void handleEvent(Event event) {
 		    	  appearanceComposite.setVisible(false);
 		    	  performanceComposite.setVisible(true);
-		    	  
 		      }
 		 };
 		 
@@ -371,10 +457,56 @@ public class DesktopMenu {
 		    	  performanceComposite.setVisible(false);
 		    	  appearanceComposite.setVisible(true);
 		    	  
+		    	  String karosery = Bodywork.bodyworks[bodyworkC.getSelectionIndex()].getCode();
+		    	  String glass = Glass.glasses[glassC.getSelectionIndex()].getCode();
+		    	  
+		    	  Image myImage = new Image(display, "images/"+karosery+glass+".png");
+		    	  myLabel.setSize(myImage.getBounds().width, myImage.getBounds().height);
+		    	  myLabel.setImage(myImage);
 		      }
 		 };
 		 
+		 SelectionListener bodyworkSelectionL = new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				  String karosery = Bodywork.bodyworks[bodyworkC.getSelectionIndex()].getCode();
+		    	  String glass = Glass.glasses[glassC.getSelectionIndex()].getCode();
+		    	  
+		    	  Image myImage = new Image(display, "images/"+karosery+glass+".png");
+		    	  myLabel.setSize(myImage.getBounds().width, myImage.getBounds().height);
+		    	  myLabel.setImage(myImage);
+				
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+		    	  bodyworkC.select(0);
+			}
+		 };
 		 
+		 SelectionListener glassSelectionL = new SelectionListener() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					  String karosery = Bodywork.bodyworks[bodyworkC.getSelectionIndex()].getCode();
+			    	  String glass = Glass.glasses[glassC.getSelectionIndex()].getCode();
+			    	  
+			    	  Image myImage = new Image(display, "images/"+karosery+glass+".png");
+			    	  myLabel.setSize(myImage.getBounds().width, myImage.getBounds().height);
+			    	  myLabel.setImage(myImage);
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					glassC.select(0);
+				}
+			 };
+		 
+		 
+		bodyworkC.addSelectionListener(bodyworkSelectionL);
+		glassC.addSelectionListener(glassSelectionL);
+		
 		newGame.addListener(SWT.Selection, newGameL);
 		joinGame.addListener(SWT.Selection, joinGameL);
 		buildCar.addListener(SWT.Selection, buildCarL);
@@ -388,6 +520,7 @@ public class DesktopMenu {
 		appearance.addListener(SWT.Selection, appearanceL);
 		
 		
+		loadingComposite.setVisible(false);
 		appearanceComposite.pack();
 		appearanceComposite.setVisible(false);
 		performanceComposite.pack();
@@ -420,47 +553,108 @@ public class DesktopMenu {
     	for(Engine e : Engine.engines){
     		engineC.add(e.getName()+", "+e.getValue());
     	}
+    	engineC.select(0);
     }
     
     private void addExhaust(){
     	for(Exhaust e : Exhaust.exhausts){
     		exhaustC.add(e.getName()+", "+e.getValue());
     	}
+    	exhaustC.select(0);
     }
     
     private void addFilter(){
     	for(Filter f : Filter.filters){
     		filterC.add(f.getName()+", "+f.getValue());
     	}
+    	filterC.select(0);
     }
     
     private void addAbsorber(){
     	for(Absorbers a : Absorbers.absorbers){
     		absorberC.add(a.getName()+", "+a.getValue());
     	}
+    	absorberC.select(0);
     }
 
 	private void addWheel(){
 		for(Wheel w : Wheel.wheels){
 			wheelC.add(w.getName()+", "+w.getValue());
 		}
+		wheelC.select(0);
 	}
 
 	private void addNitro(){
 		for(Nitro n : Nitro.nitrous){
 			nitroC.add(n.getName()+", "+n.getValue());
 		}
+		nitroC.select(0);
 	}
 	
 	private void addBodywork(){
 		for(Bodywork b : Bodywork.bodyworks){
 			bodyworkC.add(b.getName()+", "+b.getType()+", "+b.getColor());
 		}
+		bodyworkC.select(0);
 	}
 	
 	private void addGlass(){
 		for(Glass g : Glass.glasses){
 			glassC.add(g.getName()+", "+g.getColor());
 		}
+		glassC.select(0);
+	}
+	
+   private boolean setComponentsToCar(Game myGame){
+	   int idPlayer = myGame.getIDplayer();
+	   
+	   myGame.getMap().cars.get(idPlayer).setEngine(Engine.engines[engineComponent]);
+	   myGame.getMap().cars.get(idPlayer).setExhaust(Exhaust.exhausts[exhaustComponent]);
+	   myGame.getMap().cars.get(idPlayer).setFilter(Filter.filters[filterComponent]);
+	   myGame.getMap().cars.get(idPlayer).setAbsorbers(Absorbers.absorbers[absorbersComponent]);
+	   myGame.getMap().cars.get(idPlayer).setWheel(Wheel.wheels[wheelComponent]);
+	   myGame.getMap().cars.get(idPlayer).setNitro(Nitro.nitrous[nitroComponent]);
+	   myGame.getMap().cars.get(idPlayer).setBodywork(Bodywork.bodyworks[bodyworkComponent]);
+	   myGame.getMap().cars.get(idPlayer).setGlass(Glass.glasses[glassComponent]);
+	   
+	   return true;
+   }
+   
+   private boolean saveAllCarComponents(){
+	   engineComponent = engineC.getSelectionIndex();
+	   exhaustComponent = exhaustC.getSelectionIndex();
+	   filterComponent = filterC.getSelectionIndex();
+	   absorbersComponent = absorberC.getSelectionIndex();
+	   wheelComponent = filterC.getSelectionIndex();
+	   nitroComponent = nitroC.getSelectionIndex();
+	   
+	   bodyworkComponent = bodyworkC.getSelectionIndex();
+	   glassComponent = glassC.getSelectionIndex();
+	   
+	   return true;
+   }
+   
+   private void setAllCarComponents(){
+	   engineC.select(engineComponent);
+	   exhaustC.select(exhaustComponent);
+	   filterC.select(filterComponent);
+	   absorberC.select(absorbersComponent);
+	   wheelC.select(wheelComponent);
+	   nitroC.select(nitroComponent);
+	   
+	   bodyworkC.select(bodyworkComponent);
+	   glassC.select(glassComponent);
+   }
+	
+	private void nullCombo(){
+		bodyworkC.select(0);
+	    glassC.select(0);
+	  
+	    engineC.select(0);
+	    exhaustC.select(0);
+	    filterC.select(0);
+	    absorberC.select(0);
+	    wheelC.select(0);
+	    nitroC.select(0);   
 	}
 }

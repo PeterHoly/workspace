@@ -5,7 +5,7 @@ public class Nitro {
 	private int id;
 	private int value;
 	
-	public static Nitro[] nitrous = {new Nitro("EJ20",1,20), new Nitro("EJ30",2,30), new Nitro("ZEXi20",3,50), new Nitro("ZEXi30",4,60)};	
+	public static Nitro[] nitrous = {new Nitro("EJ20",0,20), new Nitro("EJ30",1,30), new Nitro("ZEXi20",2,50), new Nitro("ZEXi30",3,60)};	
 	
 	public Nitro(String name, int id, int value){
 		this.name = name;

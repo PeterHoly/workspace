@@ -6,7 +6,6 @@ import com.example.bclib.Car;
 import com.example.bclib.Display;
 import com.example.bclib.Game;
 import com.example.bclib.Map;
-import com.example.bclib.Menu;
 import com.example.bclib.Obstacle;
 
 import android.content.Context;
@@ -23,7 +22,6 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	private MyThread mythread;
 	private Game myGame = new Game(new Display(0,0,320,430));
 	private GameUI gameUI = new GameUI();
-	private Menu menu;
 	
 	public SurfacePanel(Context context) {
 		super(context);
@@ -42,7 +40,6 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	public void surfaceCreated(SurfaceHolder holder) {
 		
 		this.mythread = new MyThread(holder, myGame, this);
-		this.menu = new Menu(mythread.myClient, d, myGame, 'm');
 		
 		this.mythread.setRunning(true);
 		this.mythread.start();

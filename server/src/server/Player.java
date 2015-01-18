@@ -10,6 +10,7 @@ import java.net.Socket;
 import com.example.bclib.Car;
 import com.example.bclib.CommandClass;
 import com.example.bclib.Display;
+import com.example.bclib.components.Bodywork;
 
 public class Player {
 	public Socket socket;
@@ -19,17 +20,21 @@ public class Player {
 	public double angle;
 	public int ID;
 	public int IDiterace;
+	public int bodyworkIndex;
+	public int glassIndex;
 	
 	public Car myCar;
 	
 	public Display display;
 	
-	public Player(Socket s, Game g, double width, double height){
+	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass){
 		socket = s;
 		game = g;
 		ID = g.getCountPlayers();
-		myCar = new Car(150, 100, 40, 20);
+		myCar = new Car(150, 100, Bodywork.bodyworks[indexBodywork].getWidth(), Bodywork.bodyworks[indexGlass].getHeight());
 		display = new Display(0, 0, width, height);
+		bodyworkIndex = indexBodywork;
+		glassIndex = indexGlass;
 	}
 	
 	public void run(){
@@ -97,6 +102,15 @@ public class Player {
 				else if(command==CommandClass.cmdRelease)
 				{
 					myCar.setIncrement(0.09f, 0f);
+				}
+				else if(command==CommandClass.cmdGetImgs)
+				{
+					for(Player p : game.getPlayers()){
+						System.out.println("get " + p.ID + ": " + p.bodyworkIndex+", "+p.glassIndex);
+						
+						dos.writeInt(p.bodyworkIndex);
+						dos.writeInt(p.glassIndex);
+					}
 				}
 
 				dos.flush();

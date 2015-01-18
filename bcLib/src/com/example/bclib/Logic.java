@@ -73,8 +73,9 @@ public class Logic {
 		
 		idIterace++;
 	}
-	
+
 	public void increaseValue2(Game myGame, Client client){
+		
 		double y = myGame.getMap().cars.get(myGame.getIDplayer()).getY();
 		
 		myGame.getMap().setAllCars(myGame, client);

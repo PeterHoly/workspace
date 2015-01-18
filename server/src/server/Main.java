@@ -35,7 +35,7 @@ public class Main {
 				OutputStream os = s.getOutputStream();
 				InputStream is = s.getInputStream();
 				DataInputStream dis = new DataInputStream(is);
-				DataOutputStream dos = new DataOutputStream(os);
+				final DataOutputStream dos = new DataOutputStream(os);
 				
 				int command = is.read();
 				
@@ -45,11 +45,13 @@ public class Main {
 					
 					double width = dis.readDouble();
 					double height = dis.readDouble();
+					int bodyworkIndex = dis.readInt();
+					int glassIndex = dis.readInt();
 					int countPlay = dis.readInt();
 				
 					myGame.setCountPlay(countPlay);
 					
-					final Player p = new Player(s, myGame, width, height);
+					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex);
 					
 					dos.writeInt(p.ID);
 					dos.flush();
@@ -78,6 +80,12 @@ public class Main {
 									e.printStackTrace();
 								}
 							}
+							try {
+								//synchronizace startu
+								dos.writeBoolean(true);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 							
 							t.start();
 							myGame.run();
@@ -93,8 +101,10 @@ public class Main {
 					
 					double width = dis.readDouble();
 					double height = dis.readDouble();
+					int bodyworkIndex = dis.readInt();
+					int glassIndex = dis.readInt();
 					
-					final Player p = new Player(s, myGame, width, height);
+					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex);
 					myGame.addPlayer(p);
 					
 					dos.writeInt(p.ID);
@@ -120,6 +130,13 @@ public class Main {
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
+							}
+							
+							try {
+								//synchronizace startu
+								dos.writeBoolean(true);
+							} catch (IOException e) {
+								e.printStackTrace();
 							}
 							
 							t.start();

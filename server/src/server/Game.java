@@ -7,6 +7,7 @@ import com.example.bclib.Collision;
 import com.example.bclib.Display;
 import com.example.bclib.Map;
 import com.example.bclib.Vector;
+import com.example.bclib.components.Bodywork;
 
 public class Game {
 	private ArrayList<Player> players = new ArrayList<Player>();

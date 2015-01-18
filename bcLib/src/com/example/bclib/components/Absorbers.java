@@ -5,7 +5,7 @@ public class Absorbers {
 	private int id;
 	private int value;
 	
-	public static Absorbers[] absorbers = {new Absorbers("Forester",1,160), new Absorbers("Legacy",2,162), new Absorbers("Svx",3,170), new Absorbers("Impreza",4,190)};	
+	public static Absorbers[] absorbers = {new Absorbers("Forester",0,160), new Absorbers("Legacy",1,162), new Absorbers("Svx",2,170), new Absorbers("Impreza",3,190)};	
 	
 	public Absorbers(String name, int id, int value){
 		this.name = name;

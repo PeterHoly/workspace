@@ -20,8 +20,16 @@ public class MapObject {
 		return this.y;
 	}
 	
+	public void setWidth(double width) {
+		this.width = width;
+	}
+	
 	public double getWidth(){
 		return this.width;
+	}
+	
+	public void setHeight(double height) {
+		this.height = height;
 	}
 	
 	public double getHeight(){

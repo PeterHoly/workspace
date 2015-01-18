@@ -7,7 +7,7 @@ public class Engine {
 	private int id;
 	private int value;
 	
-	public static Engine[] engines = {new Engine("EJ22",1,106), new Engine("EJ22Turbo",2,206), new Engine("EJ23",3,224), new Engine("EJ23Turbo",4,324)};	
+	public static Engine[] engines = {new Engine("EJ22",0,106), new Engine("EJ22Turbo",1,206), new Engine("EJ23",2,224), new Engine("EJ23Turbo",3,324)};	
 	
 	public Engine(String name, int id, int value){
 		this.name = name;

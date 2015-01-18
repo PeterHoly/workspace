@@ -5,6 +5,7 @@ import java.util.concurrent.locks.Lock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Canvas;
@@ -38,6 +39,9 @@ public class Render {
 		{
 			synchronized (mo) {
 				synchronized (myDisplay) {
+					
+					Image myImage = new Image(e.display, "images/"+((Car)mo).getImgCode()+".png");
+			    	  
 					Transform t = new Transform(e.display);
 					t.translate((float)mo.getX(), (float)myDisplay.conversionY(mo.getY()));
 					t.rotate((float) -Math.toDegrees(mo.getAngle()));
@@ -45,7 +49,10 @@ public class Render {
 					
 					e.gc.setTransform(t);
 					e.gc.setBackground(p);
+					
 					e.gc.drawRectangle((int)Math.round(mo.getLeft()), (int)Math.round(myDisplay.conversionY(mo.getTop())), (int)Math.round(mo.getWidth()), (int)Math.round(mo.getHeight()));
+					
+					e.gc.drawImage(myImage, 0, 0, myImage.getBounds().width, myImage.getBounds().height,(int)Math.round(mo.getX()-mo.getWidth()/2), (int)Math.round(myDisplay.conversionY(mo.getY()+mo.getHeight()/2)), (int)Math.round(mo.getWidth()), (int)Math.round(mo.getHeight()));
 					
 					e.gc.setTransform(null);
 					

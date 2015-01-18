@@ -5,7 +5,7 @@ public class Wheel {
 	private int id;
 	private int value;
 	
-	public static Wheel[] wheels = {new Wheel("Platin",1,17), new Wheel("Gepard",2,19), new Wheel("Ronal",3,21), new Wheel("Enzo",4,23)};	
+	public static Wheel[] wheels = {new Wheel("Platin",0,17), new Wheel("Gepard",1,19), new Wheel("Ronal",2,21), new Wheel("Enzo",3,23)};	
 	
 	public Wheel(String name, int id, int value){
 		this.name = name;
