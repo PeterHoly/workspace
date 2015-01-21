@@ -5,11 +5,11 @@ import java.util.jar.Attributes.Name;
 public class Engine {
 	private String name;
 	private int id;
-	private int value;
+	private double value;
 	
-	public static Engine[] engines = {new Engine("EJ22",0,106), new Engine("EJ22Turbo",1,206), new Engine("EJ23",2,224), new Engine("EJ23Turbo",3,324)};	
+	public static Engine[] engines = {new Engine("EJ22",0,0.8), new Engine("EJ22Turbo",1,1), new Engine("EJ23",2,1.2), new Engine("EJ23Turbo",3,1.4)};	
 	
-	public Engine(String name, int id, int value){
+	public Engine(String name, int id, double value){
 		this.name = name;
 		this.id = id;
 		this.value = value;
@@ -31,11 +31,11 @@ public class Engine {
 		this.id = id;
 	}
 	
-	public int getValue() {
+	public double getValue() {
 		return value;
 	}
 	
-	public void setValue(int value) {
+	public void setValue(double value) {
 		this.value = value;
 	}
 	

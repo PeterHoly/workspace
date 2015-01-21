@@ -50,7 +50,7 @@ public class Render {
 					e.gc.setTransform(t);
 					e.gc.setBackground(p);
 					
-					e.gc.drawRectangle((int)Math.round(mo.getLeft()), (int)Math.round(myDisplay.conversionY(mo.getTop())), (int)Math.round(mo.getWidth()), (int)Math.round(mo.getHeight()));
+					//e.gc.drawRectangle((int)Math.round(mo.getLeft()), (int)Math.round(myDisplay.conversionY(mo.getTop())), (int)Math.round(mo.getWidth()), (int)Math.round(mo.getHeight()));
 					
 					e.gc.drawImage(myImage, 0, 0, myImage.getBounds().width, myImage.getBounds().height,(int)Math.round(mo.getX()-mo.getWidth()/2), (int)Math.round(myDisplay.conversionY(mo.getY()+mo.getHeight()/2)), (int)Math.round(mo.getWidth()), (int)Math.round(mo.getHeight()));
 					

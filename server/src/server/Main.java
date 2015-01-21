@@ -48,10 +48,14 @@ public class Main {
 					int bodyworkIndex = dis.readInt();
 					int glassIndex = dis.readInt();
 					int countPlay = dis.readInt();
+					double x = dis.readDouble();
+					double y = dis.readDouble();
+					
+					System.out.println(x+", "+y);
 				
 					myGame.setCountPlay(countPlay);
 					
-					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex);
+					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, x, y);
 					
 					dos.writeInt(p.ID);
 					dos.flush();
@@ -103,8 +107,12 @@ public class Main {
 					double height = dis.readDouble();
 					int bodyworkIndex = dis.readInt();
 					int glassIndex = dis.readInt();
+					double x = dis.readDouble();
+					double y = dis.readDouble();
 					
-					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex);
+					System.out.println(x+", "+y);
+					
+					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, x, y);
 					myGame.addPlayer(p);
 					
 					dos.writeInt(p.ID);

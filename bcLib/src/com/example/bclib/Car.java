@@ -135,4 +135,9 @@ public class Car extends Vehicle {
 	public String getImgCode() {
 		return this.bodywork.getCode()+this.glass.getCode();
 	}
+	
+	public void setTrajectory() {
+		this.trajectory.setXwithComponent((engine.getValue()+exhaust.getValue())/2);
+		this.trajectory.setYwithComponent((absorbers.getValue()+wheel.getValue())/2);
+	}
 }

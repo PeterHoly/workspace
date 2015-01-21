@@ -3,7 +3,7 @@ package com.example.bclib;
 
 public class Trajectory {
 		
-	private double x,y;
+	public double x,y;
 	
 	public Trajectory(){
 		this.x = 7;
@@ -14,8 +14,24 @@ public class Trajectory {
 		return this.x * Math.cos(angle);
 	}
 	
+	public void setX(double x) {
+		this.x = x;
+	}
+	
+	public void setXwithComponent(double a) {
+		this.x *= a;
+	}
+	
 	public double getY(double angle){
 		return this.y * Math.sin(angle);
+	}
+	
+	public void setY(double y) {
+		this.y = y;
+	}
+	
+	public void setYwithComponent(double a) {
+		this.y *= a;
 	}
 	
 }

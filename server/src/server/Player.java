@@ -27,11 +27,13 @@ public class Player {
 	
 	public Display display;
 	
-	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass){
+	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass, double x, double y){
 		socket = s;
 		game = g;
 		ID = g.getCountPlayers();
 		myCar = new Car(150, 100, Bodywork.bodyworks[indexBodywork].getWidth(), Bodywork.bodyworks[indexGlass].getHeight());
+		myCar.getTrajectory().setXwithComponent(x);
+		myCar.getTrajectory().setYwithComponent(y);
 		display = new Display(0, 0, width, height);
 		bodyworkIndex = indexBodywork;
 		glassIndex = indexGlass;
@@ -106,7 +108,7 @@ public class Player {
 				else if(command==CommandClass.cmdGetImgs)
 				{
 					for(Player p : game.getPlayers()){
-						System.out.println("get " + p.ID + ": " + p.bodyworkIndex+", "+p.glassIndex);
+						//System.out.println("get " + p.ID + ": " + p.myCar.getTrajectory().x+", "+p.myCar.getTrajectory().y);
 						
 						dos.writeInt(p.bodyworkIndex);
 						dos.writeInt(p.glassIndex);

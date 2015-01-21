@@ -3,11 +3,11 @@ package com.example.bclib.components;
 public class Wheel {
 	private String name;
 	private int id;
-	private int value;
+	private double value;
 	
-	public static Wheel[] wheels = {new Wheel("Platin",0,17), new Wheel("Gepard",1,19), new Wheel("Ronal",2,21), new Wheel("Enzo",3,23)};	
+	public static Wheel[] wheels = {new Wheel("Platin",0,0.8), new Wheel("Gepard",1,1), new Wheel("Ronal",2,1.2), new Wheel("Enzo",3,1.4)};	
 	
-	public Wheel(String name, int id, int value){
+	public Wheel(String name, int id, double value){
 		this.name = name;
 		this.id = id;
 		this.value = value;
@@ -29,11 +29,11 @@ public class Wheel {
 		this.id = id;
 	}
 	
-	public int getValue() {
+	public double getValue() {
 		return value;
 	}
 	
-	public void setValue(int value) {
+	public void setValue(double value) {
 		this.value = value;
 	}
 }

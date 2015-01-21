@@ -3,11 +3,11 @@ package com.example.bclib.components;
 public class Nitro {
 	private String name;
 	private int id;
-	private int value;
+	private double value;
 	
-	public static Nitro[] nitrous = {new Nitro("EJ20",0,20), new Nitro("EJ30",1,30), new Nitro("ZEXi20",2,50), new Nitro("ZEXi30",3,60)};	
+	public static Nitro[] nitrous = {new Nitro("EJ20",0,0.8), new Nitro("EJ30",1,1), new Nitro("ZEXi20",2,1.2), new Nitro("ZEXi30",3,1.4)};	
 	
-	public Nitro(String name, int id, int value){
+	public Nitro(String name, int id, double value){
 		this.name = name;
 		this.id = id;
 		this.value = value;
@@ -29,11 +29,11 @@ public class Nitro {
 		this.id = id;
 	}
 	
-	public int getValue() {
+	public double getValue() {
 		return value;
 	}
 	
-	public void setValue(int value) {
+	public void setValue(double value) {
 		this.value = value;
 	}
 }

@@ -3,11 +3,11 @@ package com.example.bclib.components;
 public class Absorbers {
 	private String name;
 	private int id;
-	private int value;
+	private double value;
 	
-	public static Absorbers[] absorbers = {new Absorbers("Forester",0,160), new Absorbers("Legacy",1,162), new Absorbers("Svx",2,170), new Absorbers("Impreza",3,190)};	
+	public static Absorbers[] absorbers = {new Absorbers("Forester",0,0.8), new Absorbers("Legacy",1,1), new Absorbers("Svx",2,1.2), new Absorbers("Impreza",3,1.4)};	
 	
-	public Absorbers(String name, int id, int value){
+	public Absorbers(String name, int id, double value){
 		this.name = name;
 		this.id = id;
 		this.value = value;
@@ -29,11 +29,11 @@ public class Absorbers {
 		this.id = id;
 	}
 	
-	public int getValue() {
+	public double getValue() {
 		return value;
 	}
 	
-	public void setValue(int value) {
+	public void setValue(double value) {
 		this.value = value;
 	}
 }

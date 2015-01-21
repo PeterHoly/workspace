@@ -76,4 +76,8 @@ public class MovableObject extends MapObject {
 			this.angle += this.increment;
 		}
 	}
+	
+	public Trajectory getTrajectory(){
+		return this.trajectory;
+	}
 }

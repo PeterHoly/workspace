@@ -1,10 +1,20 @@
 package desktopApp;
 
 
+import java.awt.Color;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -62,16 +72,16 @@ public class DesktopMenu {
     List createdGames;
     
     Spinner countPlayers;
-    Text writeCountPlayers;
-    Text chooseGame;
+    Label writeCountPlayers;
+    Label chooseGame;
    
-    Text engine;
-    Text exhaust;
-    Text filter;
-    Text absorber;
-    Text wheel;
-    Text nitro;
-    Text loadingText;
+    Label engine;
+    Label exhaust;
+    Label filter;
+    Label absorber;
+    Label wheel;
+    Label nitro;
+    Label loadingText;
     
     Combo engineC;
     Combo exhaustC;
@@ -80,8 +90,8 @@ public class DesktopMenu {
     Combo wheelC;
     Combo nitroC;
     
-    Text bodywork;
-    Text glass;
+    Label bodywork;
+    Label glass;
     
     Combo bodyworkC;
     Combo glassC;
@@ -96,172 +106,216 @@ public class DesktopMenu {
     Composite appearanceComposite;
     Composite loadingComposite;
      
-    Label myLabel;
+    Label carLabel;
     
     public DesktopMenu(final Display display, Shell shell, final Client client, final com.example.bclib.Display myDisplay, final Game game, final SurfacePanel sp){
- 
+    	
         mainMenuComposite = new Composite(shell, SWT.NULL);
-        newGameComposite = new Composite(shell, SWT.NULL);
-        joinGameComposite = new Composite(shell, SWT.NULL);
-        buildCarComposite = new Composite(shell, SWT.NULL);
-        performanceComposite = new Composite(buildCarComposite, SWT.NULL);
-        appearanceComposite = new Composite(buildCarComposite, SWT.NULL);
-        loadingComposite = new Composite(shell, SWT.NULL);
+        mainMenuComposite.setBackgroundImage(new Image(display, "images/menuWallpaper.png"));
+        mainMenuComposite.setSize(320, 410);
+        mainMenuComposite.setBackgroundMode(SWT.INHERIT_FORCE);
         
-        final org.eclipse.swt.graphics.Color color1 = display.getSystemColor(SWT.COLOR_WHITE);
-        final org.eclipse.swt.graphics.Color color2 = display.getSystemColor(SWT.COLOR_BLACK);
+        newGameComposite = new Composite(shell, SWT.NULL);
+        newGameComposite.setBackgroundImage(new Image(display, "images/menuWallpaper.png"));
+        newGameComposite.setSize(320, 410);
+        newGameComposite.setBackgroundMode(SWT.INHERIT_FORCE);
+        
+        joinGameComposite = new Composite(shell, SWT.NULL);
+        joinGameComposite.setBackgroundImage(new Image(display, "images/menuWallpaper.png"));
+        joinGameComposite.setSize(320, 410);
+        joinGameComposite.setBackgroundMode(SWT.INHERIT_FORCE);
+        
+        buildCarComposite = new Composite(shell, SWT.NULL);
+        buildCarComposite.setSize(320, 410);
+        buildCarComposite.setBackgroundImage(new Image(display, "images/buildWallpaper.png"));
+        buildCarComposite.setBackgroundMode(SWT.INHERIT_FORCE);
+        
+        performanceComposite = new Composite(buildCarComposite, SWT.NULL);
+        performanceComposite.setBackgroundImage(new Image(display, "images/buildWallpaper.png"));
+        performanceComposite.setBackgroundMode(SWT.INHERIT_FORCE);
+        performanceComposite.setSize(320, 410);
+        
+        appearanceComposite = new Composite(buildCarComposite, SWT.NULL);
+        appearanceComposite.setBackgroundImage(new Image(display, "images/buildWallpaperWithCarPlace.png"));
+        appearanceComposite.setBackgroundMode(SWT.INHERIT_FORCE);
+        appearanceComposite.setSize(320, 410);
+        
+        loadingComposite = new Composite(shell, SWT.NULL);
+        loadingComposite.setBackgroundImage(new Image(display, "images/menuWallpaper.png"));
+        loadingComposite.setSize(320, 410);
+        loadingComposite.setBackgroundMode(SWT.INHERIT_FORCE);
+        
+        final org.eclipse.swt.graphics.Color colorBlack = display.getSystemColor(SWT.COLOR_BLACK);
+        final org.eclipse.swt.graphics.Color colorWhite = display.getSystemColor(SWT.COLOR_WHITE);
+        final org.eclipse.swt.graphics.Color colorDarkGray = display.getSystemColor(SWT.COLOR_DARK_GRAY);
+        final org.eclipse.swt.graphics.Color colorGray = new org.eclipse.swt.graphics.Color(display, 132, 144, 142);
+        final org.eclipse.swt.graphics.Color colorSilver = new org.eclipse.swt.graphics.Color(display, 178,184,182);
+        final org.eclipse.swt.graphics.Color colorSilver2 = new org.eclipse.swt.graphics.Color(display, 196,197,201);
+        final org.eclipse.swt.graphics.Color colorBlack2 = new org.eclipse.swt.graphics.Color(display, 40, 45, 45);
         
         //Menu---------
-        mainMenuComposite.setBackground(color1);  
+        Font myfont = new Font(display, new FontData("Capture it", 13, SWT.NORMAL));
         
         buildCar = new Button(mainMenuComposite,SWT.PUSH);
-        buildCar.setSize(200, 50);
+        buildCar.setSize(200, 40);
         buildCar.setText("Build Car");
-        buildCar.setLocation(60, 320);
-        //buildCar.setBackground(color1);
-        
+        buildCar.setLocation(60, 334);
+        buildCar.setFont(myfont);
         
         joinGame = new Button(mainMenuComposite,SWT.PUSH);
-        joinGame.setSize(200, 50);
+        joinGame.setSize(200, 40);
         joinGame.setText("Join Game");
-        joinGame.setLocation(60, 270);
-        //joinGame.setBackground(color1);
+        joinGame.setLocation(60, 292);
+        joinGame.setFont(myfont);
         
         newGame = new Button(mainMenuComposite,SWT.PUSH);
-        newGame.setSize(200, 50);
-        newGame.setText("New Game!");
-        newGame.setLocation(60, 220);
-        newGame.setFocus();
-        //newGame.setBackground(color1);
-        
+        newGame.setSize(200, 40);
+        newGame.setText("New Game");
+        newGame.setLocation(60, 250);
+        newGame.setFont(myfont);
         
         //New Game---------
-        newGameComposite.setBackground(color1);
         
-        countPlayers = new Spinner(newGameComposite, SWT.NULL);
+        countPlayers = new Spinner(newGameComposite, SWT.TRANSPARENT);
   	  	countPlayers.setMinimum(1);
   	  	countPlayers.setMaximum(10);
   	  	countPlayers.setSize(50, 40);
-  	  	countPlayers.setLocation(115, 200);
-  	  	//countPlayers.setBackground(color2);
+  	  	countPlayers.setLocation(125, 150);
+  	  	countPlayers.setBackground(colorGray);
+  	  	countPlayers.setForeground(colorBlack);
   	  	
 	  	play = new Button(newGameComposite,SWT.PUSH);
-	  	play.setSize(200, 50);
-	  	play.setText("Play!");
+	  	play.setSize(200, 40);
+	  	play.setText("Play");
 	  	play.setLocation(60, 250);
+	  	play.setFont(myfont);
 	  	
-	  	writeCountPlayers = new Text(newGameComposite,SWT.NULL);
-	  	writeCountPlayers.setSize(140, 20);
-	  	writeCountPlayers.setText("Write count players!");
-	  	writeCountPlayers.setLocation(85, 130);
+	  	writeCountPlayers = new Label(newGameComposite,SWT.NONE);
+	  	writeCountPlayers.setSize(220, 20);
+	  	writeCountPlayers.setText("Write count players !");
+	  	writeCountPlayers.setLocation(68, 100);
+	  	writeCountPlayers.setForeground(colorSilver2);
+	  	writeCountPlayers.setFont(myfont);
 	  	
-	  	
-	  	Image image = new Image(display, "images/back.png");
-	  	backNewGame = new Button(newGameComposite,SWT.PUSH);
-	  	backNewGame.setSize(60, 40);
-	  	backNewGame.setLocation(5, 362);
-	  	backNewGame.setImage(image);
+	  	backNewGame = new Button(newGameComposite,SWT.PUSH );
+	  	backNewGame.setSize(48, 48);
+	  	backNewGame.setLocation(4, 358);
         
 	  	//Join Game---------
-        joinGameComposite.setBackground(color1);
         
-        chooseGame = new Text(joinGameComposite,SWT.NULL);
-        chooseGame.setSize(125, 20);
-        chooseGame.setText("Choose one game!");
-        chooseGame.setLocation(80, 110);
+        chooseGame = new Label(joinGameComposite,SWT.NULL);
+        chooseGame.setSize(220, 20);
+        chooseGame.setText("Choose one game !");
+        chooseGame.setLocation(77, 100);
+        chooseGame.setForeground(colorSilver2);
+        chooseGame.setFont(myfont);
         
-        createdGames = new List(joinGameComposite,SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+        createdGames = new List(joinGameComposite,SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.TRANSPARENT);
+        createdGames.setBackground(colorGray);
+        createdGames.setForeground(colorBlack);
         createdGames.setSize(200, 150);
         createdGames.setLocation(62, 190);
         
 	  	backJoinGame = new Button(joinGameComposite,SWT.PUSH);
-	  	backJoinGame.setSize(60, 40);
-	  	backJoinGame.setLocation(5, 362);
-	  	backJoinGame.setImage(image);
+	  	backJoinGame.setSize(48, 48);
+	  	backJoinGame.setLocation(4, 358);
 	  	
 	  	connect = new Button(joinGameComposite,SWT.PUSH);
-	  	connect.setSize(70, 45);
-	  	connect.setText("Connect!");
-	  	connect.setLocation(245, 357);
+	  	connect.setSize(75, 40);
+	  	connect.setText("Connect");
+	  	connect.setLocation(241, 366);
+	  	Font italicFont = new Font(display, new FontData("Arial", 11, SWT.ITALIC ));
+	  	connect.setFont(italicFont);
+	  	
         
 	  	
-	  	//Build car---------
-
-	  	buildCarComposite.setBackground(color1);
-	  	performanceComposite.setBackground(color1);
-	  	appearanceComposite.setBackground(color1);
-	  	
+	  	//Build car---------	  	
 	  	
 	  	backBuildCar = new Button(buildCarComposite,SWT.PUSH);
-	  	backBuildCar.setSize(60, 40);
-	  	backBuildCar.setLocation(5, 362);
-	  	backBuildCar.setImage(image);
+	  	backBuildCar.setSize(48, 48);
+	  	backBuildCar.setLocation(4, 358);
 	  	
 	  	save = new Button(buildCarComposite,SWT.PUSH);
-	  	save.setSize(70, 45);
+	  	save.setSize(65, 40);
 	  	save.setText("Save");
-	  	save.setLocation(245, 357);
+	  	save.setLocation(251, 366);
+	  	save.setFont(italicFont);
 	  	
 	  	//Vykon auta------
+	  	
+	  	Font perfAndAppeFont = new Font(display, new FontData("Capture it", 11, SWT.NORMAL ));
 	  	
 	  	performance = new Button(buildCarComposite,SWT.NULL);
 	  	performance.setSize(125, 40);
 	  	performance.setText("Performance");
 	  	performance.setLocation(30, 310);
+	  	performance.setFont(perfAndAppeFont);
 	  	
-	  	engine = new Text(performanceComposite, SWT.NULL);
+	  	engine = new Label(performanceComposite, SWT.NULL);
 	  	engine.setSize(75, 20);
 	  	engine.setText("Engine");
-	  	engine.setLocation(25, 140);
+	  	engine.setLocation(35, 110);
+	  	engine.setFont(perfAndAppeFont);
+	  	engine.setForeground(colorSilver2);
 	  	
 	  	engineC = new Combo(performanceComposite, SWT.NULL);
-	  	engineC.setSize(200, 20);
-	  	engineC.setLocation(101, 140);
+	  	engineC.setSize(170, 20);
+	  	engineC.setLocation(116, 105);
 	  	
-	  	exhaust = new Text(performanceComposite, SWT.NULL);
+	  	exhaust = new Label(performanceComposite, SWT.NULL);
 	  	exhaust.setSize(75, 20);
 	  	exhaust.setText("Exhaust");
-	  	exhaust.setLocation(25, 165);
+	  	exhaust.setLocation(35, 140);
+	  	exhaust.setFont(perfAndAppeFont);
+	  	exhaust.setForeground(colorSilver2);
 	  	
 	  	exhaustC = new Combo(performanceComposite, SWT.NULL);
-	  	exhaustC.setSize(200, 20);
-	  	exhaustC.setLocation(101, 165);
+	  	exhaustC.setSize(170, 20);
+	  	exhaustC.setLocation(116, 135);
 	  	
-	  	filter = new Text(performanceComposite, SWT.NULL);
+	  	filter = new Label(performanceComposite, SWT.NULL);
 	  	filter.setSize(75, 20);
 	  	filter.setText("Filter");
-	  	filter.setLocation(25, 190);
+	  	filter.setLocation(35, 170);
+	  	filter.setFont(perfAndAppeFont);
+	  	filter.setForeground(colorSilver2);
 	  	
 	  	filterC = new Combo(performanceComposite, SWT.NULL);
-	  	filterC.setSize(200, 20);
-	  	filterC.setLocation(101, 190);
+	  	filterC.setSize(170, 20);
+	  	filterC.setLocation(116, 165);
 	  	
-	  	absorber = new Text(performanceComposite, SWT.NULL);
+	  	absorber = new Label(performanceComposite, SWT.NULL);
 	  	absorber.setSize(75, 20);
 	  	absorber.setText("Absorber");
-	  	absorber.setLocation(25, 215);
+	  	absorber.setLocation(35, 200);
+	  	absorber.setFont(perfAndAppeFont);
+	  	absorber.setForeground(colorSilver2);
 	  	
 	  	absorberC = new Combo(performanceComposite, SWT.NULL);
-	  	absorberC.setSize(200, 20);
-	  	absorberC.setLocation(101, 215);
+	  	absorberC.setSize(170, 20);
+	  	absorberC.setLocation(116, 195);
 	  	
-	  	wheel = new Text(performanceComposite, SWT.NULL);
+	  	wheel = new Label(performanceComposite, SWT.NULL);
 	  	wheel.setSize(75, 20);
 	  	wheel.setText("Wheel");
-	  	wheel.setLocation(25, 240);
+	  	wheel.setLocation(35, 230);
+	  	wheel.setFont(perfAndAppeFont);
+	  	wheel.setForeground(colorSilver2);
 	  	
 	  	wheelC = new Combo(performanceComposite, SWT.NULL);
-	  	wheelC.setSize(200, 20);
-	  	wheelC.setLocation(101, 240);
+	  	wheelC.setSize(170, 20);
+	  	wheelC.setLocation(116, 225);
 	  	
-	  	nitro = new Text(performanceComposite, SWT.NULL);
+	  	nitro = new Label(performanceComposite, SWT.NULL);
 	  	nitro.setSize(75, 20);
 	  	nitro.setText("Nitro");
-	  	nitro.setLocation(25, 265);
+	  	nitro.setLocation(35, 260);
+	  	nitro.setFont(perfAndAppeFont);
+	  	nitro.setForeground(colorSilver2);
 	  	
 	  	nitroC = new Combo(performanceComposite, SWT.NULL);
-	  	nitroC.setSize(200, 20);
-	  	nitroC.setLocation(101, 265);
+	  	nitroC.setSize(170, 20);
+	  	nitroC.setLocation(116, 255);
 	  	
 	  	//Vzhled auta------
 	  	
@@ -269,46 +323,55 @@ public class DesktopMenu {
 	  	appearance.setSize(125, 40);
 	  	appearance.setText("Appearance");
 	  	appearance.setLocation(165, 310);
+	  	appearance.setFont(perfAndAppeFont);
 	  	
-	  	bodywork = new Text(appearanceComposite, SWT.NULL);
+	  	bodywork = new Label(appearanceComposite, SWT.NULL);
 	  	bodywork.setSize(75, 20);
 	  	bodywork.setText("Bodywork");
-	  	bodywork.setLocation(25, 200);
+	  	bodywork.setLocation(35, 200);
+	  	bodywork.setFont(perfAndAppeFont);
+	  	bodywork.setForeground(colorSilver2);
 	  	
 	  	bodyworkC = new Combo(appearanceComposite, SWT.NULL);
-	  	bodyworkC.setSize(200, 20);
-	  	bodyworkC.setLocation(101, 200);
+	  	bodyworkC.setSize(170, 20);
+	  	bodyworkC.setLocation(116, 195);
 	  	
-	  	glass = new Text(appearanceComposite, SWT.NULL);
+	  	glass = new Label(appearanceComposite, SWT.NULL);
 	  	glass.setSize(75, 20);
 	  	glass.setText("Glass");
-	  	glass.setLocation(25, 225);
+	  	glass.setLocation(35, 230);
+	  	glass.setFont(perfAndAppeFont);
+	  	glass.setForeground(colorSilver2);
 	  	
 	  	glassC = new Combo(appearanceComposite, SWT.NULL);
-	  	glassC.setSize(200, 20);
-	  	glassC.setLocation(101, 225);
+	  	glassC.setSize(170, 20);
+	  	glassC.setLocation(116, 225);
 	  	
-	  	myLabel = new Label(appearanceComposite, SWT.NONE);
-	  	myLabel.setBackground(color1);
-	  	myLabel.setLocation(110, 110);
+	  	carLabel = new Label(appearanceComposite, SWT.TRANSPARENT);
+	  	carLabel.setLocation(148, 67);
+	  	
 	  	
 	  	addPerformanceComponents();
 	  	addAppearanceComponents();
 	  	
 	  	//Loading----------
 	  	
-	  	loadingComposite.setBackground(color1);
-	  	loadingComposite.setSize(320, 400);
+	  	loadingComposite.setSize(320, 410);
 	  	
-	  	loadingText = new Text(loadingComposite, SWT.NULL);
-	  	loadingText.setText("Waiting for opponents, please wait...");
-	  	loadingText.setSize(240, 40);
-	  	loadingText.setLocation(40, 200);
+	  	loadingText = new Label(loadingComposite, SWT.NULL);
+	  	loadingText.setText("Waiting for opponents, \n   please wait...");
+	  	loadingText.setSize(260, 40);
+	  	loadingText.setLocation(50, 110);
+	  	loadingText.setForeground(colorSilver2);
+	  	loadingText.setFont(myfont);
+	  	
 	  	
 	  	loading = new ProgressBar(loadingComposite, SWT.HORIZONTAL | SWT.INDETERMINATE);
 	  	loading.setSize(250, 20);
-	  	loading.setLocation(35, 270);
+	  	loading.setLocation(35, 290);
 	  	
+	  	loading.setBackground(display.getSystemColor(SWT.TRANSPARENT));
+
         
     	shell.setSize(320,430);
 		shell.setMinimumSize(320, 430);
@@ -367,11 +430,10 @@ public class DesktopMenu {
 		    	  int u = Integer.parseInt(countPlayers.getText());
 		    	  System.out.println("Create game for " + u + " players.");
 		    	  game.createCars(u);
-		    	  client.createGame(myDisplay, u, game, bodyworkComponent, glassComponent);
+		    	  client.createGame(myDisplay, u, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2));
 		    	  setComponentsToCar(game);
-		    	  
-		    	  newGameComposite.setVisible(false);
-		    	  
+		   
+		    	  newGameComposite.setVisible(false); 	  
 		    	  loadingComposite.setVisible(true);
 		    	  Thread t = new Thread(new Runnable() {
 					
@@ -405,7 +467,7 @@ public class DesktopMenu {
 		    	  int u = Integer.parseInt(createdGames.getItem(createdGames.getSelectionIndex()).split(" ")[2]);
 		    	  System.out.println("Selected game: " + u);
 		    	  
-		    	  int cars = client.joinGame(u, myDisplay, game, bodyworkComponent, glassComponent);
+		    	  int cars = client.joinGame(u, myDisplay, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2));
 				  game.createCars(cars);
 				  setComponentsToCar(game);
 				  
@@ -460,9 +522,9 @@ public class DesktopMenu {
 		    	  String karosery = Bodywork.bodyworks[bodyworkC.getSelectionIndex()].getCode();
 		    	  String glass = Glass.glasses[glassC.getSelectionIndex()].getCode();
 		    	  
-		    	  Image myImage = new Image(display, "images/"+karosery+glass+".png");
-		    	  myLabel.setSize(myImage.getBounds().width, myImage.getBounds().height);
-		    	  myLabel.setImage(myImage);
+		    	  Image carImage = new Image(display, "images/"+karosery+glass+".png");
+		    	  carLabel.setSize(carImage.getBounds().width, carImage.getBounds().height);
+		    	  carLabel.setImage(carImage);
 		      }
 		 };
 		 
@@ -470,12 +532,13 @@ public class DesktopMenu {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				
 				  String karosery = Bodywork.bodyworks[bodyworkC.getSelectionIndex()].getCode();
 		    	  String glass = Glass.glasses[glassC.getSelectionIndex()].getCode();
 		    	  
-		    	  Image myImage = new Image(display, "images/"+karosery+glass+".png");
-		    	  myLabel.setSize(myImage.getBounds().width, myImage.getBounds().height);
-		    	  myLabel.setImage(myImage);
+		    	  Image carImage = new Image(display, "images/"+karosery+glass+".png");
+		    	  carLabel.setSize(carImage.getBounds().width, carImage.getBounds().height);
+		    	  carLabel.setImage(carImage);
 				
 			}
 
@@ -492,9 +555,9 @@ public class DesktopMenu {
 					  String karosery = Bodywork.bodyworks[bodyworkC.getSelectionIndex()].getCode();
 			    	  String glass = Glass.glasses[glassC.getSelectionIndex()].getCode();
 			    	  
-			    	  Image myImage = new Image(display, "images/"+karosery+glass+".png");
-			    	  myLabel.setSize(myImage.getBounds().width, myImage.getBounds().height);
-			    	  myLabel.setImage(myImage);
+			    	  Image carImage = new Image(display, "images/"+karosery+glass+".png");
+			    	  carLabel.setSize(carImage.getBounds().width, carImage.getBounds().height);
+			    	  carLabel.setImage(carImage);
 				}
 
 				@Override
@@ -502,8 +565,64 @@ public class DesktopMenu {
 					glassC.select(0);
 				}
 			 };
+		
+		PaintListener backgroundButtonPaintL = new PaintListener() {
+					
+			@Override
+			public void paintControl(PaintEvent e) {
+				if(e.widget instanceof Button)
+				{
+					Button button = (Button)e.widget;
+				
+					e.gc.setBackground(colorSilver);
+					e.gc.fillRoundRectangle(0, 0, button.getBounds().width, button.getBounds().height, 10, 10);
+					
+					e.gc.setBackground(colorBlack2);
+					e.gc.fillRoundRectangle(5, 5, button.getBounds().width-10, button.getBounds().height-10, 10, 10);
+					
+					e.gc.setForeground(colorSilver);
+					
+					Point textSize = e.gc.stringExtent(button.getText());
+					int x = (button.getBounds().width-textSize.x)/2;
+					int y = (button.getBounds().height-textSize.y)/2;
+					
+					e.gc.drawText(button.getText(), x, y);
+				}
+			}
+		};
+				
+		PaintListener backgroundButtonImgL = new PaintListener() {
+					
+			@Override
+			public void paintControl(PaintEvent e) {
+				if(e.widget instanceof Button)
+				{
+					Button button = (Button)e.widget;
+				
+					e.gc.setBackground(colorSilver);
+					e.gc.fillRoundRectangle(0, 0, button.getBounds().width, button.getBounds().height, 10, 10);
+					
+					Image image = new Image(display, "images/back2.png");
+					e.gc.drawImage(image, 0, 0);
+				}
+			}
+		};
+				
 		 
-		 
+		newGame.addPaintListener(backgroundButtonPaintL);
+		joinGame.addPaintListener(backgroundButtonPaintL);
+		buildCar.addPaintListener(backgroundButtonPaintL);
+		play.addPaintListener(backgroundButtonPaintL);
+		connect.addPaintListener(backgroundButtonPaintL);
+		save.addPaintListener(backgroundButtonPaintL);
+		performance.addPaintListener(backgroundButtonPaintL);
+		appearance.addPaintListener(backgroundButtonPaintL);
+		
+		backNewGame.addPaintListener(backgroundButtonImgL);
+		backJoinGame.addPaintListener(backgroundButtonImgL);
+		backBuildCar.addPaintListener(backgroundButtonImgL);
+		
+				
 		bodyworkC.addSelectionListener(bodyworkSelectionL);
 		glassC.addSelectionListener(glassSelectionL);
 		
@@ -525,14 +644,10 @@ public class DesktopMenu {
 		appearanceComposite.setVisible(false);
 		performanceComposite.pack();
 		performanceComposite.setVisible(false);
-		buildCarComposite.pack();
+		//buildCarComposite.pack();
 		buildCarComposite.setVisible(false);
-		joinGameComposite.pack();
 		joinGameComposite.setVisible(false);
-		newGameComposite.pack();
 		newGameComposite.setVisible(false);
-		mainMenuComposite.pack();
-		
     }
     
     private void addPerformanceComponents(){
@@ -617,6 +732,10 @@ public class DesktopMenu {
 	   myGame.getMap().cars.get(idPlayer).setBodywork(Bodywork.bodyworks[bodyworkComponent]);
 	   myGame.getMap().cars.get(idPlayer).setGlass(Glass.glasses[glassComponent]);
 	   
+	   System.out.println(Wheel.wheels[wheelComponent].getValue());
+	   
+	   myGame.getMap().cars.get(idPlayer).setTrajectory();
+	   
 	   return true;
    }
    
@@ -625,7 +744,7 @@ public class DesktopMenu {
 	   exhaustComponent = exhaustC.getSelectionIndex();
 	   filterComponent = filterC.getSelectionIndex();
 	   absorbersComponent = absorberC.getSelectionIndex();
-	   wheelComponent = filterC.getSelectionIndex();
+	   wheelComponent = wheelC.getSelectionIndex();
 	   nitroComponent = nitroC.getSelectionIndex();
 	   
 	   bodyworkComponent = bodyworkC.getSelectionIndex();

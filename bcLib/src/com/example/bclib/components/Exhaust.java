@@ -3,11 +3,11 @@ package com.example.bclib.components;
 public class Exhaust {
 	private String name;
 	private int id;
-	private int value;
+	private double value;
 	
-	public static Exhaust[] exhausts = {new Exhaust("Izawit 004",0,40), new Exhaust("Izawit 006",1,45), new Exhaust("Izawit 008",2,50), new Exhaust("Izawit 010",3,55)};	
+	public static Exhaust[] exhausts = {new Exhaust("Izawit 004",0,0.8), new Exhaust("Izawit 006",1,1), new Exhaust("Izawit 008",2,1.2), new Exhaust("Izawit 010",3,1.4)};	
 	
-	public Exhaust(String name, int id, int value){
+	public Exhaust(String name, int id, double value){
 		this.name = name;
 		this.id = id;
 		this.value = value;
@@ -29,11 +29,11 @@ public class Exhaust {
 		this.id = id;
 	}
 	
-	public int getValue() {
+	public double getValue() {
 		return value;
 	}
 	
-	public void setValue(int value) {
+	public void setValue(double value) {
 		this.value = value;
 	}
 }
