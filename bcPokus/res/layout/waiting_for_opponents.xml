@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_panel"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/menuwallpaper"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <TextView
+        android:id="@+id/waiting_for_opponents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="104dp"
+        android:text="@string/waiting_for_opponents"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="22sp" />
+
+    <ProgressBar
+        android:id="@+id/progressBarWaiting"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/waiting_for_opponents"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="134dp" />
+ 
+</RelativeLayout>

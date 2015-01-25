@@ -40,10 +40,11 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	public void surfaceCreated(SurfaceHolder holder) {
 		
 		this.mythread = new MyThread(holder, myGame, this);
-		
+	}
+	
+	public void Start(){
 		this.mythread.setRunning(true);
 		this.mythread.start();
-		
 	}
 
 	@Override

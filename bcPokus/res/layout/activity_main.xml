@@ -3,6 +3,44 @@
     android:id="@+id/layout_panel"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/menuwallpaper" >
+
+    <Button
+        android:id="@+id/menu_button_join"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/menu_button_build"
+        android:layout_alignLeft="@+id/menu_button_build"
+        android:background="@drawable/menubutton"
+        android:onClick="joinGame"
+        android:text="@string/join_game"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/menu_button_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/menu_button_join"
+        android:layout_alignLeft="@+id/menu_button_join"
+        android:background="@drawable/menubutton"
+        android:onClick="newGame"
+        android:text="@string/new_game"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/menu_button_build"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="54dp"
+        android:background="@drawable/menubutton"
+        android:onClick="buildCar"
+        android:text="@string/build_car"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="18sp" />
 
 </RelativeLayout>

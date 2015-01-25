@@ -11,12 +11,12 @@ import android.view.SurfaceHolder;
 
 public class MyThread extends Thread {
 	private SurfacePanel mySurfacePanel;
-	private Canvas mcanvas;
 	private boolean mRun = false;
 	private SurfaceHolder holder;
 	private Game myGame;
 	private Object o = new Object();
 	private Logic myLogic = new Logic();
+	public Canvas mcanvas;
 	public Client myClient = new Client("192.168.0.21", 8096);
 	
 	public MyThread(SurfaceHolder holder, Game game, SurfacePanel panel) {
@@ -36,9 +36,7 @@ public class MyThread extends Thread {
 	{	
 		while(mRun)
 		{
-			
 			mcanvas = holder.lockCanvas();
-			
 			
 			if(mcanvas != null)
 			{

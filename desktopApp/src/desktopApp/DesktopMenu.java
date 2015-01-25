@@ -1,8 +1,5 @@
 package desktopApp;
 
-
-import java.awt.Color;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -12,9 +9,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -26,14 +20,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Text;
 
-import com.example.bclib.Car;
 import com.example.bclib.Client;
 import com.example.bclib.Game;
-import com.example.bclib.Obstacle;
 import com.example.bclib.components.Absorbers;
 import com.example.bclib.components.Bodywork;
 import com.example.bclib.components.Engine;
@@ -45,7 +34,7 @@ import com.example.bclib.components.Wheel;
 
 public class DesktopMenu {
 	
-	public int idGame;
+	public int idGame; 
 	public boolean saveAllCarComponents = false;
 	
 	int engineComponent;

@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_panel"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/menuwallpaper"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <TextView
+        android:id="@+id/choose_one_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="104dp"
+        android:text="@string/choose_one_game"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="22sp" />
+
+    <Button
+        android:id="@+id/back_button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/back"
+        android:onClick="back" />
+
+    <Button
+        android:id="@+id/connect_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/connect"
+        android:onClick="connect"
+        android:text="@string/connect"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        android:typeface="normal" />
+
+    <ScrollView
+        android:id="@+id/created_games_scroll"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@+id/choose_one_game"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="63dp"
+        android:background="@android:color/darker_gray" >
+        
+        <TableLayout 
+            android:id="@+id/created_games_table"
+             android:layout_width="fill_parent"
+    		 android:layout_height="wrap_content" 
+    		 android:background="@android:color/darker_gray" >
+            
+        </TableLayout>
+    </ScrollView>
+    
+</RelativeLayout>

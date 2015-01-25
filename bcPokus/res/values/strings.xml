@@ -4,5 +4,25 @@
     <string name="app_name">bcPokus</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="new_game">NEW GAME</string>
+    <string name="join_game">JOIN GAME</string>
+    <string name="build_car">BUILD CAR</string>
+    <string name="play">PLAY</string>
+    <string name="write_count_players">Write count players !</string>
+    <string name="choose_one_game">Choose one game !</string>
+    <string name="connect">Connect</string>
+    <string name="save">Save</string>
+    <string name="performance">Performance</string>
+    <string name="appearance">Appearance</string>
+    <string name="waiting_for_opponents">"Waiting for opponents,\n \t \t please wait..."</string>
+    <string name="engine">ENGINE</string>
+    <string name="exhaust">EXHAUST</string>
+    <string name="filter">FILTER</string>
+    <string name="absorber">ABSORBER</string>
+    <string name="wheel">WHEEL</string>
+    <string name="nitro">NITRO</string>
+    <string name="bodywork">BODYWORK</string>
+    <string name="glass">GLASS</string>
+    
 
 </resources>

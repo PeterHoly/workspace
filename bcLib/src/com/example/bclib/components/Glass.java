@@ -6,7 +6,7 @@ public class Glass {
 	private int id;
 	private String color;
 	
-	public static Glass[] glasses = {new Glass("Forester","Gbl",0,"black"), new Glass("Impreza","Gbr",1,"brown"), new Glass("Legacy","Gsi",2,"silver")};	
+	public static Glass[] glasses = {new Glass("Forester","gbl",0,"black"), new Glass("Impreza","gbr",1,"brown"), new Glass("Legacy","gsi",2,"silver")};	
 	
 	public Glass(String name, String code, int id, String color){
 		this.name = name;

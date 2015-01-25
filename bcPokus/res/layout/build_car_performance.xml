@@ -1,0 +1,171 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_panel"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/buildwallpaper"
+    android:orientation="vertical"
+    android:padding="5dp" >
+    
+    
+    <Button
+        android:id="@+id/back_button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/back"
+        android:onClick="back" />
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/connect"
+        android:onClick="savePerformance"
+        android:text="@string/save"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        android:typeface="normal" />
+
+    <Button
+        android:id="@+id/button_performance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button_appearance"
+        android:layout_alignBottom="@+id/button_appearance"
+        android:layout_alignLeft="@+id/back_button3"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/buildperandapp"
+        android:onClick="performance"
+        android:text="@string/performance"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/button_appearance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/back_button3"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/button_performance"
+        android:background="@drawable/buildperandapp"
+        android:onClick="appearance"
+        android:text="@string/appearance"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textNitro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_performance"
+        android:layout_alignLeft="@+id/button_performance"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="23dp"
+        android:text="@string/nitro"
+        android:textSize="18sp" />
+    
+    <TextView
+        android:id="@+id/textWheel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textNitro"
+        android:layout_alignLeft="@+id/textNitro"
+        android:layout_marginBottom="23dp"
+        android:text="@string/wheel"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textAbsorber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textWheel"
+        android:layout_alignLeft="@+id/textWheel"
+        android:layout_marginBottom="23dp"
+        android:text="@string/absorber"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textAbsorber"
+        android:layout_alignLeft="@+id/textAbsorber"
+        android:layout_marginBottom="23dp"
+        android:text="@string/filter"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textExhaust"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textFilter"
+        android:layout_alignLeft="@+id/textFilter"
+        android:layout_marginBottom="23dp"
+        android:text="@string/exhaust"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textEngine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textExhaust"
+        android:layout_alignLeft="@+id/textExhaust"
+        android:layout_marginBottom="23dp"
+        android:text="@string/engine"
+        android:textSize="18sp" />
+
+    <Spinner
+        android:id="@+id/spinnerNitro"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_alignRight="@+id/button_appearance"
+        android:layout_above="@+id/button_appearance"
+        android:layout_marginBottom="30dp" />
+
+    <Spinner
+        android:id="@+id/spinnerWheel"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/spinnerNitro"
+        android:layout_above="@+id/spinnerNitro"
+        android:layout_marginBottom="4dp" />
+
+    <Spinner
+        android:id="@+id/spinnerAbsorber"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/spinnerNitro"
+        android:layout_above="@+id/spinnerWheel"
+        android:layout_marginBottom="4dp" />
+    
+    <Spinner
+        android:id="@+id/spinnerFilter"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/spinnerNitro"
+        android:layout_above="@+id/spinnerAbsorber"
+        android:layout_marginBottom="4dp" />
+    
+    <Spinner
+        android:id="@+id/spinnerExhaust"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/spinnerNitro"
+        android:layout_above="@+id/spinnerFilter"
+        android:layout_marginBottom="4dp" />
+
+    <Spinner
+        android:id="@+id/spinnerEngine"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/spinnerExhaust"
+        android:layout_above="@+id/spinnerExhaust"
+        android:layout_marginBottom="4dp" />
+ 
+</RelativeLayout>
