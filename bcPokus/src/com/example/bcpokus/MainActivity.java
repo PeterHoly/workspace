@@ -87,21 +87,8 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//mHandler = new Handler();
-		//menu();
-		
-		setContentView(R.layout.game_layout);
-		
-		r = (RelativeLayout) findViewById(R.id.layout_game);
-		
-		//layoutParams = new LayoutParams(313, 420);
-		Log.i("vypis", "chyba:a");
-		Log.i("vypis", this.toString());
-		sp = new SurfacePanel(this,myClient,myGame);
-		Log.i("vypis", "chyba:b");
-		//sp.setLayoutParams(layoutParams);
-		
-		r.addView(sp);
+		mHandler = new Handler();
+		menu();
 	}
 	
 	public void menu(){
@@ -139,9 +126,22 @@ public class MainActivity extends Activity {
 	
 	public void playGame(View v){
 		Spinner countPlayers = (Spinner) findViewById(R.id.spinner);
-		int u = Integer.parseInt(arraySpinner[countPlayers.getSelectedItemPosition()]);
+		final int u = Integer.parseInt(arraySpinner[countPlayers.getSelectedItemPosition()]);
 		myGame.createCars(u);
-		myClient.createGame(myGame.getDisplay(), u, myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2));
+		
+		Thread th = new Thread(new Runnable(){
+			@Override
+			public void run() {
+				myClient.createGame(myGame.getDisplay(), u, myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2));
+			}
+		});
+		th.start();
+		try {
+			th.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		setComponentsToCar(myGame);
 			  
   	  	waitingForOpponents();
@@ -164,11 +164,11 @@ public class MainActivity extends Activity {
 						Log.i("vypis", "chyba:5");
 						r = (RelativeLayout) findViewById(R.id.layout_game);
 						Log.i("vypis", "chyba:6");
-						//SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame); //chyba v tomto radku...
+						SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame);
 						Log.i("vypis", "chyba:7");
 						r.addView(sp);
 						Log.i("vypis", "chyba:8");
-						sp.Starts();
+						sp.Start();
 						Log.i("vypis", "chyba:9");
 					}
 				});
@@ -187,8 +187,7 @@ public class MainActivity extends Activity {
 		TextView tw = (TextView) findViewById(R.id.choose_one_game);
 		tw.setTypeface(tf);
 		
-		//String games = myClient.getGames();
-		String games = "0,1,2,3";
+		String games = myClient.getGames();
   	  
   	  	//clear table Layout
   	  	tableLayout = (TableLayout) findViewById(R.id.created_games_table);

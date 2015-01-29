@@ -10,7 +10,6 @@ public class GameUI {
 	public GameUI(){
 		buttonLeft = new Rect(2,370,159,428);
 		buttonRight = new Rect(161,370,318,428);
-		
 	}
 	
 	public Rect getButtonLeft(){

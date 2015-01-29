@@ -16,17 +16,25 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
-
+	
+	private boolean gameStarted = false;
 	private MyThread mythread;
 	private Client myClient;
 	private Game myGame;
-	private GameUI gameUI = new GameUI();
+	private GameUI gameUI;
+	private Map m;
+	private Display d;
+	private Render r;
 	
 	public SurfacePanel(Context context, Client myClient, Game myGame) {
 		super(context);
 		Log.i("vypis", "konstruktor");
 		this.myClient = myClient;
 		this.myGame = myGame;
+		this.m = myGame.getMap();
+		this.d = myGame.getDisplay();
+		this.r = new Render(d);
+		gameUI = new GameUI();
 		
 		getHolder().addCallback(this);
 		
@@ -42,11 +50,20 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.i("vypis", "created");
 		this.mythread = new MyThread(holder, myGame, this, myClient);
+		
+		if(gameStarted){
+			this.mythread.setRunning(true);
+			this.mythread.start();
+		}
 	}
 	
-	public void Starts(){
-		this.mythread.setRunning(true);
-		this.mythread.start();
+	public void Start(){
+		if(this.mythread != null){
+			this.mythread.setRunning(true);
+			this.mythread.start();
+		}else{
+			gameStarted = true;
+		}
 	}
 
 	@Override
@@ -109,10 +126,6 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		
 		return true;
 	}
-	
-	Map m = myGame.getMap();
-	Display d = myGame.getDisplay();
-	Render r = new Render(d);
 	
 	void doDraw(Canvas canvas) throws InterruptedException
 	{
