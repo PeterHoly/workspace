@@ -1,8 +1,7 @@
 package com.example.bcpokus;
 
-import java.awt.font.TextAttribute;
-
 import com.example.bclib.Car;
+import com.example.bclib.Client;
 import com.example.bclib.Display;
 import com.example.bclib.Game;
 import com.example.bclib.Map;
@@ -11,7 +10,6 @@ import com.example.bclib.Obstacle;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -20,11 +18,15 @@ import android.view.SurfaceView;
 public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 
 	private MyThread mythread;
-	private Game myGame = new Game(new Display(0,0,320,430));
+	private Client myClient;
+	private Game myGame;
 	private GameUI gameUI = new GameUI();
 	
-	public SurfacePanel(Context context) {
+	public SurfacePanel(Context context, Client myClient, Game myGame) {
 		super(context);
+		Log.i("vypis", "konstruktor");
+		this.myClient = myClient;
+		this.myGame = myGame;
 		
 		getHolder().addCallback(this);
 		
@@ -38,11 +40,11 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		
-		this.mythread = new MyThread(holder, myGame, this);
+		Log.i("vypis", "created");
+		this.mythread = new MyThread(holder, myGame, this, myClient);
 	}
 	
-	public void Start(){
+	public void Starts(){
 		this.mythread.setRunning(true);
 		this.mythread.start();
 	}

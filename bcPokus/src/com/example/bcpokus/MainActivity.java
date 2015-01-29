@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.w3c.dom.Text;
 
+import com.example.bclib.Client;
+import com.example.bclib.Display;
 import com.example.bclib.Game;
 import com.example.bclib.components.Absorbers;
 import com.example.bclib.components.Bodywork;
@@ -14,19 +16,27 @@ import com.example.bclib.components.Glass;
 import com.example.bclib.components.Nitro;
 import com.example.bclib.components.Wheel;
 
+import android.R.integer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v4.app.NotificationManagerCompat;
 import android.text.AndroidCharacter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -40,12 +50,13 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 	private RelativeLayout r;
-	private SurfacePanel sp;
 	private LayoutParams layoutParams;
 	
 	public int idGame; 
 	public boolean saveAllCarPerformanceComponents = false;
 	public boolean saveAllCarAppearanceComponents = false;
+	public int viewPerformanceComponents;
+	public int viewAppearanceComponents;
 	
 	int engineComponent;
 	int exhaustComponent;
@@ -56,17 +67,41 @@ public class MainActivity extends Activity {
 	int bodyworkComponent;
 	int glassComponent;
 	
+	int engineCom;
+	int exhaustCom;
+	int wheelCom;
+	int absorbersCom;
+	int filterCom;
+	int nitroCom;
+	int bodyworkCom;
+	int glassCom;
+	
+	public Handler mHandler;
+	
+	public String[] arraySpinner = new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+	
+	private final Client myClient = new Client("192.168.0.21", 8096);
+	private final Game myGame = new Game(new Display(0,0,320,430));
+	private SurfacePanel sp;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//mHandler = new Handler();
+		//menu();
 		
-		menu();
+		setContentView(R.layout.game_layout);
 		
-		//r = (RelativeLayout) findViewById(R.id.layout_panel);
+		r = (RelativeLayout) findViewById(R.id.layout_game);
 		
-		//sp = new  SurfacePanel(this);
-				
-		//r.addView(sp);
+		//layoutParams = new LayoutParams(313, 420);
+		Log.i("vypis", "chyba:a");
+		Log.i("vypis", this.toString());
+		sp = new SurfacePanel(this,myClient,myGame);
+		Log.i("vypis", "chyba:b");
+		//sp.setLayoutParams(layoutParams);
+		
+		r.addView(sp);
 	}
 	
 	public void menu(){
@@ -96,11 +131,50 @@ public class MainActivity extends Activity {
 		tw.setTypeface(tf);
 		
 		Spinner spinner = (Spinner) findViewById(R.id.spinner);
-		String[] arraySpinner = new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
-	        
+		
 	    ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, arraySpinner);
 	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    spinner.setAdapter(adapter);
+	}
+	
+	public void playGame(View v){
+		Spinner countPlayers = (Spinner) findViewById(R.id.spinner);
+		int u = Integer.parseInt(arraySpinner[countPlayers.getSelectedItemPosition()]);
+		myGame.createCars(u);
+		myClient.createGame(myGame.getDisplay(), u, myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2));
+		setComponentsToCar(myGame);
+			  
+  	  	waitingForOpponents();
+  	  	
+  	  	Thread t = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Log.i("vypis", "chyba:1");
+				myClient.syncStart();
+				Log.i("vypis", "chyba:2");
+				myClient.getImgs(myGame.getMap().cars);
+				Log.i("vypis", "chyba:3");
+				mHandler.post(new Runnable() {
+
+					@Override
+					public void run() {
+						Log.i("vypis", "chyba:4");
+						setContentView(R.layout.game_layout);
+						Log.i("vypis", "chyba:5");
+						r = (RelativeLayout) findViewById(R.id.layout_game);
+						Log.i("vypis", "chyba:6");
+						//SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame); //chyba v tomto radku...
+						Log.i("vypis", "chyba:7");
+						r.addView(sp);
+						Log.i("vypis", "chyba:8");
+						sp.Starts();
+						Log.i("vypis", "chyba:9");
+					}
+				});
+			}
+  	  	});
+  	  	t.start();
 	}
 	
 	public TableLayout tableLayout;
@@ -113,29 +187,41 @@ public class MainActivity extends Activity {
 		TextView tw = (TextView) findViewById(R.id.choose_one_game);
 		tw.setTypeface(tf);
 		
-		// ve foru naplnit tableLayount - to budou vytvorene hry
-		
-		TextView item = new TextView(getApplicationContext());
-		item.setText("ahoj");
-		item.setTextColor(Color.BLACK);
-		item.setTextSize(20);
-		
-		final int idGame = 0; // misto 0 bude i foru
-		final TableRow trow = new TableRow(getApplicationContext());
-		trow.addView(item);
-		
-		trow.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				trow.setBackgroundColor(Color.GRAY);
-				gameId = idGame;
-				
-			}
-		});
-		
-		tableLayout = (TableLayout) findViewById(R.id.created_games_table);
-		tableLayout.addView(trow);
+		//String games = myClient.getGames();
+		String games = "0,1,2,3";
+  	  
+  	  	//clear table Layout
+  	  	tableLayout = (TableLayout) findViewById(R.id.created_games_table);
+  	  	int i=0;
+  	  	
+  	  	
+  	  	for(String a: games.split(",")){
+  	  		if(a.length() > 0){
+  	  			
+	  	  		TextView item = new TextView(getApplicationContext());
+	  			item.setText("Game id: "+a);
+	  			item.setTextColor(Color.BLACK);
+	  			item.setTextSize(20);
+	  			
+	  			final int idGame = i;
+	  			
+	  			final TableRow trow = new TableRow(getApplicationContext());
+	  			trow.addView(item);
+	  			
+	  			trow.setOnClickListener(new OnClickListener() {
+	  				
+	  				@Override
+	  				public void onClick(View v) {
+	  					trow.setBackgroundColor(Color.GRAY);
+	  					gameId = idGame;
+	  				}
+	  			});
+
+	  			tableLayout.addView(trow);
+	  			
+	  			i++;
+  	  		}
+  	  	}	
 	}
 	
 	public void connect(View v){
@@ -149,42 +235,28 @@ public class MainActivity extends Activity {
 		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/capture_it.ttf");
 		
 		TextView tw = (TextView) findViewById(R.id.waiting_for_opponents);
-		tw.setTypeface(tf);		
+		tw.setTypeface(tf);
 	}
 	
 	public void buildCar(View v){
-		setContentView(R.layout.build_car_performance);
+		if(!saveAllCarPerformanceComponents)
+		{
+			nullComboPerformance();
+		}
+		if(!saveAllCarAppearanceComponents){
+			nullComboAppearance();
+		}
+		viewPerformanceComponents = 0;
+		viewAppearanceComponents = 0;
 		
-		addPerformanceComponents();
-		setAllCarPerformanceComponents();
-		
-		
-		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/capture_it.ttf");
-		
-		Button per = (Button) findViewById(R.id.button_performance);
-		per.setTypeface(tf);
-		Button app = (Button) findViewById(R.id.button_appearance);
-		app.setTypeface(tf);
-		
-		TextView ab = (TextView) findViewById(R.id.textAbsorber);
-		ab.setTypeface(tf);		
-		TextView en = (TextView) findViewById(R.id.textEngine);
-		en.setTypeface(tf);		
-		TextView ex = (TextView) findViewById(R.id.textExhaust);
-		ex.setTypeface(tf);		
-		TextView ni = (TextView) findViewById(R.id.textNitro);
-		ni.setTypeface(tf);		
-		TextView wh = (TextView) findViewById(R.id.textWheel);
-		wh.setTypeface(tf);		
-		TextView fi = (TextView) findViewById(R.id.textFilter);
-		fi.setTypeface(tf);
+		performance(v);
 	}
 	
 	public void performance(View v){
 		setContentView(R.layout.build_car_performance);
-		
+		addListenerChangePerformance();
 		addPerformanceComponents();
-		setAllCarPerformanceComponents();
+		setAllCarPerformanceComponents(saveAllCarPerformanceComponents);
 		
 		
 		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/capture_it.ttf");
@@ -206,13 +278,15 @@ public class MainActivity extends Activity {
 		wh.setTypeface(tf);		
 		TextView fi = (TextView) findViewById(R.id.textFilter);
 		fi.setTypeface(tf);
+		
+		viewPerformanceComponents++;
 	}
 	
 	public void appearance(View v){
 		setContentView(R.layout.build_car_appearance);
-		
+		addListenerChangeAppearance();
 		addAppearanceComponents();
-		setAllCarAppearanceComponents();
+		setAllCarAppearanceComponents(saveAllCarAppearanceComponents);
 		
 		
 		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/capture_it.ttf");
@@ -226,6 +300,8 @@ public class MainActivity extends Activity {
 		bo.setTypeface(tf);		
 		TextView gl = (TextView) findViewById(R.id.textGlass);
 		gl.setTypeface(tf);	
+		
+		viewAppearanceComponents++;
 	}
 	
 	public void savePerformance(View v){
@@ -377,99 +453,229 @@ public class MainActivity extends Activity {
    }
    
    private boolean saveAllCarPerformanceComponents(){
-	   
-	   Spinner spinnerEn = (Spinner) findViewById(R.id.spinnerEngine);
-	   engineComponent = spinnerEn.getSelectedItemPosition();
-	   
-	   Spinner spinnerEx = (Spinner) findViewById(R.id.spinnerExhaust);
-	   exhaustComponent = spinnerEx.getSelectedItemPosition();
-	   
-	   Spinner spinnerFi = (Spinner) findViewById(R.id.spinnerFilter);
-	   filterComponent = spinnerFi.getSelectedItemPosition();
-	   
-	   Spinner spinnerAb = (Spinner) findViewById(R.id.spinnerAbsorber);
-	   absorbersComponent = spinnerAb.getSelectedItemPosition();
-	   
-	   Spinner spinnerWh = (Spinner) findViewById(R.id.spinnerWheel);
-	   wheelComponent = spinnerWh.getSelectedItemPosition();
-	   
-	   Spinner spinnerNi = (Spinner) findViewById(R.id.spinnerNitro);
-	   nitroComponent = spinnerNi.getSelectedItemPosition();
+	   engineComponent = engineCom;
+	   exhaustComponent = exhaustCom;
+	   filterComponent = filterCom;
+	   absorbersComponent = absorbersCom;
+	   wheelComponent = wheelCom;
+	   nitroComponent = nitroCom;
 
 	   return true;
    }
    
    private boolean saveAllCarAppearanceComponents(){
-	   
-	   Spinner spinnerBo = (Spinner) findViewById(R.id.spinnerBodywork);
-	   bodyworkComponent = spinnerBo.getSelectedItemPosition();
-	   
-	   Spinner spinnerGl = (Spinner) findViewById(R.id.spinnerGlass);
-	   glassComponent = spinnerGl.getSelectedItemPosition();
+	   bodyworkComponent = bodyworkCom;
+	   glassComponent = glassCom;
 	   
 	   return true;
    }
    
-   private void setAllCarPerformanceComponents(){
+   private void setAllCarPerformanceComponents(boolean com){
 	   
 	   Spinner spinnerEn = (Spinner) findViewById(R.id.spinnerEngine);
-	   spinnerEn.setSelection(engineComponent);
-	   
 	   Spinner spinnerEx = (Spinner) findViewById(R.id.spinnerExhaust);
-	   spinnerEx.setSelection(exhaustComponent);
-	   
 	   Spinner spinnerFi = (Spinner) findViewById(R.id.spinnerFilter);
-	   spinnerFi.setSelection(filterComponent);
-	   
 	   Spinner spinnerAb = (Spinner) findViewById(R.id.spinnerAbsorber);
-	   spinnerAb.setSelection(absorbersComponent);
-	   
 	   Spinner spinnerWh = (Spinner) findViewById(R.id.spinnerWheel);
-	   spinnerWh.setSelection(wheelComponent);
-	   
 	   Spinner spinnerNi = (Spinner) findViewById(R.id.spinnerNitro);
-	   spinnerNi.setSelection(nitroComponent);
+	   
+	   if(!com || viewPerformanceComponents >= 1){
+		   spinnerEn.setSelection(engineCom);
+		   spinnerEx.setSelection(exhaustCom);
+		   spinnerFi.setSelection(filterCom);
+		   spinnerAb.setSelection(absorbersCom);
+		   spinnerWh.setSelection(wheelCom);
+		   spinnerNi.setSelection(nitroCom);
+	   }
+	   else if(com && viewPerformanceComponents < 1){
+		   spinnerEn.setSelection(engineComponent);
+		   spinnerEx.setSelection(exhaustComponent);
+		   spinnerFi.setSelection(filterComponent);
+		   spinnerAb.setSelection(absorbersComponent);
+		   spinnerWh.setSelection(wheelComponent);
+		   spinnerNi.setSelection(nitroComponent);
+		   
+		   engineCom = engineComponent;
+		   exhaustCom = exhaustComponent;
+		   filterCom = filterComponent;
+		   absorbersCom = absorbersComponent;
+		   wheelCom = wheelComponent;
+		   nitroCom = nitroComponent;
+	   }
    }
    
-   private void setAllCarAppearanceComponents(){
+   private void setAllCarAppearanceComponents(boolean com){
 	   
 	   Spinner spinnerBo = (Spinner) findViewById(R.id.spinnerBodywork);
-	   spinnerBo.setSelection(bodyworkComponent);
-	   
 	   Spinner spinnerGl = (Spinner) findViewById(R.id.spinnerGlass);
-	   spinnerGl.setSelection(glassComponent);
+	   ImageView imageCar = (ImageView) findViewById(R.id.imageCar);
+	   
+	   if(!com || viewAppearanceComponents >= 1){
+		   spinnerBo.setSelection(bodyworkCom);
+		   spinnerGl.setSelection(glassCom);
+		   
+		   String codeB = Bodywork.bodyworks[bodyworkCom].getCode();
+		   String codeG = Glass.glasses[glassCom].getCode();
+		   String code = codeB+codeG;
+			
+		   int resourceID = getResources().getIdentifier(code, "drawable", getPackageName());
+		   imageCar.setImageResource(resourceID);
+	   }
+	   else if(com && viewAppearanceComponents < 1){
+		   spinnerBo.setSelection(bodyworkComponent);
+		   spinnerGl.setSelection(glassComponent);
+		   
+		   String codeB = Bodywork.bodyworks[bodyworkComponent].getCode();
+		   String codeG = Glass.glasses[glassComponent].getCode();
+		   String code = codeB+codeG;
+			
+		   int resourceID = getResources().getIdentifier(code, "drawable", getPackageName());
+		   imageCar.setImageResource(resourceID);
+		   
+		   bodyworkCom = bodyworkComponent;
+		   glassCom = glassComponent;
+	   }		
    }
 	
-	private void nullCombo(){
+	private void nullComboPerformance(){
+		engineCom = 0;
+		exhaustCom = 0;
+		wheelCom = 0;
+		absorbersCom = 0;
+		filterCom = 0;
+		nitroCom = 0;
+	}
+	
+	private void nullComboAppearance(){
+		bodyworkCom = 0;
+		glassCom = 0;
+	}
+	
+	private void addListenerChangePerformance(){
 		
-	   Spinner spinnerEn = (Spinner) findViewById(R.id.spinnerEngine);
-	   spinnerEn.setSelection(0);
+	   final Spinner spinnerEn = (Spinner) findViewById(R.id.spinnerEngine);
+	   spinnerEn.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				engineCom = spinnerEn.getSelectedItemPosition();
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+	   });
 	   
-	   Spinner spinnerEx = (Spinner) findViewById(R.id.spinnerExhaust);
-	   spinnerEx.setSelection(0);
+	   final Spinner spinnerEx = (Spinner) findViewById(R.id.spinnerExhaust);
+	   spinnerEx.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				exhaustCom = spinnerEx.getSelectedItemPosition();	
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+	   });
 	   
-	   Spinner spinnerFi = (Spinner) findViewById(R.id.spinnerFilter);
-	   spinnerFi.setSelection(0);
+	   final Spinner spinnerFi = (Spinner) findViewById(R.id.spinnerFilter);
+	   spinnerFi.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				filterCom = spinnerFi.getSelectedItemPosition();	
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+	   });
 	   
-	   Spinner spinnerAb = (Spinner) findViewById(R.id.spinnerAbsorber);
-	   spinnerAb.setSelection(0);
+	   final Spinner spinnerAb = (Spinner) findViewById(R.id.spinnerAbsorber);
+	   spinnerAb.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				absorbersCom = spinnerAb.getSelectedItemPosition();
+				
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+	   });
 	   
-	   Spinner spinnerWh = (Spinner) findViewById(R.id.spinnerWheel);
-	   spinnerWh.setSelection(0);
+	   final Spinner spinnerWh = (Spinner) findViewById(R.id.spinnerWheel);
+	   spinnerWh.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				wheelCom = spinnerWh.getSelectedItemPosition();
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+	   });
 	   
-	   Spinner spinnerNi = (Spinner) findViewById(R.id.spinnerNitro);
-	   spinnerNi.setSelection(0);
-	   
-	   Spinner spinnerBo = (Spinner) findViewById(R.id.spinnerBodywork);
-	   spinnerBo.setSelection(0);
-	   
-	   Spinner spinnerGl = (Spinner) findViewById(R.id.spinnerGlass);
-	   spinnerGl.setSelection(0);  
+	   final Spinner spinnerNi = (Spinner) findViewById(R.id.spinnerNitro);
+	   spinnerNi.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				nitroCom = spinnerNi.getSelectedItemPosition();
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+	   });
+	}
+	
+	private void addListenerChangeAppearance(){
+		
+		final Spinner spinnerBo = (Spinner) findViewById(R.id.spinnerBodywork);
+		spinnerBo.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				bodyworkCom = spinnerBo.getSelectedItemPosition();
+				
+				ImageView car = (ImageView) findViewById(R.id.imageCar);
+				
+				String codeB = Bodywork.bodyworks[bodyworkCom].getCode();
+				String codeG = Glass.glasses[glassCom].getCode();
+				String code = codeB+codeG;
+				
+				int resourceID = getResources().getIdentifier(code, "drawable", getPackageName());
+				
+				car.setImageResource(resourceID);
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+	   });
+		   
+	   final Spinner spinnerGl = (Spinner) findViewById(R.id.spinnerGlass);
+	   spinnerGl.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				glassCom = spinnerGl.getSelectedItemPosition();
+				
+				ImageView car = (ImageView) findViewById(R.id.imageCar);
+				
+				String codeB = Bodywork.bodyworks[bodyworkCom].getCode();
+				String codeG = Glass.glasses[glassCom].getCode();
+				String code = codeB+codeG;
+				
+				int resourceID = getResources().getIdentifier(code, "drawable", getPackageName());
+				
+				car.setImageResource(resourceID);
+			}
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+	   });
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}

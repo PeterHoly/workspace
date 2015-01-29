@@ -17,13 +17,15 @@ public class MyThread extends Thread {
 	private Object o = new Object();
 	private Logic myLogic = new Logic();
 	public Canvas mcanvas;
-	public Client myClient = new Client("192.168.0.21", 8096);
+	public Client myClient;
 	
-	public MyThread(SurfaceHolder holder, Game game, SurfacePanel panel) {
+	
+	public MyThread(SurfaceHolder holder, Game game, SurfacePanel panel, Client myClient) {
 		this.mySurfacePanel = panel;
 		this.mRun = false;
 		this.holder = holder;
 		this.myGame = game;
+		this.myClient = myClient;
 	}
 	
 	void setRunning(boolean bRun)

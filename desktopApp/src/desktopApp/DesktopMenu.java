@@ -417,13 +417,13 @@ public class DesktopMenu {
 		      public void handleEvent(Event event) {
 		    	  
 		    	  int u = Integer.parseInt(countPlayers.getText());
-		    	  System.out.println("Create game for " + u + " players.");
 		    	  game.createCars(u);
 		    	  client.createGame(myDisplay, u, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2));
 		    	  setComponentsToCar(game);
 		   
 		    	  newGameComposite.setVisible(false); 	  
 		    	  loadingComposite.setVisible(true);
+		    	  
 		    	  Thread t = new Thread(new Runnable() {
 					
 					@Override
@@ -633,7 +633,6 @@ public class DesktopMenu {
 		appearanceComposite.setVisible(false);
 		performanceComposite.pack();
 		performanceComposite.setVisible(false);
-		//buildCarComposite.pack();
 		buildCarComposite.setVisible(false);
 		joinGameComposite.setVisible(false);
 		newGameComposite.setVisible(false);
@@ -763,6 +762,6 @@ public class DesktopMenu {
 	    filterC.select(0);
 	    absorberC.select(0);
 	    wheelC.select(0);
-	    nitroC.select(0);   
+	    nitroC.select(0); 
 	}
 }

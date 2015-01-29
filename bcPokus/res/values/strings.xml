@@ -23,6 +23,7 @@
     <string name="nitro">NITRO</string>
     <string name="bodywork">BODYWORK</string>
     <string name="glass">GLASS</string>
+    <string name="image_notfound">Image not found.</string>
     
 
 </resources>
