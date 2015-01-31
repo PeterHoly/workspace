@@ -41,6 +41,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TableRow;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Spinner;
@@ -132,7 +133,7 @@ public class MainActivity extends Activity {
 		Thread th = new Thread(new Runnable(){
 			@Override
 			public void run() {
-				myClient.createGame(myGame.getDisplay(), u, myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2));
+				myClient.createGame(myGame.getDisplay(), u, myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent);
 			}
 		});
 		th.start();
@@ -150,26 +151,17 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void run() {
-				Log.i("vypis", "chyba:1");
 				myClient.syncStart();
-				Log.i("vypis", "chyba:2");
 				myClient.getImgs(myGame.getMap().cars);
-				Log.i("vypis", "chyba:3");
 				mHandler.post(new Runnable() {
 
 					@Override
 					public void run() {
-						Log.i("vypis", "chyba:4");
 						setContentView(R.layout.game_layout);
-						Log.i("vypis", "chyba:5");
 						r = (RelativeLayout) findViewById(R.id.layout_game);
-						Log.i("vypis", "chyba:6");
-						SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame);
-						Log.i("vypis", "chyba:7");
+						SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame, getPackageName());
 						r.addView(sp);
-						Log.i("vypis", "chyba:8");
 						sp.Start();
-						Log.i("vypis", "chyba:9");
 					}
 				});
 			}
@@ -187,9 +179,11 @@ public class MainActivity extends Activity {
 		TextView tw = (TextView) findViewById(R.id.choose_one_game);
 		tw.setTypeface(tf);
 		
+		ScrollView sw = (ScrollView) findViewById(R.id.created_games_scroll);
+		sw.setBackgroundColor(Color.GRAY);
+		
 		String games = myClient.getGames();
-  	  
-  	  	//clear table Layout
+
   	  	tableLayout = (TableLayout) findViewById(R.id.created_games_table);
   	  	int i=0;
   	  	
@@ -211,7 +205,12 @@ public class MainActivity extends Activity {
 	  				
 	  				@Override
 	  				public void onClick(View v) {
-	  					trow.setBackgroundColor(Color.GRAY);
+	  					
+	  					for(int i=0; i<tableLayout.getChildCount(); i++){
+	  						tableLayout.getChildAt(i).setBackgroundColor(Color.GRAY);
+	  					}
+	  					
+	  					trow.setBackgroundColor(Color.DKGRAY);
 	  					gameId = idGame;
 	  				}
 	  			});
@@ -224,9 +223,37 @@ public class MainActivity extends Activity {
 	}
 	
 	public void connect(View v){
-		Button connect = (Button) findViewById(R.id.connect_button);
-		connect.setText(String.valueOf(gameId));
+		
+		int u = gameId;
+  	  
+  	  	int cars = myClient.joinGame(u, myGame.getDisplay(), myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent);
+  	  	myGame.createCars(cars);
+  	  	setComponentsToCar(myGame);
+		  
+  	  	waitingForOpponents();
+  	  	
+  	  	Thread t = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				myClient.syncStart();
+				myClient.getImgs(myGame.getMap().cars);
+				mHandler.post(new Runnable() {
+					
+					@Override
+					public void run() {
+						setContentView(R.layout.game_layout);
+						r = (RelativeLayout) findViewById(R.id.layout_game);
+						SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame, getPackageName());
+						r.addView(sp);
+						sp.Start();
+					}
+				});
+			}
+  	  	});
+  	  	t.start();
 	}
+
 	
 	public void waitingForOpponents(){
 		setContentView(R.layout.waiting_for_opponents);

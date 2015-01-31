@@ -50,12 +50,13 @@ public class Main {
 					int countPlay = dis.readInt();
 					double x = dis.readDouble();
 					double y = dis.readDouble();
+					int nitro = dis.readInt();
 					
-					System.out.println(x+", "+y);
+					System.out.println("nitro je: "+nitro);
 				
 					myGame.setCountPlay(countPlay);
 					
-					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, x, y);
+					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, x, y, nitro);
 					
 					dos.writeInt(p.ID);
 					dos.flush();
@@ -109,10 +110,11 @@ public class Main {
 					int glassIndex = dis.readInt();
 					double x = dis.readDouble();
 					double y = dis.readDouble();
+					int nitro = dis.readInt();
 					
 					System.out.println(x+", "+y);
 					
-					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, x, y);
+					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, x, y, nitro);
 					myGame.addPlayer(p);
 					
 					dos.writeInt(p.ID);

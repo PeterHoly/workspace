@@ -25,8 +25,9 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	private Map m;
 	private Display d;
 	private Render r;
+	private String packageName;
 	
-	public SurfacePanel(Context context, Client myClient, Game myGame) {
+	public SurfacePanel(Context context, Client myClient, Game myGame, String packageName) {
 		super(context);
 		Log.i("vypis", "konstruktor");
 		this.myClient = myClient;
@@ -34,7 +35,8 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		this.m = myGame.getMap();
 		this.d = myGame.getDisplay();
 		this.r = new Render(d);
-		gameUI = new GameUI();
+		this.gameUI = new GameUI(d);
+		this.packageName = packageName;
 		
 		getHolder().addCallback(this);
 		
@@ -118,6 +120,11 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 					//m.car.setIncrement(-0.09f, 0.79f);
 					mythread.myClient.rightPush();
 				}
+				else if(gameUI.getButtonNitro().contains((int)event.getX(), (int)event.getY()))
+				{
+					mythread.myClient.nitroPush();
+					Log.i("asd","nitro");
+				}
 		}
 		else if(event.getAction() == MotionEvent.ACTION_UP) {
 			//m.car.setIncrement(0.09f, 0f);
@@ -132,17 +139,17 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		canvas.drawColor(Color.WHITE);
 		
 		for(Car c : m.cars){
-			r.draw(c, canvas);
+			r.draw(c, canvas, getResources(), this.packageName);
 		}
 		
 		for (Obstacle o : m.obstacles){
-			r.draw(o, canvas);
+			r.draw(o, canvas, getResources(), this.packageName);
 		}
 		
-		r.drawButton(gameUI.getButtonLeft(), canvas);
-		r.drawButton(gameUI.getButtonRight(), canvas);
+		r.drawButton(gameUI.getButtonLeft(), canvas, getResources(), this.packageName, "left");
+		r.drawButton(gameUI.getButtonRight(), canvas, getResources(), this.packageName, "right");
+		r.drawButton(gameUI.getButtonNitro(), canvas, getResources(), this.packageName, "nitro");
 		r.drawText(gameUI.getText(), canvas);
-		gameUI.setText("");
 	}
 
 }

@@ -47,14 +47,12 @@
         android:layout_height="200dp"
         android:layout_below="@+id/choose_one_game"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="63dp"
-        android:background="@android:color/darker_gray" >
+        android:layout_marginTop="63dp" >
         
         <TableLayout 
             android:id="@+id/created_games_table"
              android:layout_width="fill_parent"
-    		 android:layout_height="wrap_content" 
-    		 android:background="@android:color/darker_gray" >
+    		 android:layout_height="wrap_content" >
             
         </TableLayout>
     </ScrollView>

@@ -418,7 +418,7 @@ public class DesktopMenu {
 		    	  
 		    	  int u = Integer.parseInt(countPlayers.getText());
 		    	  game.createCars(u);
-		    	  client.createGame(myDisplay, u, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2));
+		    	  client.createGame(myDisplay, u, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent);
 		    	  setComponentsToCar(game);
 		   
 		    	  newGameComposite.setVisible(false); 	  
@@ -456,7 +456,7 @@ public class DesktopMenu {
 		    	  int u = Integer.parseInt(createdGames.getItem(createdGames.getSelectionIndex()).split(" ")[2]);
 		    	  System.out.println("Selected game: " + u);
 		    	  
-		    	  int cars = client.joinGame(u, myDisplay, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2));
+		    	  int cars = client.joinGame(u, myDisplay, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent);
 				  game.createCars(cars);
 				  setComponentsToCar(game);
 				  

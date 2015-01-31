@@ -8,6 +8,7 @@ import com.example.bclib.Display;
 import com.example.bclib.Map;
 import com.example.bclib.Vector;
 import com.example.bclib.components.Bodywork;
+import com.example.bclib.components.Nitro;
 
 public class Game {
 	private ArrayList<Player> players = new ArrayList<Player>();
@@ -15,6 +16,7 @@ public class Game {
 	private int IDiterace;
 	private int countPlayers;
 	private Map map;
+	private int i=0;
 	
 	public Game(int id){
 		this.ID=id;
@@ -40,8 +42,16 @@ public class Game {
 					if(col != -1){
 						p.myCar.setAngle2(col);
 					}
+					
+					if(p.nitrous && p.nitroIsUsed){
+						if(i==200){
+							p.myCar.getTrajectory().setYwithComponent(1/Nitro.nitrous[p.nitroIndex].getValue());
+							i=0;
+							p.nitroIsUsed = false;
+						}
+						i++;
+					}
 				}
-				
 				
 				//test kolizi mezi auty
 				for(int i=0; i<players.size(); i++){

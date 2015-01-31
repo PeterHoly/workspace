@@ -11,6 +11,7 @@ import com.example.bclib.Car;
 import com.example.bclib.CommandClass;
 import com.example.bclib.Display;
 import com.example.bclib.components.Bodywork;
+import com.example.bclib.components.Nitro;
 
 public class Player {
 	public Socket socket;
@@ -22,12 +23,15 @@ public class Player {
 	public int IDiterace;
 	public int bodyworkIndex;
 	public int glassIndex;
+	public int nitroIndex;
+	public boolean nitrous = false;
+	public boolean nitroIsUsed = true;
 	
 	public Car myCar;
 	
 	public Display display;
 	
-	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass, double x, double y){
+	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass, double x, double y, int nitro){
 		socket = s;
 		game = g;
 		ID = g.getCountPlayers();
@@ -37,6 +41,7 @@ public class Player {
 		display = new Display(0, 0, width, height);
 		bodyworkIndex = indexBodywork;
 		glassIndex = indexGlass;
+		nitroIndex = nitro;
 	}
 	
 	public void run(){
@@ -100,6 +105,13 @@ public class Player {
 				else if(command==CommandClass.cmdRightPush)
 				{
 					myCar.setIncrement(-0.09f, 0.79f);
+				}
+				else if(command==CommandClass.cmdNitroPush)
+				{
+					if(!nitrous){
+						nitrous = true;
+						myCar.getTrajectory().setYwithComponent(Nitro.nitrous[nitroIndex].getValue());
+					}
 				}
 				else if(command==CommandClass.cmdRelease)
 				{

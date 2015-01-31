@@ -162,7 +162,7 @@ public class Client {
 		}
 	}
 	
-	public void createGame(Display display, int countPlay, Game game, int indexBodywork, int indexGlass, double x, double y){
+	public void createGame(Display display, int countPlay, Game game, int indexBodywork, int indexGlass, double x, double y, int nitro){
 		initSocket();
 		
 		try {
@@ -174,6 +174,7 @@ public class Client {
 			dos.writeInt(countPlay);
 			dos.writeDouble(x);
 			dos.writeDouble(y);
+			dos.writeInt(nitro);
 			dos.flush();
 			game.setIDplayer(dis.readInt());
 		
@@ -201,7 +202,7 @@ public class Client {
 		return this.games;
 	}
 	
-	public int joinGame(int u, Display display, Game game, int indexBodywork, int indexGlass, double x, double y){
+	public int joinGame(int u, Display display, Game game, int indexBodywork, int indexGlass, double x, double y, int nitro){
 		initSocket();
 		
 		try {			
@@ -213,6 +214,7 @@ public class Client {
 			dos.writeInt(indexGlass);
 			dos.writeDouble(x);
 			dos.writeDouble(y);
+			dos.writeInt(nitro);
 			dos.flush();
 			
 			game.setIDplayer(dis.readInt());
@@ -237,6 +239,15 @@ public class Client {
 	public void rightPush(){
 		try {			
 			os.write(CommandClass.cmdRightPush);
+			os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void nitroPush(){
+		try {			
+			os.write(CommandClass.cmdNitroPush);
 			os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
