@@ -123,7 +123,7 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 				else if(gameUI.getButtonNitro().contains((int)event.getX(), (int)event.getY()))
 				{
 					mythread.myClient.nitroPush();
-					Log.i("asd","nitro");
+					Log.i("asd","nitro.");
 				}
 		}
 		else if(event.getAction() == MotionEvent.ACTION_UP) {
