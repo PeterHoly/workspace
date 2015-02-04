@@ -24,7 +24,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:background="@drawable/connect"
-        android:onClick="saveAppearance"
+        android:onClick="save"
         android:text="@string/save"
         android:textColor="@android:color/darker_gray"
         android:textSize="16sp"

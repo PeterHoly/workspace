@@ -6,5 +6,6 @@ libs/
 
 .classpath
 .project
+.recommenders
 proguard-project.txt
 project.properties

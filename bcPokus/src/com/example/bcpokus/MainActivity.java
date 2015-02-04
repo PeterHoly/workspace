@@ -56,8 +56,6 @@ public class MainActivity extends Activity {
 	public int idGame; 
 	public boolean saveAllCarPerformanceComponents = false;
 	public boolean saveAllCarAppearanceComponents = false;
-	public int viewPerformanceComponents;
-	public int viewAppearanceComponents;
 	
 	int engineComponent;
 	int exhaustComponent;
@@ -272,9 +270,6 @@ public class MainActivity extends Activity {
 		if(!saveAllCarAppearanceComponents){
 			nullComboAppearance();
 		}
-		viewPerformanceComponents = 0;
-		viewAppearanceComponents = 0;
-		
 		performance(v);
 	}
 	
@@ -304,8 +299,7 @@ public class MainActivity extends Activity {
 		wh.setTypeface(tf);		
 		TextView fi = (TextView) findViewById(R.id.textFilter);
 		fi.setTypeface(tf);
-		
-		viewPerformanceComponents++;
+
 	}
 	
 	public void appearance(View v){
@@ -326,16 +320,12 @@ public class MainActivity extends Activity {
 		bo.setTypeface(tf);		
 		TextView gl = (TextView) findViewById(R.id.textGlass);
 		gl.setTypeface(tf);	
-		
-		viewAppearanceComponents++;
 	}
 	
-	public void savePerformance(View v){
+	public void save(View v){
 		saveAllCarPerformanceComponents = saveAllCarPerformanceComponents();
-	}
-	
-	public void saveAppearance(View v){
 		saveAllCarAppearanceComponents = saveAllCarAppearanceComponents();
+		back(v);
 	}
 	
 	public void back(View v){
@@ -505,28 +495,21 @@ public class MainActivity extends Activity {
 	   Spinner spinnerWh = (Spinner) findViewById(R.id.spinnerWheel);
 	   Spinner spinnerNi = (Spinner) findViewById(R.id.spinnerNitro);
 	   
-	   if(!com || viewPerformanceComponents >= 1){
-		   spinnerEn.setSelection(engineCom);
-		   spinnerEx.setSelection(exhaustCom);
-		   spinnerFi.setSelection(filterCom);
-		   spinnerAb.setSelection(absorbersCom);
-		   spinnerWh.setSelection(wheelCom);
-		   spinnerNi.setSelection(nitroCom);
-	   }
-	   else if(com && viewPerformanceComponents < 1){
+	   if(com){
 		   spinnerEn.setSelection(engineComponent);
 		   spinnerEx.setSelection(exhaustComponent);
 		   spinnerFi.setSelection(filterComponent);
 		   spinnerAb.setSelection(absorbersComponent);
 		   spinnerWh.setSelection(wheelComponent);
 		   spinnerNi.setSelection(nitroComponent);
-		   
-		   engineCom = engineComponent;
-		   exhaustCom = exhaustComponent;
-		   filterCom = filterComponent;
-		   absorbersCom = absorbersComponent;
-		   wheelCom = wheelComponent;
-		   nitroCom = nitroComponent;
+	   }
+	   else{
+		   spinnerEn.setSelection(engineCom);
+		   spinnerEx.setSelection(exhaustCom);
+		   spinnerFi.setSelection(filterCom);
+		   spinnerAb.setSelection(absorbersCom);
+		   spinnerWh.setSelection(wheelCom);
+		   spinnerNi.setSelection(nitroCom);
 	   }
    }
    
@@ -536,18 +519,7 @@ public class MainActivity extends Activity {
 	   Spinner spinnerGl = (Spinner) findViewById(R.id.spinnerGlass);
 	   ImageView imageCar = (ImageView) findViewById(R.id.imageCar);
 	   
-	   if(!com || viewAppearanceComponents >= 1){
-		   spinnerBo.setSelection(bodyworkCom);
-		   spinnerGl.setSelection(glassCom);
-		   
-		   String codeB = Bodywork.bodyworks[bodyworkCom].getCode();
-		   String codeG = Glass.glasses[glassCom].getCode();
-		   String code = codeB+codeG;
-			
-		   int resourceID = getResources().getIdentifier(code, "drawable", getPackageName());
-		   imageCar.setImageResource(resourceID);
-	   }
-	   else if(com && viewAppearanceComponents < 1){
+	   if(com){
 		   spinnerBo.setSelection(bodyworkComponent);
 		   spinnerGl.setSelection(glassComponent);
 		   
@@ -557,9 +529,17 @@ public class MainActivity extends Activity {
 			
 		   int resourceID = getResources().getIdentifier(code, "drawable", getPackageName());
 		   imageCar.setImageResource(resourceID);
+	   }
+	   else{
+		   spinnerBo.setSelection(bodyworkCom);
+		   spinnerGl.setSelection(glassCom);
 		   
-		   bodyworkCom = bodyworkComponent;
-		   glassCom = glassComponent;
+		   String codeB = Bodywork.bodyworks[bodyworkCom].getCode();
+		   String codeG = Glass.glasses[glassCom].getCode();
+		   String code = codeB+codeG;
+			
+		   int resourceID = getResources().getIdentifier(code, "drawable", getPackageName());
+		   imageCar.setImageResource(resourceID);
 	   }		
    }
 	

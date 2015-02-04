@@ -493,6 +493,9 @@ public class DesktopMenu {
 		 Listener saveL = new Listener() {
 		      public void handleEvent(Event event) {		    	  
 		    	  saveAllCarComponents = saveAllCarComponents();
+		    	  
+		    	  buildCarComposite.setVisible(false);
+		    	  mainMenuComposite.setVisible(true);
 		      }
 		 };
 		 

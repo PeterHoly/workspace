@@ -31,13 +31,13 @@ public class Player {
 	
 	public Display display;
 	
-	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass, double x, double y, int nitro){
+	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro){
 		socket = s;
 		game = g;
 		ID = g.getCountPlayers();
 		myCar = new Car(150, 100, Bodywork.bodyworks[indexBodywork].getWidth(), Bodywork.bodyworks[indexGlass].getHeight());
-		myCar.getTrajectory().setXwithComponent(x);
-		myCar.getTrajectory().setYwithComponent(y);
+		myCar.getTrajectory().setXwithComponent(xSpeed);
+		myCar.getTrajectory().setYwithComponent(ySpeed);
 		display = new Display(0, 0, width, height);
 		bodyworkIndex = indexBodywork;
 		glassIndex = indexGlass;
