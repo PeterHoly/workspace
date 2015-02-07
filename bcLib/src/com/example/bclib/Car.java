@@ -11,8 +11,10 @@ import com.example.bclib.components.Wheel;
 
 public class Car extends Vehicle {
 
-	private double HP;
+	private int hp;
 	private double angle2;
+	private int crashImg;
+	private double xCrash,yCrash;
 	
 	//celkova rychlost = y
 	private Engine engine = Engine.engines[0];
@@ -25,7 +27,6 @@ public class Car extends Vehicle {
 	//zrychleni ze startu po dobu 2s
 	private Filter filter = Filter.filters[0];
 	
-	//po zapnuti zrychleni 2s, pak nelze 15s zapnout
 	private Nitro nitro = Nitro.nitrous[0];
 	
 	//vzhled auta
@@ -35,12 +36,12 @@ public class Car extends Vehicle {
 	public Car(double x, double y, double width, double height) {
 		super(x , y, width, height);
 		angle = Math.PI/2;
-		HP = 3;
+		hp = 10;
 		angle2 = 0;
 	}
 	
 	public void reductionHP(){
-		this.HP -= 1;
+		this.hp -= 1;
 	}
 	
 	public boolean setPositionAndAngle(double angle2){
@@ -139,5 +140,46 @@ public class Car extends Vehicle {
 	public void setTrajectory() {
 		this.trajectory.setXwithComponent((engine.getValue()+exhaust.getValue())/2);
 		this.trajectory.setYwithComponent((absorbers.getValue()+wheel.getValue())/2);
+	}
+	
+	public int getHp(){
+		return this.hp;
+	}
+	
+	public void setHp(int hp){
+		this.hp = hp;
+	}
+	
+	int number;
+	public int getCrashImg(int crashCar){
+		
+		if(crashCar%3 == 0){
+		
+			if(this.crashImg == 7){
+				number = -1;
+				return number;
+			}
+			
+			number = this.crashImg;
+			
+			if(number == 0){
+				xCrash = getX();
+				yCrash = getY();
+			}
+
+			this.crashImg++;
+			return number;
+		}
+		else{
+			return number;
+		}
+	}
+	
+	public double getxCrash(){
+		return xCrash;
+	}
+		
+	public double getyCrash() {
+		return yCrash;
 	}
 }

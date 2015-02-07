@@ -11,6 +11,7 @@ import com.example.bclib.Car;
 import com.example.bclib.CommandClass;
 import com.example.bclib.Display;
 import com.example.bclib.components.Bodywork;
+import com.example.bclib.components.Filter;
 import com.example.bclib.components.Nitro;
 
 public class Player {
@@ -26,18 +27,20 @@ public class Player {
 	public int nitroIndex;
 	public boolean nitrous = false;
 	public boolean nitroIsUsed = true;
+	public int i=0;
 	
 	public Car myCar;
 	
 	public Display display;
 	
-	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro){
+	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro, int filter){
 		socket = s;
 		game = g;
 		ID = g.getCountPlayers();
 		myCar = new Car(150, 100, Bodywork.bodyworks[indexBodywork].getWidth(), Bodywork.bodyworks[indexGlass].getHeight());
 		myCar.getTrajectory().setXwithComponent(xSpeed);
 		myCar.getTrajectory().setYwithComponent(ySpeed);
+		myCar.getTrajectory().setFilter(Filter.filters[filter].getValue());
 		display = new Display(0, 0, width, height);
 		bodyworkIndex = indexBodywork;
 		glassIndex = indexGlass;
@@ -73,6 +76,7 @@ public class Player {
 						dos.writeDouble(p.myCar.getX());
 						dos.writeDouble(p.myCar.getY());
 						dos.writeDouble(p.myCar.getAngle());
+						dos.writeInt(p.myCar.getHp());
 					}
 				}
 				else if(command==CommandClass.cmdGetPos)

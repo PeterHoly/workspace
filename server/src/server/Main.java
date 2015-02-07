@@ -51,12 +51,11 @@ public class Main {
 					double ySpeed = dis.readDouble();
 					double xSpeed = dis.readDouble();
 					int nitro = dis.readInt();
-					
-					System.out.println("Y je: "+ySpeed);
+					int filter = dis.readInt();
 				
 					myGame.setCountPlay(countPlay);
 					
-					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro);
+					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter);
 					
 					dos.writeInt(p.ID);
 					dos.flush();
@@ -111,10 +110,9 @@ public class Main {
 					double ySpeed = dis.readDouble();
 					double xSpeed = dis.readDouble();
 					int nitro = dis.readInt();
+					int filter = dis.readInt();
 					
-					System.out.println("Y je: "+ySpeed);
-					
-					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro);
+					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter);
 					myGame.addPlayer(p);
 					
 					dos.writeInt(p.ID);

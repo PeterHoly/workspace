@@ -103,7 +103,7 @@ public class Client {
 		return serverIDiter;
 	}
 	
-	public void getPoses(List <Car> cars){
+	public void getPosesAndHp(List <Car> cars){
 		try {
 			os.write(CommandClass.cmdGetPoses);
 			dos.flush();
@@ -112,10 +112,12 @@ public class Client {
 				double positionX = dis.readDouble();
 				double positionY = dis.readDouble();
 				double angle = dis.readDouble();
+				int hp = dis.readInt();
 				
 				car.setX(positionX);
 				car.setY(positionY);
 				car.setAngle(angle);
+				car.setHp(hp);
 			}
 			
 		} catch (IOException e) {
@@ -162,7 +164,7 @@ public class Client {
 		}
 	}
 	
-	public void createGame(Display display, int countPlay, Game game, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro){
+	public void createGame(Display display, int countPlay, Game game, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro, int filter){
 		initSocket();
 		
 		try {
@@ -175,6 +177,7 @@ public class Client {
 			dos.writeDouble(ySpeed);
 			dos.writeDouble(xSpeed);
 			dos.writeInt(nitro);
+			dos.writeInt(filter);
 			dos.flush();
 			game.setIDplayer(dis.readInt());
 		
@@ -202,7 +205,7 @@ public class Client {
 		return this.games;
 	}
 	
-	public int joinGame(int u, Display display, Game game, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro){
+	public int joinGame(int u, Display display, Game game, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro, int filter){
 		initSocket();
 		
 		try {			
@@ -215,6 +218,7 @@ public class Client {
 			dos.writeDouble(ySpeed);
 			dos.writeDouble(xSpeed);
 			dos.writeInt(nitro);
+			dos.writeInt(filter);
 			dos.flush();
 			
 			game.setIDplayer(dis.readInt());

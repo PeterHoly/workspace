@@ -16,7 +16,6 @@ public class Game {
 	private int IDiterace;
 	private int countPlayers;
 	private Map map;
-	private int i=0;
 	
 	public Game(int id){
 		this.ID=id;
@@ -41,15 +40,16 @@ public class Game {
 					double col = Collision.TestCollision(map, p.display, p.myCar);
 					if(col != -1){
 						p.myCar.setAngle2(col);
+						p.myCar.reductionHP();
 					}
 					
 					if(p.nitrous && p.nitroIsUsed){
-						if(i==200){
+						if(p.i==200){
 							p.myCar.getTrajectory().setYwithComponent(1/Nitro.nitrous[p.nitroIndex].getValue());
-							i=0;
+							p.i=0;
 							p.nitroIsUsed = false;
 						}
-						i++;
+						p.i++;
 					}
 				}
 				

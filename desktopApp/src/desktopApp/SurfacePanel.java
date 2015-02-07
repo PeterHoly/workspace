@@ -22,6 +22,7 @@ public class SurfacePanel implements PaintListener {
 	private Shell shell;
 	private Display display;
 	private DesktopMenu menu;
+	private boolean nitroPressed = false;
 	private Game myGame = new Game(new com.example.bclib.Display(0,0,314,429-31));
 	
 	public SurfacePanel() {
@@ -74,6 +75,11 @@ public class SurfacePanel implements PaintListener {
 							//myGame.getMap().car.setIncrement(-0.09f, 0.79f);
 							myThread.myClient.rightPush();
 						}
+						else if(e.keyCode == SWT.SPACE){
+							//myGame.getMap().car.setIncrement(-0.09f, 0.79f);
+							myThread.myClient.nitroPush();
+							nitroPressed = true;
+						}
 					}
 				
 				}
@@ -95,18 +101,25 @@ public class SurfacePanel implements PaintListener {
 	Map m = myGame.getMap();
 	com.example.bclib.Display d = myGame.getDisplay();
 	Render r = new Render(d);
+	int crashCar = 0;
 	
 	public void paintControl(PaintEvent e) {
 
 		e.gc.setLineAttributes(new LineAttributes(1,SWT.CAP_FLAT,SWT.JOIN_MITER));
 		
 		for(Car c : m.cars){
-			r.draw(c, e,shell);
+			r.draw(c, e, shell, crashCar);
 		}
 		
 		for (Obstacle o : m.obstacles){
-			r.draw(o, e,shell);
+			r.draw(o, e, shell, crashCar);
 		}
+		
+		int idPlayer = myGame.getIDplayer();
+		r.drawImg(e, shell, nitroPressed, myGame.getMap().cars.get(idPlayer).getHp());
+		
+		
+		crashCar++;
 	}
 }
 

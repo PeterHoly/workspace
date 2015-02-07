@@ -10,6 +10,7 @@ public class GameUI {
 	private Rect buttonNitro;
 	private String text = "";
 	private Display d;
+	public String[] hp = {"HP 0","HP 1","HP 2","HP 3","HP 4","HP 5","HP 6","HP 7","HP 8","HP 9","HP 10"};
 	
 	public GameUI(Display d){
 		

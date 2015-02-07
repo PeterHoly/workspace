@@ -131,7 +131,7 @@ public class MainActivity extends Activity {
 		Thread th = new Thread(new Runnable(){
 			@Override
 			public void run() {
-				myClient.createGame(myGame.getDisplay(), u, myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent);
+				myClient.createGame(myGame.getDisplay(), u, myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent, filterComponent);
 			}
 		});
 		th.start();
@@ -157,7 +157,7 @@ public class MainActivity extends Activity {
 					public void run() {
 						setContentView(R.layout.game_layout);
 						r = (RelativeLayout) findViewById(R.id.layout_game);
-						SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame, getPackageName());
+						SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame, getPackageName(), getAssets());
 						r.addView(sp);
 						sp.Start();
 					}
@@ -224,7 +224,7 @@ public class MainActivity extends Activity {
 		
 		int u = gameId;
   	  
-  	  	int cars = myClient.joinGame(u, myGame.getDisplay(), myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent);
+  	  	int cars = myClient.joinGame(u, myGame.getDisplay(), myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent, filterComponent);
   	  	myGame.createCars(cars);
   	  	setComponentsToCar(myGame);
 		  
@@ -242,7 +242,7 @@ public class MainActivity extends Activity {
 					public void run() {
 						setContentView(R.layout.game_layout);
 						r = (RelativeLayout) findViewById(R.id.layout_game);
-						SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame, getPackageName());
+						SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame, getPackageName(), getAssets());
 						r.addView(sp);
 						sp.Start();
 					}

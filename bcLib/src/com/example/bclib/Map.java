@@ -119,7 +119,7 @@ public class Map {
 	
 	public void setAllCars(Game myGame, Client client){
 		synchronized (client) {
-			client.getPoses(myGame.getMap().cars);
+			client.getPosesAndHp(myGame.getMap().cars);
 		}
 	}
 }

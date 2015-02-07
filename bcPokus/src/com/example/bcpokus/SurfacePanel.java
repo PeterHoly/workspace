@@ -8,6 +8,7 @@ import com.example.bclib.Map;
 import com.example.bclib.Obstacle;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
@@ -26,17 +27,21 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	private Display d;
 	private Render r;
 	private String packageName;
+	private boolean nitroPressed = false;
+	private AssetManager am;
 	
-	public SurfacePanel(Context context, Client myClient, Game myGame, String packageName) {
+	public SurfacePanel(Context context, Client myClient, Game myGame, String packageName, AssetManager am) {
 		super(context);
 		Log.i("vypis", "konstruktor");
 		this.myClient = myClient;
 		this.myGame = myGame;
 		this.m = myGame.getMap();
 		this.d = myGame.getDisplay();
-		this.r = new Render(d);
+		this.am = am;
+		this.r = new Render(d, this.am);
 		this.gameUI = new GameUI(d);
 		this.packageName = packageName;
+		
 		
 		getHolder().addCallback(this);
 		
@@ -123,6 +128,7 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 				else if(gameUI.getButtonNitro().contains((int)event.getX(), (int)event.getY()))
 				{
 					mythread.myClient.nitroPush();
+					nitroPressed = true;
 					Log.i("asd","nitro");
 				}
 		}
@@ -134,22 +140,35 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		return true;
 	}
 	
+	int crashCar = 0;
+	
 	void doDraw(Canvas canvas) throws InterruptedException
 	{
 		canvas.drawColor(Color.WHITE);
 		
 		for(Car c : m.cars){
-			r.draw(c, canvas, getResources(), this.packageName);
+			r.draw(c, canvas, getResources(), this.packageName, crashCar);
 		}
 		
 		for (Obstacle o : m.obstacles){
-			r.draw(o, canvas, getResources(), this.packageName);
+			r.draw(o, canvas, getResources(), this.packageName, crashCar);
 		}
 		
 		r.drawButton(gameUI.getButtonLeft(), canvas, getResources(), this.packageName, "left");
 		r.drawButton(gameUI.getButtonRight(), canvas, getResources(), this.packageName, "right");
-		r.drawButton(gameUI.getButtonNitro(), canvas, getResources(), this.packageName, "nitro");
-		r.drawText(gameUI.getText(), canvas);
+		
+		if(nitroPressed){
+			r.drawButton(gameUI.getButtonNitro(), canvas, getResources(), this.packageName, "nitropressed");
+		}
+		else{
+			r.drawButton(gameUI.getButtonNitro(), canvas, getResources(), this.packageName, "nitro");
+		}
+		
+		int idPlayer = myGame.getIDplayer();
+		r.drawHp(gameUI, canvas, myGame.getMap().cars.get(idPlayer).getHp());
+		
+		
+		crashCar++;
 	}
 
 }
