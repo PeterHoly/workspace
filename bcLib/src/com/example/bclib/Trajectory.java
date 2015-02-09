@@ -57,4 +57,9 @@ public class Trajectory {
 	public void setFilter(double filter){
 		this.filter = filter;
 	}
+	
+	public void stop(){
+		this.x = 0;
+		this.y = 0;
+	}
 }

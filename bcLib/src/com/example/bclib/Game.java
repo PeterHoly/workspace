@@ -21,7 +21,8 @@ public class Game {
 	
 	public void createCars(int count){
 		for(int i=0; i<count; i++){
-			map.cars.add(new Car(150, 100, 40, 20));
+			//pozice a velikosti auta nejsou podstatne
+			map.cars.add(new Car(100, 100, 40, 20));
 		}
 	}
 	

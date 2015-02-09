@@ -33,11 +33,11 @@ public class Player {
 	
 	public Display display;
 	
-	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro, int filter){
+	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro, int filter, int order){
 		socket = s;
 		game = g;
 		ID = g.getCountPlayers();
-		myCar = new Car(150, 100, Bodywork.bodyworks[indexBodywork].getWidth(), Bodywork.bodyworks[indexGlass].getHeight());
+		myCar = new Car(100+50*order, 100, Bodywork.bodyworks[indexBodywork].getWidth(), Bodywork.bodyworks[indexGlass].getHeight());
 		myCar.getTrajectory().setXwithComponent(xSpeed);
 		myCar.getTrajectory().setYwithComponent(ySpeed);
 		myCar.getTrajectory().setFilter(Filter.filters[filter].getValue());
@@ -77,6 +77,7 @@ public class Player {
 						dos.writeDouble(p.myCar.getY());
 						dos.writeDouble(p.myCar.getAngle());
 						dos.writeInt(p.myCar.getHp());
+						dos.writeBoolean(p.myCar.getnitroActived());
 					}
 				}
 				else if(command==CommandClass.cmdGetPos)
@@ -115,6 +116,8 @@ public class Player {
 					if(!nitrous){
 						nitrous = true;
 						myCar.getTrajectory().setYwithComponent(Nitro.nitrous[nitroIndex].getValue());
+						
+						myCar.setnitroActived(true);
 					}
 				}
 				else if(command==CommandClass.cmdRelease)

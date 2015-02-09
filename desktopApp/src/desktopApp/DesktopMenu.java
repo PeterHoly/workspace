@@ -34,7 +34,9 @@ import com.example.bclib.components.Wheel;
 
 public class DesktopMenu {
 	
-	public int idGame; 
+	public String[] textKomponents = {"increase the speed of the car","increase control car","increase acceleration car","instant acceleration car \n \t  - push space"};
+	
+	public int idGame;
 	public boolean saveAllCarComponents = false;
 	
 	int engineComponent;
@@ -63,7 +65,8 @@ public class DesktopMenu {
     Spinner countPlayers;
     Label writeCountPlayers;
     Label chooseGame;
-   
+    Label textKomp;
+    
     Label engine;
     Label exhaust;
     Label filter;
@@ -233,6 +236,13 @@ public class DesktopMenu {
 	  	//Vykon auta------
 	  	
 	  	Font perfAndAppeFont = new Font(display, new FontData("Capture it", 11, SWT.NORMAL ));
+	  	Font textComponents = new Font(display, new FontData("Capture it", 11, SWT.ITALIC ));
+	  	
+	  	textKomp = new Label(performanceComposite, SWT.NULL);
+	  	textKomp.setSize(250, 40);
+	  	textKomp.setLocation(50, 60);
+	  	textKomp.setFont(textComponents);
+	  	textKomp.setForeground(colorSilver2);
 	  	
 	  	performance = new Button(buildCarComposite,SWT.NULL);
 	  	performance.setSize(125, 40);
@@ -519,6 +529,54 @@ public class DesktopMenu {
 		      }
 		 };
 		 
+		 SelectionListener engineAndExhaustSelectionL = new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				textKomp.setText(textKomponents[0]);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		};
+		
+		SelectionListener absorberAndWheelSelectionL = new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				textKomp.setText(textKomponents[1]);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		};
+		
+		SelectionListener filterSelectionL = new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				textKomp.setText(textKomponents[2]);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		};
+		
+		SelectionListener nitroSelectionL = new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				textKomp.setText(textKomponents[3]);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		};
+		 
 		 SelectionListener bodyworkSelectionL = new SelectionListener() {
 
 			@Override
@@ -613,7 +671,15 @@ public class DesktopMenu {
 		backJoinGame.addPaintListener(backgroundButtonImgL);
 		backBuildCar.addPaintListener(backgroundButtonImgL);
 		
-				
+		engineC.addSelectionListener(engineAndExhaustSelectionL);
+		exhaustC.addSelectionListener(engineAndExhaustSelectionL);
+		
+		filterC.addSelectionListener(filterSelectionL);
+		nitroC.addSelectionListener(nitroSelectionL);
+		
+		wheelC.addSelectionListener(absorberAndWheelSelectionL);
+		absorberC.addSelectionListener(absorberAndWheelSelectionL);
+		
 		bodyworkC.addSelectionListener(bodyworkSelectionL);
 		glassC.addSelectionListener(glassSelectionL);
 		

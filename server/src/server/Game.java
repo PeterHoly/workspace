@@ -48,6 +48,7 @@ public class Game {
 							p.myCar.getTrajectory().setYwithComponent(1/Nitro.nitrous[p.nitroIndex].getValue());
 							p.i=0;
 							p.nitroIsUsed = false;
+							p.myCar.setnitroActived(false);
 						}
 						p.i++;
 					}
@@ -71,6 +72,9 @@ public class Game {
 							double angle = players.get(i).myCar.getAngle();
 							players.get(i).myCar.setAngle(players.get(j).myCar.getAngle());
 							players.get(j).myCar.setAngle(angle);
+							
+							players.get(i).myCar.reductionHP();
+							players.get(j).myCar.reductionHP();
 						}
 					}
 				}

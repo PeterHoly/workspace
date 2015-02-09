@@ -167,5 +167,13 @@
         android:layout_alignLeft="@+id/spinnerExhaust"
         android:layout_above="@+id/spinnerExhaust"
         android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/textComponent"
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:layout_above="@+id/spinnerEngine"
+        android:layout_alignLeft="@+id/textEngine"
+        android:layout_marginBottom="5dp" />
  
 </RelativeLayout>

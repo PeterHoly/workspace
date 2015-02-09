@@ -14,7 +14,7 @@ public class Car extends Vehicle {
 	private int hp;
 	private double angle2;
 	private int crashImg;
-	private double xCrash,yCrash;
+	private boolean nitroActived = false;
 	
 	//celkova rychlost = y
 	private Engine engine = Engine.engines[0];
@@ -41,7 +41,13 @@ public class Car extends Vehicle {
 	}
 	
 	public void reductionHP(){
-		this.hp -= 1;
+		if(this.hp > 0){
+			this.hp -= 1;
+		}
+		
+		if(this.hp == 0){
+			this.trajectory.stop();
+		}
 	}
 	
 	public boolean setPositionAndAngle(double angle2){
@@ -153,7 +159,7 @@ public class Car extends Vehicle {
 	int number;
 	public int getCrashImg(int crashCar){
 		
-		if(crashCar%3 == 0){
+		if(crashCar%2 == 0){
 		
 			if(this.crashImg == 7){
 				number = -1;
@@ -161,11 +167,6 @@ public class Car extends Vehicle {
 			}
 			
 			number = this.crashImg;
-			
-			if(number == 0){
-				xCrash = getX();
-				yCrash = getY();
-			}
 
 			this.crashImg++;
 			return number;
@@ -175,11 +176,11 @@ public class Car extends Vehicle {
 		}
 	}
 	
-	public double getxCrash(){
-		return xCrash;
+	public boolean getnitroActived(){
+		return this.nitroActived;
 	}
-		
-	public double getyCrash() {
-		return yCrash;
+	
+	public void setnitroActived(boolean actived){
+		this.nitroActived = actived;
 	}
 }

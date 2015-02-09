@@ -1,5 +1,7 @@
 package com.example.bcpokus;
 
+import java.util.Random;
+
 import com.example.bclib.Car;
 import com.example.bclib.Display;
 import com.example.bclib.MapObject;
@@ -30,7 +32,15 @@ public class Render {
 	private Paint p;
 	private Paint p2;
 	private String[] imagesCarCrash = {"explosion1", "explosion2", "explosion3", "explosion4", "explosion5", "explosion6", "explosion7"};
+	private String[] imagesCarNitro = {"redfire1", "redfire2", "redfire3", "redfire4", "redfire5", "redfire6", "redfire7", "redfire8", 
+			"redfire9", "redfire10", "redfire11", "redfire12", "redfire13", "redfire14", "redfire15", "redfire16", "redfire17", 
+			"redfire18", "redfire19", "redfire20", "redfire21", "redfire22", "redfire23", "redfire24"};
+	
 	public int numberImgCrash;
+	private double widthFire = 17;
+	private double heightFire = 10;
+	
+	private double widthAndheightExplosion = 32;
 	
 	public Render(Display d, AssetManager am)
 	{
@@ -64,7 +74,7 @@ public class Render {
 		else
 		{
 			
-			if(((Car)mo).getHp() == 0){
+			if(((Car)mo).getHp() <= 0){
 				
 				numberImgCrash = ((Car)mo).getCrashImg(crashCar);
 				
@@ -74,13 +84,29 @@ public class Render {
 					   
 					Drawable drawable = res.getDrawable(resourceID);
 					
-					drawable.setBounds((int)mo.getLeft(), (int)myDisplay.conversionY(mo.getTop()), (int)(mo.getLeft()+(mo.getTop()-mo.getBottom())), (int)myDisplay.conversionY(mo.getBottom()));
+					drawable.setBounds((int)(mo.getRight()-mo.getWidth()/2-widthAndheightExplosion/2), (int)(myDisplay.conversionY(mo.getBottom() + mo.getHeight()/2 + widthAndheightExplosion/2)),(int)(mo.getRight()-mo.getWidth()/2+widthAndheightExplosion/2),(int)(myDisplay.conversionY(mo.getBottom() + mo.getHeight()/2 - widthAndheightExplosion/2)));
+					
 					myCanvas.save();
 					drawable.draw(myCanvas);
 					myCanvas.restore();
 				}
 			}
 			else{
+				
+				if(((Car)mo).getnitroActived()){
+					
+					Random rand = new Random();
+					int  n = rand.nextInt(23);
+					int resourceID = res.getIdentifier(imagesCarNitro[n], "drawable", packageName);
+					   
+					Drawable drawable = res.getDrawable(resourceID);
+					drawable.setBounds((int)(mo.getLeft()-widthFire), (int)myDisplay.conversionY(mo.getTop()-mo.getHeight()/2+heightFire/2), (int)mo.getLeft(), (int)myDisplay.conversionY(mo.getTop()-mo.getHeight()/2-heightFire/2));
+					myCanvas.save();
+					myCanvas.rotate((float) Math.toDegrees(-mo.getAngle()),(float)mo.getX(),(float)myDisplay.conversionY(mo.getY()));
+					drawable.draw(myCanvas);
+					myCanvas.restore();
+				}
+				
 				//car = (Car) mo;
 				//myCanvas.drawRect((float)mo.getLeft(), (float)myDisplay.conversionY(mo.getTop()), (float)mo.getRight(), (float)myDisplay.conversionY(mo.getBottom()), p2);
 	

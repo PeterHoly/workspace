@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.app.NotificationManagerCompat;
 import android.text.AndroidCharacter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -56,6 +57,7 @@ public class MainActivity extends Activity {
 	public int idGame; 
 	public boolean saveAllCarPerformanceComponents = false;
 	public boolean saveAllCarAppearanceComponents = false;
+	public String[] textComponents = {"increase the speed of the car","increase control car","increase acceleration car","instant acceleration car"};
 	
 	int engineComponent;
 	int exhaustComponent;
@@ -565,6 +567,12 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				engineCom = spinnerEn.getSelectedItemPosition();
+						
+				Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/capture_it.ttf");
+				TextView textCompo = (TextView) findViewById(R.id.textComponent);
+				textCompo.setTypeface(tf, Typeface.ITALIC);
+				textCompo.setTextSize(16);
+				textCompo.setText(textComponents[0]);
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
@@ -577,6 +585,12 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				exhaustCom = spinnerEx.getSelectedItemPosition();	
+				
+				Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/capture_it.ttf");
+				TextView textCompo = (TextView) findViewById(R.id.textComponent);
+				textCompo.setTypeface(tf, Typeface.ITALIC);
+				textCompo.setTextSize(16);
+				textCompo.setText(textComponents[0]);
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
@@ -589,6 +603,12 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				filterCom = spinnerFi.getSelectedItemPosition();	
+				
+				Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/capture_it.ttf");
+				TextView textCompo = (TextView) findViewById(R.id.textComponent);
+				textCompo.setTypeface(tf, Typeface.ITALIC);
+				textCompo.setTextSize(16);
+				textCompo.setText(textComponents[2]);
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
@@ -602,6 +622,12 @@ public class MainActivity extends Activity {
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				absorbersCom = spinnerAb.getSelectedItemPosition();
 				
+				Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/capture_it.ttf");
+				TextView textCompo = (TextView) findViewById(R.id.textComponent);
+				textCompo.setTypeface(tf, Typeface.ITALIC);
+				textCompo.setTextSize(16);
+				textCompo.setText(textComponents[1]);
+				
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
@@ -614,6 +640,12 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				wheelCom = spinnerWh.getSelectedItemPosition();
+				
+				Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/capture_it.ttf");
+				TextView textCompo = (TextView) findViewById(R.id.textComponent);
+				textCompo.setTypeface(tf, Typeface.ITALIC);
+				textCompo.setTextSize(16);
+				textCompo.setText(textComponents[1]);
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
@@ -626,6 +658,12 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				nitroCom = spinnerNi.getSelectedItemPosition();
+				
+				Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/capture_it.ttf");
+				TextView textCompo = (TextView) findViewById(R.id.textComponent);
+				textCompo.setTypeface(tf, Typeface.ITALIC);
+				textCompo.setTextSize(16);
+				textCompo.setText(textComponents[3]);
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {

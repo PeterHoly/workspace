@@ -113,11 +113,13 @@ public class Client {
 				double positionY = dis.readDouble();
 				double angle = dis.readDouble();
 				int hp = dis.readInt();
+				boolean nitroActived = dis.readBoolean();
 				
 				car.setX(positionX);
 				car.setY(positionY);
 				car.setAngle(angle);
 				car.setHp(hp);
+				car.setnitroActived(nitroActived);
 			}
 			
 		} catch (IOException e) {

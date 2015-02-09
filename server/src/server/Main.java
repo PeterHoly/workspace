@@ -55,7 +55,7 @@ public class Main {
 				
 					myGame.setCountPlay(countPlay);
 					
-					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter);
+					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter, myGame.getCountPlayers());
 					
 					dos.writeInt(p.ID);
 					dos.flush();
@@ -112,7 +112,7 @@ public class Main {
 					int nitro = dis.readInt();
 					int filter = dis.readInt();
 					
-					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter);
+					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter, myGame.getCountPlayers());
 					myGame.addPlayer(p);
 					
 					dos.writeInt(p.ID);
