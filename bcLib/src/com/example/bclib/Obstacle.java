@@ -4,9 +4,8 @@ package com.example.bclib;
 public class Obstacle extends MapObject {
 	
 	private double x2,y2;
-	private double order;
 
-	public Obstacle(double x, double y, double x2, double y2, double order) {
+	public Obstacle(double x, double y, double x2, double y2) {
 		super(x, y, 0, 0);
 		
 		this.x2 = x2;
@@ -19,10 +18,6 @@ public class Obstacle extends MapObject {
 	
 	public double getY2(){
 		return this.y2;
-	}
-	
-	public double getOrder(){
-		return this.order;
 	}
 	
 	public void setX2(double x2){

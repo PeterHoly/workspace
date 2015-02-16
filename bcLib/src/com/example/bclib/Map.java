@@ -22,29 +22,29 @@ public class Map {
 		//y - niz
 		//y2 - vys
 		
-		obstacles.add(new Obstacle(15, 30, 40, 170, 1));
-		obstacles.add(new Obstacle(215, 30, 240, 170, 1));
+		obstacles.add(new Obstacle(15, 30, 40, 170));
+		obstacles.add(new Obstacle(215, 30, 240, 170));
 		
-		obstacles.add(new Obstacle(40, 170, 30, 370, 2));
-		obstacles.add(new Obstacle(240, 170, 230, 370, 2));
+		obstacles.add(new Obstacle(40, 170, 30, 370));
+		obstacles.add(new Obstacle(240, 170, 230, 370));
 		
-		obstacles.add(new Obstacle(30, 370, 15, 570, 3));
-		obstacles.add(new Obstacle(230, 370, 215, 570, 3));
+		obstacles.add(new Obstacle(30, 370, 15, 570));
+		obstacles.add(new Obstacle(230, 370, 215, 570));
 		
-		obstacles.add(new Obstacle(15, 570, 40, 770, 4));
-		obstacles.add(new Obstacle(215, 570, 240, 770, 4));
+		obstacles.add(new Obstacle(15, 570, 40, 770));
+		obstacles.add(new Obstacle(215, 570, 240, 770));
 		
-		obstacles.add(new Obstacle(40, 770, 40, 970, 5));
-		obstacles.add(new Obstacle(240, 770, 240, 970, 5));
+		obstacles.add(new Obstacle(40, 770, 40, 970));
+		obstacles.add(new Obstacle(240, 770, 240, 970));
 		
-		obstacles.add(new Obstacle(40, 970, 30, 1270, 6));
-		obstacles.add(new Obstacle(240, 970, 230, 1270, 6));
+		obstacles.add(new Obstacle(40, 970, 30, 1270));
+		obstacles.add(new Obstacle(240, 970, 230, 1270));
 		
-		obstacles.add(new Obstacle(30, 1270, 15, 1470, 7));
-		obstacles.add(new Obstacle(230, 1270, 215, 1470, 7));
+		obstacles.add(new Obstacle(30, 1270, 15, 1470));
+		obstacles.add(new Obstacle(230, 1270, 215, 1470));
 		
-		obstacles.add(new Obstacle(15, 1470, 40, 1670, 8));
-		obstacles.add(new Obstacle(215, 1470, 240, 1670, 8));
+		obstacles.add(new Obstacle(15, 1470, 40, 1670));
+		obstacles.add(new Obstacle(215, 1470, 240, 1670));
 
 	}
 	
