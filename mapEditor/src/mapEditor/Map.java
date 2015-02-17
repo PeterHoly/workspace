@@ -75,13 +75,11 @@ public class Map {
 	Image road1BlokImage;
 	
 	Combo activateArea;
-	String [] areas = {"desertBlok","desert1Blok","greenBlok","roadBlok","road1Blok"};
+	String [] areas = {"desertBlokSmall","desert1BlokSmall","greenBlokSmall","roadBlokSmall","road1BlokSmall"};
 	Image [] imagesArea = new Image[5];
 	
 	Combo activateBarrier;
-	String [] barriers = {"barriers","barriers1","barriers2"};
 	String [] barriersSmall = {"barriersSmall","barriers1Small","barriers2Small"};
-	Image [] imagesBarriers = new Image[3];
 	Image [] imagesBarriersSmall = new Image[3];
 	
 	Composite sc;
@@ -99,14 +97,15 @@ public class Map {
 	
 	int[][] imgGrid = new int[row][col];
 	List<Obstacle> obstacleList = new ArrayList<Obstacle>();
-	
 	List<Label> barriersList = new ArrayList<Label>();
 	
 	boolean mouseClick = false;
+	boolean changePosition = false;
+	
+	int xChange,yChange;
 	
 	int indexArea;
 	int indexBarrier;
-	
 	
 	public Map(){
 		
@@ -120,8 +119,7 @@ public class Map {
 			imagesArea[i] = new Image(display, "images/"+areas[i]+".png");
 		}
 		
-		for(int i=0; i<barriers.length; i++){
-			imagesBarriers[i] = new Image(display, "images/"+barriers[i]+".png");
+		for(int i=0; i<barriersSmall.length; i++){
 			imagesBarriersSmall[i] = new Image(display, "images/"+barriersSmall[i]+".png");
 		}
 		
@@ -137,13 +135,21 @@ public class Map {
 	        public void paintControl(PaintEvent e){
 	            Rectangle clientArea = child.getClientArea();
 	            
-	            if(e.width == rect){
+	            //if(e.width == rect){
+	            if(mouseClick){
 		            e.gc.drawImage(imagesArea[indexArea], 0, 0, imagesArea[indexArea].getBounds().width, imagesArea[indexArea].getBounds().height, e.x, e.y, rect, rect);
 	            }
-	            else if(e.width == barrierWidth){
-	            	//e.gc.drawImage(imagesBarriers[indexBarrier], 0, 0, imagesBarriers[indexBarrier].getBounds().width, imagesBarriers[indexBarrier].getBounds().height, e.x, e.y, barrierWidth, barrierHeight);
-	            }
 	            
+	            if(changePosition){
+	            	for(int i=0; i<row; i++){
+		        		for(int j=0; j<col; j++){	
+		        			if(imgGrid[i][j] != -1){
+		        				e.gc.drawImage(imagesArea[imgGrid[i][j]], i*rect, j*rect);
+		        			}
+		        		}
+		        	}
+	            }
+
             	for(int i=0	; i<clientArea.width;i++){
 	            	e.gc.drawLine(i*rect,0,i*rect,clientArea.height);
 	            }
@@ -175,11 +181,10 @@ public class Map {
 					
 					child.redraw(positionX, positionY, rect, rect, false);
 				}
-				else{
-					//logika souradnice
+				else if(mapFolder.getSelectionIndex() == 1){
 					obstacleList.add(new Obstacle(e.x+barrierWidth/2, e.y, e.x+barrierWidth/2, e.y+barrierHeight));
 					
-					Label l = new Label(child, SWT.NONE);
+					final Label l = new Label(child, SWT.NONE);
 					l.setBounds(e.x, e.y, barrierWidth, barrierHeight);
 					l.setBackgroundImage(imagesBarriersSmall[indexBarrier]);
 					
@@ -187,16 +192,19 @@ public class Map {
 						
 						@Override
 						public void mouseUp(MouseEvent e) {
+							changePosition = false;
 						}
 						
 						@Override
 						public void mouseDown(MouseEvent e) {
+							changePosition = true;
+							
+							xChange = e.x;
+							yChange = e.y;
 						}
 						
 						@Override
 						public void mouseDoubleClick(MouseEvent e) {
-							//zmena uhlu
-							System.out.println("ok");
 						}
 					});
 					
@@ -204,26 +212,17 @@ public class Map {
 						
 						@Override
 						public void mouseMove(MouseEvent e) {
-							//pohyb do stran meni uhel
+							
+							if(changePosition){
+								l.setLocation(l.getLocation().x+e.x-xChange, l.getLocation().y+e.y-yChange);
+								child.redraw();
+							}
 						}
 					});
-					
 					barriersList.add(l);
-					
-					//child.redraw(e.x, e.y, barrierWidth, barrierHeight, false);
-					
-					/*
-					Transform t = new Transform(e.display);
-					t.translate();
-					t.rotate();
-					t.translate();
-					
-					e.gc.setTransform(t);
-					*/
 				}
-				
 			}
-			
+
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 			}
@@ -283,6 +282,7 @@ public class Map {
 		activateArea.add("green part");
 		activateArea.add("road part gray");
 		activateArea.add("road part dark");
+		activateArea.select(0);
 		
 		activateArea.addSelectionListener(new SelectionListener() {
 			
@@ -303,6 +303,7 @@ public class Map {
 		activateBarrier.add("red and white");
 		activateBarrier.add("silver");
 		activateBarrier.add("black and yellow");
+		activateBarrier.select(0);
 		
 		activateBarrier.addSelectionListener(new SelectionListener() {
 			
