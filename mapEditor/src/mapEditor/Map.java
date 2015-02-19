@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -12,13 +11,10 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
@@ -34,7 +30,7 @@ import com.example.bclib.Obstacle;
 
 public class Map {
 	
-	Display display = new Display();
+	public Display display = new Display();
 	Shell shell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN);
 	
 	final org.eclipse.swt.graphics.Color colorBlack = display.getSystemColor(SWT.COLOR_BLACK);
@@ -74,6 +70,9 @@ public class Map {
 	Image roadBlokImage;
 	Image road1BlokImage;
 	
+	Button hideGrid1;
+	Button hideGrid2;
+	
 	Combo activateArea;
 	String [] areas = {"desertBlokSmall","desert1BlokSmall","greenBlokSmall","roadBlokSmall","road1BlokSmall"};
 	Image [] imagesArea = new Image[5];
@@ -97,15 +96,20 @@ public class Map {
 	
 	int[][] imgGrid = new int[row][col];
 	List<Obstacle> obstacleList = new ArrayList<Obstacle>();
-	List<Label> barriersList = new ArrayList<Label>();
+	List<Image> barriersList = new ArrayList<Image>();
 	
 	boolean mouseClick = false;
 	boolean changePosition = false;
+	boolean changeAngle = false;
+	boolean grid = true;
 	
 	int xChange,yChange;
 	
 	int indexArea;
 	int indexBarrier;
+	int idBarrier;
+	int idBarrierAngle = -1;
+	int actualX;
 	
 	public Map(){
 		
@@ -131,30 +135,39 @@ public class Map {
 	    child.setSize(width,height);
 	    child.setLocation(width/2, 0);
 	    
+	    
 	    child.addPaintListener(new PaintListener(){
 	        public void paintControl(PaintEvent e){
 	            Rectangle clientArea = child.getClientArea();
 	            
-	            //if(e.width == rect){
-	            if(mouseClick){
-		            e.gc.drawImage(imagesArea[indexArea], 0, 0, imagesArea[indexArea].getBounds().width, imagesArea[indexArea].getBounds().height, e.x, e.y, rect, rect);
-	            }
+	            for(int i=0; i<row; i++){
+	        		for(int j=0; j<col; j++){	
+	        			if(imgGrid[i][j] != -1){
+	        				e.gc.drawImage(imagesArea[imgGrid[i][j]], i*rect, j*rect);
+	        			}
+	        		}
+	        	}
 	            
-	            if(changePosition){
-	            	for(int i=0; i<row; i++){
-		        		for(int j=0; j<col; j++){	
-		        			if(imgGrid[i][j] != -1){
-		        				e.gc.drawImage(imagesArea[imgGrid[i][j]], i*rect, j*rect);
-		        			}
-		        		}
-		        	}
-	            }
-
-            	for(int i=0	; i<clientArea.width;i++){
-	            	e.gc.drawLine(i*rect,0,i*rect,clientArea.height);
-	            }
-	            for(int j=0; j<clientArea.height;j++){
-	            	e.gc.drawLine(0,j*rect,clientArea.width,j*rect);
+	            for(Obstacle o : obstacleList){
+            		Transform transform = new Transform(display);
+            		
+            		transform.translate((float)o.getX(), (float)(o.getY()+barrierHeight/2));
+					transform.rotate((float)o.getAngle2());
+					transform.translate(-(float)o.getX(), -(float)(o.getY()+barrierHeight/2));
+            		
+            		e.gc.setTransform(transform);
+            		e.gc.drawImage(barriersList.get(obstacleList.indexOf(o)), 0, 0, barriersList.get(obstacleList.indexOf(o)).getBounds().width, barriersList.get(obstacleList.indexOf(o)).getBounds().height, (int)o.getX()-barrierWidth/2, (int)o.getY(), barrierWidth, barrierHeight);
+            		e.gc.setTransform(null);
+            		transform.dispose();
+            	}
+	            
+	            if(grid){
+	            	for(int i=0	; i<clientArea.width/rect;i++){
+		            	e.gc.drawLine(i*rect,0,i*rect,clientArea.height);
+		            }
+		            for(int j=0; j<clientArea.height/rect;j++){
+		            	e.gc.drawLine(0,j*rect,clientArea.width,j*rect);
+		            }
 	            }
 	        }
 	    }); 
@@ -163,6 +176,12 @@ public class Map {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				mouseClick = false;
+				changePosition = false;
+				
+				if(changeAngle){
+					changeAngle = false;
+					idBarrierAngle = -1;
+				}
 			}
 			
 			@Override
@@ -175,56 +194,48 @@ public class Map {
 					int indexY = e.y/rect;
 					
 					imgGrid[indexX][indexY] = indexArea;
-					
-					int positionX = indexX*rect;
-					int positionY = indexY*rect;
-					
-					child.redraw(positionX, positionY, rect, rect, false);
+
+					child.redraw();
 				}
 				else if(mapFolder.getSelectionIndex() == 1){
-					obstacleList.add(new Obstacle(e.x+barrierWidth/2, e.y, e.x+barrierWidth/2, e.y+barrierHeight));
 					
-					final Label l = new Label(child, SWT.NONE);
-					l.setBounds(e.x, e.y, barrierWidth, barrierHeight);
-					l.setBackgroundImage(imagesBarriersSmall[indexBarrier]);
-					
-					l.addMouseListener(new MouseListener() {
-						
-						@Override
-						public void mouseUp(MouseEvent e) {
-							changePosition = false;
-						}
-						
-						@Override
-						public void mouseDown(MouseEvent e) {
+
+					for(Obstacle o : obstacleList){
+						if(e.x > o.getX()-barrierWidth/2 && e.x < o.getX()+barrierWidth/2 && e.y > o.getY() && e.y < o.getY2()){
+							
+							idBarrier = obstacleList.indexOf(o);
+							
+							xChange = e.x - (int)o.getX()+barrierWidth/2;
+							yChange = e.y - (int)o.getY();
+							
 							changePosition = true;
-							
-							xChange = e.x;
-							yChange = e.y;
+							break;
 						}
-						
-						@Override
-						public void mouseDoubleClick(MouseEvent e) {
-						}
-					});
+					}
 					
-					l.addMouseMoveListener(new MouseMoveListener() {
-						
-						@Override
-						public void mouseMove(MouseEvent e) {
-							
-							if(changePosition){
-								l.setLocation(l.getLocation().x+e.x-xChange, l.getLocation().y+e.y-yChange);
-								child.redraw();
-							}
-						}
-					});
-					barriersList.add(l);
+					if(!changePosition){
+						Obstacle o = new Obstacle(e.x+barrierWidth/2, e.y, e.x+barrierWidth/2, e.y+barrierHeight);
+						o.setAngle(0);
+						obstacleList.add(o);
+						barriersList.add(imagesBarriersSmall[indexBarrier]);
+
+						child.redraw();
+					}
 				}
 			}
 
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
+				
+				if(mapFolder.getSelectionIndex() == 1){
+					for(Obstacle o : obstacleList){
+						if(e.x > o.getX()-barrierWidth/2 && e.x < o.getX()+barrierWidth/2 && e.y > o.getY() && e.y < o.getY2()){
+							idBarrierAngle = obstacleList.indexOf(o);
+							changeAngle = true;
+							break;
+						}
+					}
+				}
 			}
 		});
 	    
@@ -240,11 +251,37 @@ public class Map {
 						
 						imgGrid[indexX][indexY] = indexArea;
 						
-						int positionX = indexX*rect;
-						int positionY = indexY*rect;
-					
-						child.redraw(positionX, positionY, rect, rect, false);
+						child.redraw();
 					}
+				}
+				else if(changeAngle){
+					Obstacle o = obstacleList.get(idBarrierAngle);
+					
+					if(actualX > e.x && o.getY()+barrierHeight/2 > e.y){
+						o.setAngle(o.getAngle2()-5);
+					}
+					else if(actualX < e.x && o.getY()+barrierHeight/2 > e.y){
+						o.setAngle(o.getAngle2()+5);
+					}
+					else if(actualX > e.x && o.getY()+barrierHeight/2 < e.y){
+						o.setAngle(o.getAngle2()+5);
+					}
+					else if(actualX < e.x && o.getY()+barrierHeight/2 < e.y){
+						o.setAngle(o.getAngle2()-5);
+					}
+					
+					actualX = e.x;
+
+					child.redraw();
+				}
+				else if(changePosition){
+
+					obstacleList.get(idBarrier).setX(e.x+barrierWidth/2-xChange);
+					obstacleList.get(idBarrier).setY(e.y-yChange);
+					obstacleList.get(idBarrier).setX2(e.x+barrierWidth/2-xChange);
+					obstacleList.get(idBarrier).setY2(e.y+barrierHeight-yChange);
+					
+					child.redraw();
 				}
 			}
 		});
@@ -296,6 +333,33 @@ public class Map {
 			}
 		});
 		
+		hideGrid1 = new Button(areaComposite, SWT.PUSH);
+		hideGrid1.setSize(80, 30);
+		hideGrid1.setLocation(260, 0);
+		hideGrid1.setText("hide grid");
+		hideGrid1.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseUp(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent e) {
+				if(grid){
+					grid = false;
+					hideGrid2.setText("show grid");
+				}
+				else{
+					grid = true;
+					hideGrid2.setText("hide grid");
+				}
+				child.redraw();
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+		});
 		
 		activateBarrier = new Combo(barrierComposite, SWT.NULL);
 		activateBarrier.setSize(170, 20);
@@ -317,6 +381,33 @@ public class Map {
 			}
 		});
 		
+		hideGrid2 = new Button(barrierComposite, SWT.PUSH);
+		hideGrid2.setSize(80, 30);
+		hideGrid2.setLocation(260, 0);
+		hideGrid2.setText("hide grid");
+		hideGrid2.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseUp(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent e) {
+				if(grid){
+					grid = false;
+					hideGrid2.setText("show grid");
+				}
+				else{
+					grid = true;
+					hideGrid2.setText("hide grid");
+				}
+				child.redraw();
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+		});
 		
 		barriersImage = new Image(display, "images/barriers.png");
 		barrierLabel = new Label(barrierComposite, SWT.TRANSPARENT);

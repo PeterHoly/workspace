@@ -47,4 +47,8 @@ public class Obstacle extends MapObject {
 	public double getAngle() {
 		return Math.atan2(y2-y,x2-x);
 	}
+	
+	public double getAngle2() {
+		return angle;
+	}
 }
