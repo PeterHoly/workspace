@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.TabItem;
 
 import com.example.bclib.Obstacle;
 
-public class Map {
+public class MapFunkcni {
 	
 	public Display display = new Display();
 	Shell shell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN);
@@ -136,7 +136,7 @@ public class Map {
 	double angle;
 	double xStr, yStr;
 	
-	public Map(){
+	public MapFunkcni(){
 		
 		for(int i=0; i<row; i++){
     		for(int j=0; j<col; j++){
