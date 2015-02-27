@@ -48,10 +48,12 @@ public class Map {
 	Composite areaComposite;
 	Composite barrierComposite;
 	Composite rowComposite;
+	Composite startComposite;
 	
 	TabItem bArea;
 	TabItem bBarrier;
 	TabItem bRows;
+	TabItem bStart;
 	
 	Label barrierLabel;
 	Label barrierLabel1;
@@ -75,6 +77,8 @@ public class Map {
 	Label roadHighLabel;
 	Label road1HighLabel;
 	Label road2HighLabel;
+	Label startLabel;
+	Label finishLabel;
 	
 	Image desertBlokImage;
 	Image desert1BlokImage;
@@ -88,6 +92,8 @@ public class Map {
 	Image roadHighImage;
 	Image road1HighImage;
 	Image road2HighImage;
+	Image startImage;
+	Image finishImage;
 	
 	Button hideGrid1;
 	Button hideGrid2;
@@ -105,6 +111,10 @@ public class Map {
 	String [] barriersSmall = {"barriersSmall","barriers1Small","barriers2Small","barriers3Small"};
 	Image [] imagesBarriersSmall = new Image[4];
 	
+	Combo activateStart;
+	String [] startSmall = {"start","finish"};
+	Image [] imagesStartSmall = new Image[2];
+	
 	Composite sc;
 	Canvas child;
 	
@@ -113,10 +123,15 @@ public class Map {
 	int rect = 20;
 	int barrierWidth = 10;
 	int barrierHeight = 60;
+	int startWidth = 183;
+	int startHeight = 30;
 	int row = height/rect;
 	int col = width/rect;
 	
+	Obstacle[] obstacleStart = new Obstacle[2];
+	
 	int[][] imgGrid = new int[row][col];
+	
 	List<Obstacle> obstacleList = new ArrayList<Obstacle>();
 	List<Image> barriersList = new ArrayList<Image>();
 	
@@ -130,7 +145,9 @@ public class Map {
 	int xChange,yChange;
 	int indexArea;
 	int indexBarrier;
+	int indexStart;
 	int idBarrier;
+	int idStart;
 	int idBarrierAngle = -1;
 	int actualX;
 	double angle;
@@ -150,6 +167,10 @@ public class Map {
 		
 		for(int i=0; i<barriersSmall.length; i++){
 			imagesBarriersSmall[i] = new Image(display, "images/"+barriersSmall[i]+".png");
+		}
+		
+		for(int i=0; i<startSmall.length; i++){
+			imagesStartSmall[i] = new Image(display, "images/"+startSmall[i]+".png");
 		}
 		
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -191,6 +212,12 @@ public class Map {
 	        			}
 	        		}
 	        	}
+	            
+	            for(int i=0; i<obstacleStart.length; i++){
+	            	if(obstacleStart[i] != null){
+	            		e.gc.drawImage(imagesStartSmall[i], 0, 0, imagesStartSmall[i].getBounds().width, imagesStartSmall[i].getBounds().height, (int)obstacleStart[i].getX()-startWidth/2, origin.y + (int)obstacleStart[i].getY(), startWidth, startHeight);
+	            	}
+	            }
 	            
 	            for(Obstacle o : obstacleList){
             		Transform transform = new Transform(display);
@@ -254,6 +281,26 @@ public class Map {
 						child.redraw();
 					}
 				}
+				else if(mapFolder.getSelectionIndex() == 2){
+					for(int i=0; i<obstacleStart.length; i++){
+						if(obstacleStart[i] != null){
+							if(e.x > obstacleStart[i].getX()-startWidth/2 && e.x < obstacleStart[i].getX()+startWidth/2 && (-origin.y)+e.y > obstacleStart[i].getY() && (-origin.y)+e.y < obstacleStart[i].getY2()){
+								idStart = i;
+								xChange = e.x - (int)obstacleStart[i].getX()+startWidth/2;
+								yChange = e.y - (int)obstacleStart[i].getY();
+								changePosition = true;
+								break;
+							}
+						}
+					}
+					
+					if(!changePosition){
+						Obstacle o = new Obstacle(e.x+startWidth/2, (-origin.y)+e.y, e.x+startWidth/2, (-origin.y)+e.y+startHeight);
+						o.setAngle(0);
+						obstacleStart[indexStart] = o;
+						child.redraw();
+					}
+				}
 			}
 
 			@Override
@@ -301,11 +348,18 @@ public class Map {
 					child.redraw();
 				}
 				else if(changePosition){
-
-					obstacleList.get(idBarrier).setX(e.x+barrierWidth/2-xChange);
-					obstacleList.get(idBarrier).setY(e.y-yChange);
-					obstacleList.get(idBarrier).setX2(e.x+barrierWidth/2-xChange);
-					obstacleList.get(idBarrier).setY2(e.y+barrierHeight-yChange);
+					if(mapFolder.getSelectionIndex() == 1){
+						obstacleList.get(idBarrier).setX(e.x+barrierWidth/2-xChange);
+						obstacleList.get(idBarrier).setY(e.y-yChange);
+						obstacleList.get(idBarrier).setX2(e.x+barrierWidth/2-xChange);
+						obstacleList.get(idBarrier).setY2(e.y+barrierHeight-yChange);
+					}
+					else if(mapFolder.getSelectionIndex() == 2){
+						obstacleStart[idStart].setX(e.x+startWidth/2-xChange);
+						obstacleStart[idStart].setY(e.y-yChange);
+						obstacleStart[idStart].setX2(e.x+startWidth/2-xChange);
+						obstacleStart[idStart].setY2(e.y+startHeight-yChange);
+					}
 					child.redraw();
 				}
 			}
@@ -347,6 +401,12 @@ public class Map {
 		barrierComposite.setBackground(colorGray);
 		barrierComposite.setLocation(5, 33);
 		
+		startComposite = new Composite(mapFolder, SWT.NULL);
+		startComposite.setSize(340, 580);
+		startComposite.setBackgroundMode(SWT.INHERIT_FORCE);
+		startComposite.setBackground(colorGray);
+		startComposite.setLocation(5, 33);
+		
 		rowComposite = new Composite(mapFolder, SWT.NULL);
 		rowComposite.setSize(340, 580);
 		rowComposite.setBackgroundMode(SWT.INHERIT_FORCE);
@@ -358,6 +418,9 @@ public class Map {
 				
 		bBarrier = new TabItem(mapFolder, SWT.PUSH);
 		bBarrier.setText("Barrier");
+		
+		bStart = new TabItem(mapFolder, SWT.PUSH);
+		bStart.setText("Start line");
 		
 		bRows = new TabItem(mapFolder, SWT.PUSH);
 		bRows.setText("Rows");
@@ -397,6 +460,10 @@ public class Map {
 				for(Obstacle o : obstacleList){
 					o.setY(o.getY()+rect*add);
 					o.setY2(o.getY2()+rect*add);
+				}
+				for(int i=0; i<obstacleStart.length; i++){
+					obstacleStart[i].setY(obstacleStart[i].getY()+rect*add);
+					obstacleStart[i].setY2(obstacleStart[i].getY2()+rect*add);
 				}
 				
 				
@@ -669,6 +736,60 @@ public class Map {
 			}
 		});
 		
+		activateStart = new Combo(startComposite, SWT.NULL);
+		activateStart.setSize(170, 20);
+		activateStart.setLocation(80, 30);
+		activateStart.add("start");
+		activateStart.add("finish");
+		activateStart.select(0);
+		activateStart.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				indexStart = activateStart.getSelectionIndex();
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {	
+			}
+		});
+		
+		startImage = new Image(display, "images/start.png");
+		startLabel = new Label(startComposite, SWT.TRANSPARENT);
+		startLabel.setLocation(80,150);
+		startLabel.setSize(startImage.getBounds().width, startImage.getBounds().height);
+		startLabel.setImage(startImage);
+		startLabel.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+			}
+			@Override
+			public void mouseDown(MouseEvent e) {
+				indexStart = 0;
+				activateStart.select(indexStart);
+			}
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+		});
+		
+		finishImage = new Image(display, "images/finish.png");
+		finishLabel = new Label(startComposite, SWT.TRANSPARENT);
+		finishLabel.setLocation(80,200);
+		finishLabel.setSize(finishImage.getBounds().width, finishImage.getBounds().height);
+		finishLabel.setImage(finishImage);
+		finishLabel.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+			}
+			@Override
+			public void mouseDown(MouseEvent e) {
+				indexStart = 1;
+				activateStart.select(indexStart);
+			}
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+		});
+		
 		desertBlokImage = new Image(display, "images/desertBlok.png");
 		desertBlokLabel = new Label(areaComposite, SWT.TRANSPARENT);
 		desertBlokLabel.setLocation(10, 120);
@@ -906,22 +1027,30 @@ public class Map {
 				if(mapFolder.getSelectionIndex()==0){
 					rowComposite.setVisible(false);
 					barrierComposite.setVisible(false);
+					startComposite.setVisible(false);
 					areaComposite.setVisible(true);
 				}
 				else if(mapFolder.getSelectionIndex()==1){
 					rowComposite.setVisible(false);
 					areaComposite.setVisible(false);
+					startComposite.setVisible(false);
 					barrierComposite.setVisible(true);
 				}
 				else if(mapFolder.getSelectionIndex()==2){
 					areaComposite.setVisible(false);
 					barrierComposite.setVisible(false);
+					rowComposite.setVisible(false);
+					startComposite.setVisible(true);
+				}
+				else if(mapFolder.getSelectionIndex()==3){
+					areaComposite.setVisible(false);
+					barrierComposite.setVisible(false);
+					startComposite.setVisible(false);
 					rowComposite.setVisible(true);
 				}
 			}
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-
 			}
 		 };
 		   	 
