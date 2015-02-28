@@ -2,7 +2,20 @@ package mapEditor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -215,7 +228,7 @@ public class MapFunkcni {
 	            
 	            for(int i=0; i<obstacleStart.length; i++){
 	            	if(obstacleStart[i] != null){
-	            		e.gc.drawImage(imagesStartSmall[i], 0, 0, imagesStartSmall[i].getBounds().width, imagesStartSmall[i].getBounds().height, (int)obstacleStart[i].getX()-startWidth/2, origin.y + (int)obstacleStart[i].getY(), startWidth, startHeight);
+	            		e.gc.drawImage(imagesStartSmall[i], 0, 0, imagesStartSmall[i].getBounds().width, imagesStartSmall[i].getBounds().height, (int)obstacleStart[i].getX(), origin.y + (int)obstacleStart[i].getY()-(startHeight/2), startWidth, startHeight);
 	            	}
 	            }
 	            
@@ -284,10 +297,10 @@ public class MapFunkcni {
 				else if(mapFolder.getSelectionIndex() == 2){
 					for(int i=0; i<obstacleStart.length; i++){
 						if(obstacleStart[i] != null){
-							if(e.x > obstacleStart[i].getX()-startWidth/2 && e.x < obstacleStart[i].getX()+startWidth/2 && (-origin.y)+e.y > obstacleStart[i].getY() && (-origin.y)+e.y < obstacleStart[i].getY2()){
+							if(e.x > obstacleStart[i].getX() && e.x < obstacleStart[i].getX2() && (-origin.y)+e.y > obstacleStart[i].getY()-(startHeight/2) && (-origin.y)+e.y < obstacleStart[i].getY2()+(startHeight/2)){
 								idStart = i;
-								xChange = e.x - (int)obstacleStart[i].getX()+startWidth/2;
-								yChange = e.y - (int)obstacleStart[i].getY();
+								xChange = e.x - (int)obstacleStart[i].getX();
+								yChange = e.y - (int)obstacleStart[i].getY()+startHeight/2;
 								changePosition = true;
 								break;
 							}
@@ -295,7 +308,7 @@ public class MapFunkcni {
 					}
 					
 					if(!changePosition){
-						Obstacle o = new Obstacle(e.x+startWidth/2, (-origin.y)+e.y, e.x+startWidth/2, (-origin.y)+e.y+startHeight);
+						Obstacle o = new Obstacle(e.x, (-origin.y)+e.y+startHeight/2, e.x+startWidth, (-origin.y)+e.y+startHeight/2);
 						o.setAngle(0);
 						obstacleStart[indexStart] = o;
 						child.redraw();
@@ -355,10 +368,10 @@ public class MapFunkcni {
 						obstacleList.get(idBarrier).setY2(e.y+barrierHeight-yChange);
 					}
 					else if(mapFolder.getSelectionIndex() == 2){
-						obstacleStart[idStart].setX(e.x+startWidth/2-xChange);
-						obstacleStart[idStart].setY(e.y-yChange);
-						obstacleStart[idStart].setX2(e.x+startWidth/2-xChange);
-						obstacleStart[idStart].setY2(e.y+startHeight-yChange);
+						obstacleStart[idStart].setX(e.x-xChange);
+						obstacleStart[idStart].setY(e.y+startHeight/2-yChange);
+						obstacleStart[idStart].setX2(e.x+startWidth-xChange);
+						obstacleStart[idStart].setY2(e.y+startHeight/2-yChange);
 					}
 					child.redraw();
 				}
@@ -545,6 +558,7 @@ public class MapFunkcni {
 			}
 			@Override
 			public void mouseDown(MouseEvent e) {
+				saveMap();
 			}
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
@@ -563,6 +577,9 @@ public class MapFunkcni {
 			public void mouseDown(MouseEvent e) {
 				obstacleList.clear();
 				barriersList.clear();
+				for(int i=0;i<obstacleStart.length; i++){
+					obstacleStart[i] = null;
+				}
 				for(int i=0; i<row; i++){
 		    		for(int j=0; j<col; j++){
 		    			imgGrid[i][j] = -1;
@@ -630,6 +647,7 @@ public class MapFunkcni {
 			}
 			@Override
 			public void mouseDown(MouseEvent e) {
+				saveMap();
 			}
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
@@ -648,6 +666,9 @@ public class MapFunkcni {
 			public void mouseDown(MouseEvent e) {
 				obstacleList.clear();
 				barriersList.clear();
+				for(int i=0;i<obstacleStart.length; i++){
+					obstacleStart[i] = null;
+				}
 				for(int i=0; i<row; i++){
 		    		for(int j=0; j<col; j++){
 		    			imgGrid[i][j] = -1;
@@ -1063,4 +1084,121 @@ public class MapFunkcni {
 		}
 		display.dispose();
 	} 
+	
+	public void saveMap(){
+		try {
+			
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+	 
+			Document doc = docBuilder.newDocument();
+			Element rootElement = doc.createElement("map");
+			doc.appendChild(rootElement);
+			
+	 
+			Element lines = doc.createElement("Lines");
+			rootElement.appendChild(lines);
+
+			for(int i=0; i<obstacleStart.length; i++){
+				if(obstacleStart[i] != null){
+
+					Element line = doc.createElement("line");
+					
+					Attr x1 = doc.createAttribute("x1");
+					x1.setValue(String.valueOf(obstacleStart[i].getX()));
+					line.setAttributeNode(x1);
+					
+					Attr x2 = doc.createAttribute("x2");
+					x2.setValue(String.valueOf(obstacleStart[i].getX2()));
+					line.setAttributeNode(x2);
+					
+					Attr y1 = doc.createAttribute("y1");
+					y1.setValue(String.valueOf(obstacleStart[i].getY()));
+					line.setAttributeNode(y1);
+					
+					Attr y2 = doc.createAttribute("y2");
+					y2.setValue(String.valueOf(obstacleStart[i].getY2()));
+					line.setAttributeNode(y2);
+					
+					Attr img = doc.createAttribute("img");
+					img.setValue(String.valueOf(startSmall[i]));
+					line.setAttributeNode(img);
+					
+					lines.appendChild(line);
+				}
+			}	
+				
+			
+			Element obstacles = doc.createElement("Obstacles");
+			rootElement.appendChild(obstacles);
+
+			for(Obstacle o : obstacleList){
+				Element obstacle = doc.createElement("obstacle");
+				
+				Attr x1 = doc.createAttribute("x1");
+				x1.setValue(String.valueOf(o.getX()));
+				obstacle.setAttributeNode(x1);
+				
+				Attr y1 = doc.createAttribute("y1");
+				y1.setValue(String.valueOf(o.getY()));
+				obstacle.setAttributeNode(y1);
+				
+				Attr y2 = doc.createAttribute("y2");
+				y2.setValue(String.valueOf(o.getY2()));
+				obstacle.setAttributeNode(y2);
+				
+				Attr anlge = doc.createAttribute("angle");
+				anlge.setValue(String.valueOf(o.getAngle2()));
+				obstacle.setAttributeNode(anlge);
+				
+				Attr img = doc.createAttribute("img");
+				for(int i=0; i<imagesBarriersSmall.length;i++){
+					if(imagesBarriersSmall[i].equals(barriersList.get(obstacleList.indexOf(o)))){
+						img.setValue(barriersSmall[i]);
+					}
+				}
+				obstacle.setAttributeNode(img);
+				
+				obstacles.appendChild(obstacle);
+			}
+			
+			
+			Element roads = doc.createElement("Roads");
+			rootElement.appendChild(roads);
+
+			for(int i=0; i<row; i++){
+	    		for(int j=0; j<col; j++){
+	    			if(imgGrid[i][j] != -1){
+		    			Element road = doc.createElement("road");
+						
+		    			Attr x = doc.createAttribute("x");
+						x.setValue(String.valueOf(j));
+						road.setAttributeNode(x);
+						
+						Attr y = doc.createAttribute("y");
+						y.setValue(String.valueOf(i));
+						road.setAttributeNode(y);
+						
+						Attr img = doc.createAttribute("img");
+						img.setValue(areasSmall[imgGrid[i][j]]);
+						road.setAttributeNode(img);
+						
+						roads.appendChild(road);
+	    			}
+	    		}
+	    	}
+			
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File("maps/map.xml"));
+			transformer.transform(source, result);
+		} 
+		catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		} 
+		catch (TransformerException tfe) {
+			tfe.printStackTrace();
+		}
+	}
 }
