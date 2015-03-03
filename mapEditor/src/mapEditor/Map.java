@@ -16,6 +16,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -36,8 +37,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
@@ -112,6 +115,8 @@ public class Map {
 	Button hideGrid2;
 	Button saveMap;
 	Button saveMap2;
+	Button loadMap;
+	Button loadMap2;
 	Button clearMap;
 	Button clearMap2;
 	Button addRow;
@@ -140,6 +145,7 @@ public class Map {
 	int startHeight = 30;
 	int row = height/rect;
 	int col = width/rect;
+	int addRows = 0;
 	
 	Obstacle[] obstacleStart = new Obstacle[2];
 	
@@ -210,7 +216,7 @@ public class Map {
             public void handleEvent(Event event) {
                 int vSelection = vBar.getSelection();
                 int destY = -vSelection - origin.y;
-                child.scroll(0, destY, 0, 0, 180, 640, false);
+                child.scroll(0, destY, 0, 0, width, 640, false);
                 origin.y = -vSelection;
             }
         });
@@ -456,6 +462,7 @@ public class Map {
 				
 				int add = spinner.getSelection();
 				row += add;
+				addRows += add;
 				
 				int[][] imgPole = imgGrid;
 				imgGrid = new int[row][col];
@@ -475,17 +482,18 @@ public class Map {
 					o.setY2(o.getY2()+rect*add);
 				}
 				for(int i=0; i<obstacleStart.length; i++){
-					obstacleStart[i].setY(obstacleStart[i].getY()+rect*add);
-					obstacleStart[i].setY2(obstacleStart[i].getY2()+rect*add);
+					if(obstacleStart[i] != null){
+						obstacleStart[i].setY(obstacleStart[i].getY()+rect*add);
+						obstacleStart[i].setY2(obstacleStart[i].getY2()+rect*add);
+					}
 				}
-				
 				
 				vBar.setMaximum(vBar.getMaximum()+add*rect);
 				vBar.setSelection(vBar.getMaximum());
 				
 				int vSelection = vBar.getSelection();
                 int destY = -vSelection - origin.y;
-                child.scroll(0, destY, 0, 0, 180, 640, false);
+                child.scroll(0, destY, 0, 0, width, 640, false);
                 origin.y = -vSelection;
 				
 				child.redraw();
@@ -565,9 +573,36 @@ public class Map {
 			}
 		});
 		
+		loadMap = new Button(areaComposite, SWT.PUSH);
+		loadMap.setSize(80, 30);
+		loadMap.setLocation(260, 60);
+		loadMap.setText("load map");
+		loadMap.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+			}
+			@Override
+			public void mouseDown(MouseEvent e) {
+				loadMap();
+
+				vBar.setMaximum(vBar.getMaximum()+addRows*rect);
+				vBar.setSelection(vBar.getMaximum());
+				
+				int vSelection = vBar.getSelection();
+                int destY = -vSelection - origin.y;
+                child.scroll(0, destY, 0, 0, width, 640, false);
+                origin.y = -vSelection;
+                
+				child.redraw();
+			}
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+		});
+		
 		clearMap = new Button(areaComposite, SWT.PUSH);
 		clearMap.setSize(80, 30);
-		clearMap.setLocation(260, 60);
+		clearMap.setLocation(260, 90);
 		clearMap.setText("clear map");
 		clearMap.addMouseListener(new MouseListener() {
 			@Override
@@ -575,17 +610,23 @@ public class Map {
 			}
 			@Override
 			public void mouseDown(MouseEvent e) {
-				obstacleList.clear();
-				barriersList.clear();
-				for(int i=0;i<obstacleStart.length; i++){
-					obstacleStart[i] = null;
-				}
-				for(int i=0; i<row; i++){
-		    		for(int j=0; j<col; j++){
-		    			imgGrid[i][j] = -1;
-		    		}
-		    	}
-				child.redraw();
+				MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION  | SWT.YES | SWT.NO);
+			    messageBox.setMessage("Do you really want to clear the map?");
+			    messageBox.setText("Clearing map");
+			    int response = messageBox.open();
+			    if (response == SWT.YES){
+			    	obstacleList.clear();
+					barriersList.clear();
+					for(int i=0;i<obstacleStart.length; i++){
+						obstacleStart[i] = null;
+					}
+					for(int i=0; i<row; i++){
+			    		for(int j=0; j<col; j++){
+			    			imgGrid[i][j] = -1;
+			    		}
+			    	}
+					child.redraw();
+			    }				
 			}
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
@@ -654,9 +695,36 @@ public class Map {
 			}
 		});
 		
+		loadMap2 = new Button(barrierComposite, SWT.PUSH);
+		loadMap2.setSize(80, 30);
+		loadMap2.setLocation(260, 60);
+		loadMap2.setText("load map");
+		loadMap2.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+			}
+			@Override
+			public void mouseDown(MouseEvent e) {
+				loadMap();
+
+				vBar.setMaximum(vBar.getMaximum()+addRows*rect);
+				vBar.setSelection(vBar.getMaximum());
+				
+				int vSelection = vBar.getSelection();
+                int destY = -vSelection - origin.y;
+                child.scroll(0, destY, 0, 0, width, 640, false);
+                origin.y = -vSelection;
+                
+				child.redraw();
+			}
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+		});
+		
 		clearMap2 = new Button(barrierComposite, SWT.PUSH);
 		clearMap2.setSize(80, 30);
-		clearMap2.setLocation(260, 60);
+		clearMap2.setLocation(260, 90);
 		clearMap2.setText("clear map");
 		clearMap2.addMouseListener(new MouseListener() {
 			@Override
@@ -664,17 +732,23 @@ public class Map {
 			}
 			@Override
 			public void mouseDown(MouseEvent e) {
-				obstacleList.clear();
-				barriersList.clear();
-				for(int i=0;i<obstacleStart.length; i++){
-					obstacleStart[i] = null;
-				}
-				for(int i=0; i<row; i++){
-		    		for(int j=0; j<col; j++){
-		    			imgGrid[i][j] = -1;
-		    		}
-		    	}
-				child.redraw();
+				MessageBox messageBox = new MessageBox(shell, SWT.ICON_QUESTION  | SWT.YES | SWT.NO);
+			    messageBox.setMessage("Do you really want to clear the map?");
+			    messageBox.setText("Clearing map");
+			    int response = messageBox.open();
+			    if (response == SWT.YES){
+			    	obstacleList.clear();
+					barriersList.clear();
+					for(int i=0;i<obstacleStart.length; i++){
+						obstacleStart[i] = null;
+					}
+					for(int i=0; i<row; i++){
+			    		for(int j=0; j<col; j++){
+			    			imgGrid[i][j] = -1;
+			    		}
+			    	}
+					child.redraw();
+			    }
 			}
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
@@ -813,7 +887,7 @@ public class Map {
 		
 		desertBlokImage = new Image(display, "images/desertBlok.png");
 		desertBlokLabel = new Label(areaComposite, SWT.TRANSPARENT);
-		desertBlokLabel.setLocation(10, 120);
+		desertBlokLabel.setLocation(10, 130);
 		desertBlokLabel.setSize(desertBlokImage.getBounds().width, desertBlokImage.getBounds().height);
 		desertBlokLabel.setImage(desertBlokImage);
 		desertBlokLabel.addMouseListener(new MouseListener() {
@@ -832,7 +906,7 @@ public class Map {
 		
 		desert1BlokImage = new Image(display, "images/desert1Blok.png");
 		desert1BlokLabel = new Label(areaComposite, SWT.TRANSPARENT);
-		desert1BlokLabel.setLocation(120, 120);
+		desert1BlokLabel.setLocation(120, 130);
 		desert1BlokLabel.setSize(desert1BlokImage.getBounds().width, desert1BlokImage.getBounds().height);
 		desert1BlokLabel.setImage(desert1BlokImage);
 		desert1BlokLabel.addMouseListener(new MouseListener() {
@@ -851,7 +925,7 @@ public class Map {
 		
 		greenBlokImage = new Image(display, "images/greenBlok.png");
 		greenBlokLabel = new Label(areaComposite, SWT.TRANSPARENT);
-		greenBlokLabel.setLocation(230, 120);
+		greenBlokLabel.setLocation(230, 130);
 		greenBlokLabel.setSize(greenBlokImage.getBounds().width, greenBlokImage.getBounds().height);
 		greenBlokLabel.setImage(greenBlokImage);
 		greenBlokLabel.addMouseListener(new MouseListener() {
@@ -928,7 +1002,7 @@ public class Map {
 		
 		roadImage = new Image(display, "images/road.png");
 		roadLabel = new Label(areaComposite, SWT.TRANSPARENT);
-		roadLabel.setLocation(10, 360);
+		roadLabel.setLocation(10, 370);
 		roadLabel.setSize(roadImage.getBounds().width, roadImage.getBounds().height);
 		roadLabel.setImage(roadImage);
 		roadLabel.addMouseListener(new MouseListener() {
@@ -947,7 +1021,7 @@ public class Map {
 		
 		road1Image = new Image(display, "images/road1.png");
 		road1Label = new Label(areaComposite, SWT.TRANSPARENT);
-		road1Label.setLocation(120, 360);
+		road1Label.setLocation(120, 370);
 		road1Label.setSize(road1Image.getBounds().width, road1Image.getBounds().height);
 		road1Label.setImage(road1Image);
 		road1Label.addMouseListener(new MouseListener() {
@@ -966,7 +1040,7 @@ public class Map {
 		
 		road2Image = new Image(display, "images/road2.png");
 		road2Label = new Label(areaComposite, SWT.TRANSPARENT);
-		road2Label.setLocation(230, 360);
+		road2Label.setLocation(230, 370);
 		road2Label.setSize(road2Image.getBounds().width, road2Image.getBounds().height);
 		road2Label.setImage(road2Image);
 		road2Label.addMouseListener(new MouseListener() {
@@ -1085,6 +1159,76 @@ public class Map {
 		display.dispose();
 	} 
 	
+	public void loadMap(){
+		try {
+			
+			FileDialog fd = new FileDialog(shell, SWT.OPEN);
+	        fd.setText("Open");
+	        fd.setFilterPath("/home/peter/workspace/mapEditor/maps/");
+	        String[] filterExt = {"*.xml"};
+	        fd.setFilterExtensions(filterExt);
+	        String selected = fd.open();
+			
+	        if(selected != null){
+				File fXmlFile = new File(selected);
+				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+				Document doc = dBuilder.parse(fXmlFile);
+				doc.getDocumentElement().normalize();
+				
+				addRows = Integer.parseInt(doc.getDocumentElement().getAttribute("addRow"));
+				this.row += addRows;
+				
+				imgGrid = new int[row][col];
+				
+				for(int i=0; i<row; i++){
+		    		for(int j=0; j<col; j++){
+		    			imgGrid[i][j] = -1;
+		    		}
+		    	}
+	
+				NodeList nList = doc.getDocumentElement().getChildNodes();
+				
+				NodeList nodeList1 = nList.item(0).getChildNodes();
+	
+				for (int temp = 0; temp < nodeList1.getLength(); temp++) {
+					Element eElement = (Element) nodeList1.item(temp);
+					obstacleStart[temp] = new Obstacle(Double.valueOf(eElement.getAttribute("x1")), Double.valueOf(eElement.getAttribute("y1")), Double.valueOf(eElement.getAttribute("x2")), Double.valueOf(eElement.getAttribute("y1")));
+				}
+				
+				NodeList nodeList2 = nList.item(1).getChildNodes();
+	
+				for (int temp = 0; temp < nodeList2.getLength(); temp++) {
+					Element eElement = (Element) nodeList2.item(temp);
+					Obstacle o = new Obstacle(Double.valueOf(eElement.getAttribute("x1")), Double.valueOf(eElement.getAttribute("y1")), Double.valueOf(eElement.getAttribute("x1")), Double.valueOf(eElement.getAttribute("y2")));
+					o.setAngle(Double.valueOf(eElement.getAttribute("angle")));
+					obstacleList.add(o);
+					for(int i=0; i<barriersSmall.length;i++){
+						if(barriersSmall[i].equals(eElement.getAttribute("img"))){
+							barriersList.add(imagesBarriersSmall[i]);
+							break;
+						}
+					}
+				}
+				
+				NodeList nodeList3 = nList.item(2).getChildNodes();
+	
+				for (int temp = 0; temp < nodeList3.getLength(); temp++) {
+					Element eElement = (Element) nodeList3.item(temp);
+					for(int i=0; i<areasSmall.length; i++){
+						if(areasSmall[i].equals(eElement.getAttribute("img"))){
+							imgGrid[Integer.parseInt(eElement.getAttribute("y"))][Integer.parseInt(eElement.getAttribute("x"))] = i;
+							break;
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e) {
+		   	e.printStackTrace();
+		}
+	}
+	
 	public void saveMap(){
 		try {
 			
@@ -1093,6 +1237,11 @@ public class Map {
 	 
 			Document doc = docBuilder.newDocument();
 			Element rootElement = doc.createElement("map");
+			
+			Attr addRow = doc.createAttribute("addRow");
+			addRow.setValue(String.valueOf(addRows));
+			rootElement.setAttributeNode(addRow);
+			
 			doc.appendChild(rootElement);
 			
 	 
@@ -1115,10 +1264,6 @@ public class Map {
 					Attr y1 = doc.createAttribute("y1");
 					y1.setValue(String.valueOf(obstacleStart[i].getY()));
 					line.setAttributeNode(y1);
-					
-					Attr y2 = doc.createAttribute("y2");
-					y2.setValue(String.valueOf(obstacleStart[i].getY2()));
-					line.setAttributeNode(y2);
 					
 					Attr img = doc.createAttribute("img");
 					img.setValue(String.valueOf(startSmall[i]));
@@ -1191,8 +1336,21 @@ public class Map {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File("maps/map.xml"));
-			transformer.transform(source, result);
+			
+			FileDialog fd = new FileDialog(shell, SWT.SAVE);
+	        fd.setText("Save");
+	        fd.setFilterPath("/home/peter/workspace/mapEditor/maps/");
+	        String[] filterExt = {"*.xml"};
+	        fd.setFilterExtensions(filterExt);
+	        String selected = fd.open();
+	        
+	        if(selected != null){
+	        	if(!selected.endsWith(".xml")){
+		        	selected += ".xml";
+		        }
+				StreamResult result = new StreamResult(new File(selected));
+				transformer.transform(source, result);
+	        }
 		} 
 		catch (ParserConfigurationException pce) {
 			pce.printStackTrace();

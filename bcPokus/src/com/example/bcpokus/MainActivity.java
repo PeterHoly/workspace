@@ -81,7 +81,9 @@ public class MainActivity extends Activity {
 	
 	public String[] arraySpinner = new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
 	
-	private final Client myClient = new Client("192.168.0.21", 8096);
+	//private final Client myClient = new Client("192.168.0.21", 8096);
+	private final Client myClient = new Client("192.168.43.37", 8096);
+	
 	private final Game myGame = new Game(new Display(0,0,320,430));
 	private SurfacePanel sp;
 	

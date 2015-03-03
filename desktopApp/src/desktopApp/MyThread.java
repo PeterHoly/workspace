@@ -17,8 +17,9 @@ public class MyThread extends Thread{
 	private Display myDisplay;
 	private Logic myLogic = new Logic();
 	private Object o = new Object();
-	public Client myClient = new Client("192.168.0.21", 8096);
-	
+	//public Client myClient = new Client("192.168.0.21", 8096);
+	//public Client myClient = new Client("192.168.43.37", 8096);
+	public Client myClient = new Client("127.0.0.1", 8096);
 	
 	public MyThread(SurfacePanel sp, Game myGame, Shell shell, Display display) {
 		this.surfacePanel = sp;

@@ -32,12 +32,10 @@ public class Trajectory {
 		if(i < (this.filter * 100) && this.speed < getYY(angle)){
 			this.speed += this.accteleration;
 			i++;
-			System.out.println("speed: "+ this.filter + ": " + speed);
 			return this.speed;
 		}
 		else{
 			double s = getYY(angle);
-			System.out.println("speed: "+ this.filter + ": " + s);
 			return s;
 		}	
 	}
