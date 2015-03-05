@@ -28,6 +28,9 @@ public class Player {
 	public boolean nitrous = false;
 	public boolean nitroIsUsed = true;
 	public int i=0;
+	public double settingAnle;
+	public double pomAngle;
+	public int iSA=0;
 	
 	public Car myCar;
 	

@@ -2,8 +2,13 @@ package mapEditor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -49,7 +54,7 @@ import org.eclipse.swt.widgets.TabItem;
 
 import com.example.bclib.Obstacle;
 
-public class MapFunkcni {
+public class MapFunkcni{
 	
 	public Display display = new Display();
 	Shell shell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN);
@@ -172,6 +177,9 @@ public class MapFunkcni {
 	double angle;
 	double xStr, yStr;
 	
+	final Point origin;
+    final ScrollBar vBar;
+	
 	public MapFunkcni(){
 		
 		for(int i=0; i<row; i++){
@@ -181,15 +189,15 @@ public class MapFunkcni {
     	}
 		
 		for(int i=0; i<areasSmall.length; i++){
-			imagesAreaSmall[i] = new Image(display, "images/"+areasSmall[i]+".png");
+			imagesAreaSmall[i] = new Image(display, Map.class.getResourceAsStream("../images/"+areasSmall[i]+".png"));
 		}
 		
 		for(int i=0; i<barriersSmall.length; i++){
-			imagesBarriersSmall[i] = new Image(display, "images/"+barriersSmall[i]+".png");
+			imagesBarriersSmall[i] = new Image(display, Map.class.getResourceAsStream("../images/"+barriersSmall[i]+".png"));
 		}
 		
 		for(int i=0; i<startSmall.length; i++){
-			imagesStartSmall[i] = new Image(display, "images/"+startSmall[i]+".png");
+			imagesStartSmall[i] = new Image(display, Map.class.getResourceAsStream("../images/"+startSmall[i]+".png"));
 		}
 		
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -206,9 +214,8 @@ public class MapFunkcni {
 	    child.setSize(width,height);
 	    child.setLocation(width/2, 0);
 	    
-	    final Point origin = new Point(0, 0);
-        
-        final ScrollBar vBar = sc.getVerticalBar();
+	    origin = new Point(0, 0);
+	    vBar = sc.getVerticalBar();
         vBar.setMaximum(10);
         vBar.setMinimum(0);
         vBar.addListener(SWT.Selection , new Listener() {
@@ -755,7 +762,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		barriersImage = new Image(display, "images/barriers.png");
+		barriersImage = new Image(display, Map.class.getResourceAsStream("../images/barriers.png"));
 		barrierLabel = new Label(barrierComposite, SWT.TRANSPARENT);
 		barrierLabel.setLocation(100, 150);
 		barrierLabel.setSize(barriersImage.getBounds().width, barriersImage.getBounds().height);
@@ -774,7 +781,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		barriersImage1 = new Image(display, "images/barriers1.png");
+		barriersImage1 = new Image(display, Map.class.getResourceAsStream("../images/barriers1.png"));
 		barrierLabel1 = new Label(barrierComposite, SWT.TRANSPARENT);
 		barrierLabel1.setLocation(140, 150);
 		barrierLabel1.setSize(barriersImage1.getBounds().width, barriersImage1.getBounds().height);
@@ -793,7 +800,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		barriersImage2 = new Image(display, "images/barriers2.png");
+		barriersImage2 = new Image(display, Map.class.getResourceAsStream("../images/barriers2.png"));
 		barrierLabel2 = new Label(barrierComposite, SWT.TRANSPARENT);
 		barrierLabel2.setLocation(180, 150);
 		barrierLabel2.setSize(barriersImage2.getBounds().width, barriersImage2.getBounds().height);
@@ -812,7 +819,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		barriersImage3 = new Image(display, "images/barriers3.png");
+		barriersImage3 = new Image(display, Map.class.getResourceAsStream("../images/barriers3.png"));
 		barrierLabel3 = new Label(barrierComposite, SWT.TRANSPARENT);
 		barrierLabel3.setLocation(220, 150);
 		barrierLabel3.setSize(barriersImage3.getBounds().width, barriersImage3.getBounds().height);
@@ -847,7 +854,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		startImage = new Image(display, "images/start.png");
+		startImage = new Image(display, Map.class.getResourceAsStream("../images/start.png"));
 		startLabel = new Label(startComposite, SWT.TRANSPARENT);
 		startLabel.setLocation(80,150);
 		startLabel.setSize(startImage.getBounds().width, startImage.getBounds().height);
@@ -866,7 +873,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		finishImage = new Image(display, "images/finish.png");
+		finishImage = new Image(display, Map.class.getResourceAsStream("../images/finish.png"));
 		finishLabel = new Label(startComposite, SWT.TRANSPARENT);
 		finishLabel.setLocation(80,200);
 		finishLabel.setSize(finishImage.getBounds().width, finishImage.getBounds().height);
@@ -885,7 +892,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		desertBlokImage = new Image(display, "images/desertBlok.png");
+		desertBlokImage = new Image(display, Map.class.getResourceAsStream("../images/desertBlok.png"));
 		desertBlokLabel = new Label(areaComposite, SWT.TRANSPARENT);
 		desertBlokLabel.setLocation(10, 130);
 		desertBlokLabel.setSize(desertBlokImage.getBounds().width, desertBlokImage.getBounds().height);
@@ -904,7 +911,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		desert1BlokImage = new Image(display, "images/desert1Blok.png");
+		desert1BlokImage = new Image(display, Map.class.getResourceAsStream("../images/desert1Blok.png"));
 		desert1BlokLabel = new Label(areaComposite, SWT.TRANSPARENT);
 		desert1BlokLabel.setLocation(120, 130);
 		desert1BlokLabel.setSize(desert1BlokImage.getBounds().width, desert1BlokImage.getBounds().height);
@@ -923,7 +930,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		greenBlokImage = new Image(display, "images/greenBlok.png");
+		greenBlokImage = new Image(display, Map.class.getResourceAsStream("../images/greenBlok.png"));
 		greenBlokLabel = new Label(areaComposite, SWT.TRANSPARENT);
 		greenBlokLabel.setLocation(230, 130);
 		greenBlokLabel.setSize(greenBlokImage.getBounds().width, greenBlokImage.getBounds().height);
@@ -943,7 +950,7 @@ public class MapFunkcni {
 		});
 		
 		
-		roadBlokImage = new Image(display, "images/roadBlok.png");
+		roadBlokImage = new Image(display, Map.class.getResourceAsStream("../images/roadBlok.png"));
 		roadBlokLabel = new Label(areaComposite, SWT.TRANSPARENT);
 		roadBlokLabel.setLocation(10, 240);
 		roadBlokLabel.setSize(roadBlokImage.getBounds().width, roadBlokImage.getBounds().height);
@@ -962,7 +969,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		road1BlokImage = new Image(display, "images/road1Blok.png");
+		road1BlokImage = new Image(display, Map.class.getResourceAsStream("../images/road1Blok.png"));
 		road1BlokLabel = new Label(areaComposite, SWT.TRANSPARENT);
 		road1BlokLabel.setLocation(120, 240);
 		road1BlokLabel.setSize(road1BlokImage.getBounds().width, road1BlokImage.getBounds().height);
@@ -981,7 +988,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		road2BlokImage = new Image(display, "images/road2Blok.png");
+		road2BlokImage = new Image(display, Map.class.getResourceAsStream("../images/road2Blok.png"));
 		road2BlokLabel = new Label(areaComposite, SWT.TRANSPARENT);
 		road2BlokLabel.setLocation(230, 240);
 		road2BlokLabel.setSize(road2BlokImage.getBounds().width, road2BlokImage.getBounds().height);
@@ -1000,7 +1007,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		roadImage = new Image(display, "images/road.png");
+		roadImage = new Image(display, Map.class.getResourceAsStream("../images/road.png"));
 		roadLabel = new Label(areaComposite, SWT.TRANSPARENT);
 		roadLabel.setLocation(10, 370);
 		roadLabel.setSize(roadImage.getBounds().width, roadImage.getBounds().height);
@@ -1019,7 +1026,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		road1Image = new Image(display, "images/road1.png");
+		road1Image = new Image(display, Map.class.getResourceAsStream("../images/road1.png"));
 		road1Label = new Label(areaComposite, SWT.TRANSPARENT);
 		road1Label.setLocation(120, 370);
 		road1Label.setSize(road1Image.getBounds().width, road1Image.getBounds().height);
@@ -1038,7 +1045,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		road2Image = new Image(display, "images/road2.png");
+		road2Image = new Image(display, Map.class.getResourceAsStream("../images/road2.png"));
 		road2Label = new Label(areaComposite, SWT.TRANSPARENT);
 		road2Label.setLocation(230, 370);
 		road2Label.setSize(road2Image.getBounds().width, road2Image.getBounds().height);
@@ -1057,7 +1064,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		roadHighImage = new Image(display, "images/roadHigh.png");
+		roadHighImage = new Image(display, Map.class.getResourceAsStream("../images/roadHigh.png"));
 		roadHighLabel = new Label(areaComposite, SWT.TRANSPARENT);
 		roadHighLabel.setLocation(10, 480);
 		roadHighLabel.setSize(roadHighImage.getBounds().width, roadHighImage.getBounds().height);
@@ -1076,7 +1083,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		road1HighImage = new Image(display, "images/road1High.png");
+		road1HighImage = new Image(display, Map.class.getResourceAsStream("../images/road1High.png"));
 		road1HighLabel = new Label(areaComposite, SWT.TRANSPARENT);
 		road1HighLabel.setLocation(120, 480);
 		road1HighLabel.setSize(road1HighImage.getBounds().width, road1HighImage.getBounds().height);
@@ -1095,7 +1102,7 @@ public class MapFunkcni {
 			}
 		});
 		
-		road2HighImage = new Image(display, "images/road2High.png");
+		road2HighImage = new Image(display, Map.class.getResourceAsStream("../images/road2High.png"));
 		road2HighLabel = new Label(areaComposite, SWT.TRANSPARENT);
 		road2HighLabel.setLocation(230, 480);
 		road2HighLabel.setSize(road2HighImage.getBounds().width, road2HighImage.getBounds().height);
@@ -1348,6 +1355,7 @@ public class MapFunkcni {
 	        	if(!selected.endsWith(".xml")){
 		        	selected += ".xml";
 		        }
+	        	creatingMapImage(selected.substring(0, selected.length()-4));
 				StreamResult result = new StreamResult(new File(selected));
 				transformer.transform(source, result);
 	        }
@@ -1357,6 +1365,60 @@ public class MapFunkcni {
 		} 
 		catch (TransformerException tfe) {
 			tfe.printStackTrace();
+		}
+	}
+	
+	public void creatingMapImage(String path){
+		
+		BufferedImage bi = new BufferedImage(width, row*rect, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = bi.createGraphics();
+        
+        java.awt.Image obr;
+		try {
+			for(int i=0; i<row; i++){
+        		for(int j=0; j<col; j++){	
+        			if(imgGrid[i][j] != -1){
+        				obr = ImageIO.read(Map.class.getResourceAsStream("../images/"+areasSmall[imgGrid[i][j]]+".png"));
+        				g.drawImage(obr, j * rect, i * rect, null);
+        			}
+        		}
+        	}
+			for(int i=0; i<obstacleStart.length; i++){
+            	if(obstacleStart[i] != null){
+            		obr = ImageIO.read(Map.class.getResourceAsStream("../images/"+startSmall[i]+".png"));
+    				g.drawImage(obr, (int)obstacleStart[i].getX(), (int)obstacleStart[i].getY()-(startHeight/2), null);
+            	}
+            }
+			
+			AffineTransform old = g.getTransform();
+			for(Obstacle o : obstacleList){
+        		if(o.getAngle2() != 0){
+        			AffineTransform transform = new AffineTransform();
+            		transform.translate(o.getX(), o.getY()+(barrierHeight/2));
+        			transform.rotate(Math.toRadians(o.getAngle2()));
+        			transform.translate(-o.getX(), -(o.getY()+(barrierHeight/2)));
+            		g.setTransform(transform);
+        		}
+        		
+        		for(int i=0; i<imagesBarriersSmall.length;i++){
+					if(imagesBarriersSmall[i].equals(barriersList.get(obstacleList.indexOf(o)))){
+						obr = ImageIO.read(Map.class.getResourceAsStream("../images/"+barriersSmall[i]+".png"));
+						g.drawImage(obr, (int)o.getX()-barrierWidth/2, (int)o.getY(), barrierWidth, barrierHeight,null);
+						
+						break;
+					}
+				}
+        		g.setTransform(old);
+        	}
+		} 
+		catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		File outputfile = new File(path+".png");
+		try {
+			ImageIO.write(bi, "png", outputfile);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

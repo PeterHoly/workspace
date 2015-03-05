@@ -1,8 +1,7 @@
 package desktopApp;
 
-import java.awt.image.RGBImageFilter;
+import java.util.BitSet;
 import java.util.Random;
-import java.util.concurrent.locks.Lock;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -10,14 +9,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.w3c.dom.css.RGBColor;
 
 import com.example.bclib.Car;
 import com.example.bclib.MapObject;
@@ -60,7 +53,7 @@ public class Render {
 						
 						if(numberImgCrash != -1){
 							
-							Image myImage = new Image(e.display, "images/"+imagesCarCrash[numberImgCrash]+".png");
+							Image myImage = new Image(e.display, Render.class.getResourceAsStream("../images/"+imagesCarCrash[numberImgCrash]+".png"));
 							e.gc.drawImage(myImage, 0, 0, myImage.getBounds().width, myImage.getBounds().height,(int)(mo.getRight()-mo.getWidth()/2-myImage.getBounds().width/2), (int)(myDisplay.conversionY(mo.getBottom() + mo.getHeight()/2 + myImage.getBounds().height/2)), myImage.getBounds().width, myImage.getBounds().height);
 						}
 					}
@@ -69,7 +62,7 @@ public class Render {
 						if(((Car)mo).getnitroActived()){
 							Random rand = new Random();
 							int  n = rand.nextInt(23);
-							Image myImage = new Image(e.display, "images/"+imagesCarNitro[n]+".png");
+							Image myImage = new Image(e.display, Render.class.getResourceAsStream("../images/"+imagesCarNitro[n]+".png"));
 							
 							Transform t = new Transform(e.display);
 							t.translate((float)mo.getX(), (float)myDisplay.conversionY(mo.getY()));
@@ -85,7 +78,7 @@ public class Render {
 							t.dispose();
 						}
 						
-						Image myImage = new Image(e.display, "images/"+((Car)mo).getImgCode()+".png");
+						Image myImage = new Image(e.display, Render.class.getResourceAsStream("../images/"+((Car)mo).getImgCode()+".png"));
 				    	
 						Transform t = new Transform(e.display);
 						t.translate((float)mo.getX(), (float)myDisplay.conversionY(mo.getY()));
@@ -109,10 +102,10 @@ public class Render {
 	public void drawImg(PaintEvent e, Shell s, boolean nitroPressed, int hp){
 		Image myImage;
 		if(nitroPressed){
-			myImage = new Image(e.display, "images/nitroPressed.png");
+			myImage = new Image(e.display, Render.class.getResourceAsStream("../images/nitroPressed.png"));
 		}
 		else{
-			myImage = new Image(e.display, "images/nitro.png");	
+			myImage = new Image(e.display, Render.class.getResourceAsStream("../images/nitro.png"));	
 		}
 		
 		

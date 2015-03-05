@@ -16,6 +16,7 @@ public class Game {
 	private int IDiterace;
 	private int countPlayers;
 	private Map map;
+	private double centerAngle = 1.570796327;
 	
 	public Game(int id){
 		this.ID=id;
@@ -38,9 +39,24 @@ public class Game {
 					
 					//test kolizi mezi autem a prekazkou
 					double col = Collision.TestCollision(map, p.display, p.myCar);
+					/*
 					if(col != -1){
 						p.myCar.setAngle2(col);
 						p.myCar.reductionHP();
+					}
+					*/
+					if(col != -1){
+						p.settingAnle = (col-centerAngle)/5;
+						p.pomAngle = centerAngle;
+						p.iSA = 5;
+
+						p.myCar.reductionHP();
+					}
+					if(p.iSA <= 5 && p.iSA > 0){
+						p.pomAngle += p.settingAnle;
+						p.myCar.setAngle2(p.pomAngle);
+						
+						p.iSA--;
 					}
 					
 					if(p.nitrous && p.nitroIsUsed){
