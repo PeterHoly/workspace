@@ -136,7 +136,6 @@ public class Player {
 						dos.writeInt(p.glassIndex);
 					}
 				}
-
 				dos.flush();
 			} catch (IOException e1) {
 				e1.printStackTrace();

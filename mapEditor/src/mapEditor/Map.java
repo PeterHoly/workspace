@@ -2,6 +2,7 @@ package mapEditor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -1171,7 +1172,7 @@ public class Map{
 			
 			FileDialog fd = new FileDialog(shell, SWT.OPEN);
 	        fd.setText("Open");
-	        fd.setFilterPath("/home/peter/workspace/mapEditor/maps/");
+	        fd.setFilterPath("/home/peter/workspace/server/maps");
 	        String[] filterExt = {"*.xml"};
 	        fd.setFilterExtensions(filterExt);
 	        String selected = fd.open();
@@ -1346,7 +1347,7 @@ public class Map{
 			
 			FileDialog fd = new FileDialog(shell, SWT.SAVE);
 	        fd.setText("Save");
-	        fd.setFilterPath("/home/peter/workspace/mapEditor/maps/");
+	        fd.setFilterPath("/home/peter/workspace/server/maps");
 	        String[] filterExt = {"*.xml"};
 	        fd.setFilterExtensions(filterExt);
 	        String selected = fd.open();
@@ -1414,11 +1415,21 @@ public class Map{
 		catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		File outputfile = new File(path+".png");
+		
+		BufferedImage newBufferedImage = new BufferedImage(bi.getWidth(),bi.getHeight(), BufferedImage.TYPE_INT_RGB);
+		newBufferedImage.createGraphics().drawImage(bi, 0, 0, Color.WHITE, null);
+		
 		try {
-			ImageIO.write(bi, "png", outputfile);
+			ImageIO.write(newBufferedImage, "jpg", new File(path+".jpg"))
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		  
+		/*File outputfile = new File(path+".jpg");
+		try {
+			ImageIO.write(bi, "JPEG", outputfile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
 	}
 }

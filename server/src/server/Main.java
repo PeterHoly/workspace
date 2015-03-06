@@ -1,13 +1,21 @@
 package server;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import com.example.bclib.CommandClass;
 
@@ -158,6 +166,15 @@ public class Main {
 					dos.flush();
 					s.close();
 				}
+				else if(command==CommandClass.cmdLoadMap){
+					byte[] maap = getMap()
+					dos.writeInt(maap.length);
+					System.out.println(maap.length);
+					
+					dos.write(maap);
+					dos.flush();
+					s.close();
+				}
 				
 				if(command==CommandClass.cmdExit){
 					break;
@@ -182,5 +199,21 @@ public class Main {
 		}
 		return idGames;
 	}
-
+	
+	public static byte[] getMap(){
+		try {
+			byte[] imageInByte
+			BufferedImage bi = ImageIO.read(Main.class.getResourceAsStream("../maps/mapa.jpg"));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(bi, "jpg", baos);
+			baos.flush();
+			imageInByte = baos.toByteArray();
+			baos.close();
+			
+			return imageInByte;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        return null;
+	}
 }

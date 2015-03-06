@@ -378,6 +378,9 @@ public class DesktopMenu {
 		
 		 Listener newGameL = new Listener() {
 		      public void handleEvent(Event event) {
+		    	  byte[] map = client.loadMap();
+		    	  Render.createImg(map);
+		    	  
 		    	  mainMenuComposite.setVisible(false);
 		    	  newGameComposite.setVisible(true);
 		      }
@@ -385,6 +388,9 @@ public class DesktopMenu {
 		 
 		 Listener joinGameL = new Listener() {
 		      public void handleEvent(Event event) {
+		    	  //byte[] map = client.loadMap();
+		    	  //Render.createImg(map);
+		    	  
 		    	  mainMenuComposite.setVisible(false);
 		    	  joinGameComposite.setVisible(true);
 		    	  
@@ -428,6 +434,7 @@ public class DesktopMenu {
 		    	  
 		    	  int u = Integer.parseInt(countPlayers.getText());
 		    	  game.createCars(u);
+		    	  
 		    	  client.createGame(myDisplay, u, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent,filterComponent);
 		    	  setComponentsToCar(game);
 		   

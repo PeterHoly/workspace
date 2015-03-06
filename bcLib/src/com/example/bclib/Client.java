@@ -2,12 +2,15 @@ package com.example.bclib;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.List;
 
 import com.example.bclib.components.Bodywork;
@@ -267,5 +270,30 @@ public class Client {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public byte[] loadMap(){
+		try {		
+			byte[] array = null
+			Socket s = new Socket(ip, port);
+			
+			OutputStream os = s.getOutputStream();
+			DataInputStream dis = new DataInputStream(s.getInputStream());
+
+			os.write(CommandClass.cmdLoadMap);
+			os.flush();
+			
+			int len = dis.readInt();
+			
+			array = new byte[len];
+			
+			dis.read(array);
+			s.close();
+			
+			return array;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
