@@ -1415,21 +1415,12 @@ public class Map{
 		catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
-		BufferedImage newBufferedImage = new BufferedImage(bi.getWidth(),bi.getHeight(), BufferedImage.TYPE_INT_RGB);
-		newBufferedImage.createGraphics().drawImage(bi, 0, 0, Color.WHITE, null);
-		
+		  
+		File outputfile = new File(path+".png");
 		try {
-			ImageIO.write(newBufferedImage, "jpg", new File(path+".jpg"))
+			ImageIO.write(bi, "png", outputfile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		  
-		/*File outputfile = new File(path+".jpg");
-		try {
-			ImageIO.write(bi, "JPEG", outputfile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 	}
 }

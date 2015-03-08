@@ -139,8 +139,6 @@ public class Client {
 				int bodyworkIndex = dis.readInt();
 				int glassIndex = dis.readInt();
 				
-				System.out.println(bodyworkIndex+", "+glassIndex);
-				
 				car.setBodywork(Bodywork.bodyworks[bodyworkIndex]);
 				car.setGlass(Glass.glasses[glassIndex]);
 			}
@@ -169,11 +167,12 @@ public class Client {
 		}
 	}
 	
-	public void createGame(Display display, int countPlay, Game game, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro, int filter){
+	public void createGame(String m, Display display, int countPlay, Game game, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro, int filter){
 		initSocket();
 		
 		try {
 			os.write(CommandClass.cmdCreate);
+			dos.writeUTF(m);
 			dos.writeDouble(display.getWidth());
 			dos.writeDouble(display.getHeight());
 			dos.writeInt(indexBodywork);
@@ -272,25 +271,54 @@ public class Client {
 		}
 	}
 	
-	public byte[] loadMap(){
+	public byte[] loadMap(String map){
 		try {		
-			byte[] array = null
+			byte[] array = null;
 			Socket s = new Socket(ip, port);
-			
 			OutputStream os = s.getOutputStream();
 			DataInputStream dis = new DataInputStream(s.getInputStream());
-
+			DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 			os.write(CommandClass.cmdLoadMap);
-			os.flush();
-			
+			dos.writeUTF(map);
+			dos.flush();
 			int len = dis.readInt();
-			
 			array = new byte[len];
-			
-			dis.read(array);
+			dis.readFully(array);
 			s.close();
-			
 			return array;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String getMaps(){
+		try {		
+			Socket s = new Socket(ip, port);
+			OutputStream os = s.getOutputStream();
+			DataInputStream dis = new DataInputStream(s.getInputStream());
+			os.write(CommandClass.cmdGetMaps);
+			os.flush();
+			String maps = dis.readUTF();
+			s.close();
+			return maps;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public String getMapName(int id){
+		try {		
+			Socket s = new Socket(ip, port);
+			OutputStream os = s.getOutputStream();
+			DataInputStream dis = new DataInputStream(s.getInputStream());
+			DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+			os.write(CommandClass.cmdGetMapName);
+			dos.writeInt(id);
+			dos.flush();
+			String mapName = dis.readUTF();
+			s.close();
+			return mapName;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

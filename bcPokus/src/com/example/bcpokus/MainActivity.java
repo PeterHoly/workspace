@@ -1,8 +1,9 @@
 package com.example.bcpokus;
 
-import java.util.ArrayList;
-
-import org.w3c.dom.Text;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import com.example.bclib.Client;
 import com.example.bclib.Display;
@@ -16,31 +17,21 @@ import com.example.bclib.components.Glass;
 import com.example.bclib.components.Nitro;
 import com.example.bclib.components.Wheel;
 
-import android.R.integer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
-import android.app.NotificationManager;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v4.app.NotificationManagerCompat;
-import android.text.AndroidCharacter;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TableRow;
@@ -81,8 +72,8 @@ public class MainActivity extends Activity {
 	
 	public String[] arraySpinner = new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
 	
-	//private final Client myClient = new Client("192.168.0.21", 8096);
-	private final Client myClient = new Client("192.168.43.37", 8096);
+	private final Client myClient = new Client("192.168.0.21", 8096);
+	//private final Client myClient = new Client("192.168.43.37", 8096);
 	
 	private final Game myGame = new Game(new Display(0,0,320,430));
 	private SurfacePanel sp;
@@ -109,6 +100,8 @@ public class MainActivity extends Activity {
 		buildCarButton.setTypeface(tf);
 	}
 	
+	public TableLayout tableLayout2;
+	public String mapName;
 	public void newGame(View v){
 		setContentView(R.layout.new_game);
 		
@@ -120,14 +113,72 @@ public class MainActivity extends Activity {
 		TextView tw = (TextView) findViewById(R.id.write_count_players);
 		tw.setTypeface(tf);
 		
+		TextView tws = (TextView) findViewById(R.id.choose_one_map);
+		tws.setTypeface(tf);
+		
 		Spinner spinner = (Spinner) findViewById(R.id.spinner);
 		
 	    ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, arraySpinner);
 	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    spinner.setAdapter(adapter);
+	    
+	    ScrollView sw = (ScrollView) findViewById(R.id.created_maps_scroll);
+		sw.setBackgroundColor(Color.GRAY);
+		
+		String maps = myClient.getMaps();
+		
+  	  	tableLayout2 = (TableLayout) findViewById(R.id.created_maps_table);
+  	  	
+  	  	for(String a: maps.split(",")){
+  	  		if(a.length() > 0){
+  	  			
+	  	  		TextView item = new TextView(getApplicationContext());
+	  			item.setText("Map: "+a);
+	  			item.setTextColor(Color.BLACK);
+	  			item.setTextSize(20);
+	  			
+	  			final String map = a;
+	  			
+	  			final TableRow trow = new TableRow(getApplicationContext());
+	  			trow.addView(item);
+	  			
+	  			trow.setOnClickListener(new OnClickListener() {
+	  				
+	  				@Override
+	  				public void onClick(View v) {
+	  					
+	  					for(int i=0; i<tableLayout2.getChildCount(); i++){
+	  						tableLayout2.getChildAt(i).setBackgroundColor(Color.GRAY);
+	  					}
+	  					
+	  					trow.setBackgroundColor(Color.DKGRAY);
+	  					mapName = map;
+	  				}
+	  			});
+	  			tableLayout2.addView(trow);
+  	  		}
+  	  	}
 	}
 	
 	public void playGame(View v){
+
+		boolean mapIsLoaded = false;
+		String a = null;
+		String[] directoryListing = this.getDir("maps", MODE_PRIVATE).list();
+		if (directoryListing != null) {
+			for (String child : directoryListing) {
+				if(child.equals(mapName)){
+					mapIsLoaded = true;
+					break;
+				}
+			}
+		}
+  
+		if(!mapIsLoaded){
+			byte[] map = myClient.loadMap(mapName);
+			Render.createImg(map, mapName, this);
+		}
+  	  
 		Spinner countPlayers = (Spinner) findViewById(R.id.spinner);
 		final int u = Integer.parseInt(arraySpinner[countPlayers.getSelectedItemPosition()]);
 		myGame.createCars(u);
@@ -135,7 +186,7 @@ public class MainActivity extends Activity {
 		Thread th = new Thread(new Runnable(){
 			@Override
 			public void run() {
-				myClient.createGame(myGame.getDisplay(), u, myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent, filterComponent);
+				myClient.createGame(mapName, myGame.getDisplay(), u, myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent, filterComponent);
 			}
 		});
 		th.start();
@@ -172,7 +223,7 @@ public class MainActivity extends Activity {
 	}
 	
 	public TableLayout tableLayout;
-	public int gameId;
+	public String gameId;
 	public void joinGame(View v){
 		setContentView(R.layout.join_game);
 		
@@ -187,8 +238,6 @@ public class MainActivity extends Activity {
 		String games = myClient.getGames();
 
   	  	tableLayout = (TableLayout) findViewById(R.id.created_games_table);
-  	  	int i=0;
-  	  	
   	  	
   	  	for(String a: games.split(",")){
   	  		if(a.length() > 0){
@@ -198,13 +247,12 @@ public class MainActivity extends Activity {
 	  			item.setTextColor(Color.BLACK);
 	  			item.setTextSize(20);
 	  			
-	  			final int idGame = i;
+	  			final String idGame = a;
 	  			
 	  			final TableRow trow = new TableRow(getApplicationContext());
 	  			trow.addView(item);
 	  			
 	  			trow.setOnClickListener(new OnClickListener() {
-	  				
 	  				@Override
 	  				public void onClick(View v) {
 	  					
@@ -218,17 +266,31 @@ public class MainActivity extends Activity {
 	  			});
 
 	  			tableLayout.addView(trow);
-	  			
-	  			i++;
   	  		}
   	  	}	
 	}
 	
 	public void connect(View v){
+		String m = myClient.getMapName(Integer.parseInt(gameId));
+		boolean mapIsLoaded = false;
+		String a = null;
+		String[] directoryListing = this.getDir("maps", MODE_PRIVATE).list();
+		if (directoryListing != null) {
+			for (String child : directoryListing) {
+				if(child.equals(m)){
+					mapIsLoaded = true;
+					break;
+				}
+			}
+		}
+  
+		if(!mapIsLoaded){
+			byte[] map = myClient.loadMap(m);
+			Render.createImg(map, m, this);
+		}
+		myGame.setMapName(m);
 		
-		int u = gameId;
-  	  
-  	  	int cars = myClient.joinGame(u, myGame.getDisplay(), myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent, filterComponent);
+  	  	int cars = myClient.joinGame(Integer.parseInt(gameId), myGame.getDisplay(), myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent, filterComponent);
   	  	myGame.createCars(cars);
   	  	setComponentsToCar(myGame);
 		  

@@ -19,5 +19,7 @@ public class CommandClass {
 	public static final int cmdGetImgs = 14;
 	public static final int cmdNitroPush = 15;
 	public static final int cmdLoadMap = 16;
+	public static final int cmdGetMaps = 17;
+	public static final int cmdGetMapName = 18;
 
 }

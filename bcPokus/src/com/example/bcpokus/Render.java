@@ -1,25 +1,25 @@
 package com.example.bcpokus;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Random;
 
 import com.example.bclib.Car;
 import com.example.bclib.Display;
 import com.example.bclib.MapObject;
 import com.example.bclib.Obstacle;
-import com.example.bclib.components.Bodywork;
-import com.example.bclib.components.Glass;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Canvas;
-import android.graphics.Picture;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -142,5 +142,17 @@ public class Render {
 	public void drawHp(GameUI gameUI, Canvas myCanvas, int hp){
 		
 		myCanvas.drawText(gameUI.hp[hp], (float)myDisplay.getWidth()-80, (float)myDisplay.getHeight()-400, paint);
+	}
+	
+	public static void createImg(byte[] map, String name, Context context){
+		File dir = context.getDir("maps", Context.MODE_PRIVATE);
+		OutputStream os = null;
+		try {
+			os = new FileOutputStream(new File(dir, name));
+			Bitmap b = BitmapFactory.decodeByteArray(map, 0, map.length);
+			b.compress(Bitmap.CompressFormat.PNG, 100, os);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 }

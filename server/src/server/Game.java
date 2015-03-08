@@ -17,6 +17,7 @@ public class Game {
 	private int countPlayers;
 	private Map map;
 	private double centerAngle = 1.570796327;
+	private String mapImgName;
 	
 	public Game(int id){
 		this.ID=id;
@@ -147,5 +148,13 @@ public class Game {
 	
 	public List<Player> getPlayers(){
 		return players;
+	}
+	
+	public String getMapImgName(){
+		return mapImgName;
+	}
+	
+	public void setMapImgName(String mapImgName){
+		this.mapImgName = mapImgName;
 	}
 }

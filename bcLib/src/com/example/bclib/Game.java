@@ -5,6 +5,7 @@ public class Game {
 	private Display display;
 	private Map map;
 	private int IDplayer;
+	private String mapNameImg;
 	
 	public Game(Display display){
 		this.display = display;
@@ -32,5 +33,9 @@ public class Game {
 	
 	public void setIDplayer(int iDplayer) {
 		IDplayer = iDplayer;
+	}
+	
+	public void setMapName(String mapNameImg) {
+		this.mapNameImg = mapNameImg;
 	}
 }

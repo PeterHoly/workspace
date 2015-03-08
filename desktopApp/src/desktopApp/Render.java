@@ -5,7 +5,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.BitSet;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -128,11 +127,11 @@ public class Render {
 		e.gc.drawImage(myImage, 0, 0, myImage.getBounds().width, myImage.getBounds().height, (int)myDisplay.getWidth()-30, (int)myDisplay.getHeight()-90,myImage.getBounds().width/3, myImage.getBounds().height/3);
 	}
 	
-	public static void createImg(byte[] map){
+	public static void createImg(byte[] map, String name){
 		try {			
-			InputStream in = new ByteArrayInputStream(map)
+			InputStream in = new ByteArrayInputStream(map);
 			BufferedImage bImageFromConvert = ImageIO.read(in);
-			ImageIO.write(bImageFromConvert, "jpg", new File("mapa.jpg"));
+			ImageIO.write(bImageFromConvert, "png", new File("src/maps/"+name+".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

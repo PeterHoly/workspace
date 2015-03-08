@@ -1,5 +1,7 @@
 package desktopApp;
 
+import java.io.File;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -61,9 +63,11 @@ public class DesktopMenu {
     Button appearance;
     
     List createdGames;
+    List createdMaps;
     
     Spinner countPlayers;
     Label writeCountPlayers;
+    Label chooseOneMap;
     Label chooseGame;
     Label textKomp;
     
@@ -138,8 +142,6 @@ public class DesktopMenu {
         loadingComposite.setBackgroundMode(SWT.INHERIT_FORCE);
         
         final org.eclipse.swt.graphics.Color colorBlack = display.getSystemColor(SWT.COLOR_BLACK);
-        final org.eclipse.swt.graphics.Color colorWhite = display.getSystemColor(SWT.COLOR_WHITE);
-        final org.eclipse.swt.graphics.Color colorDarkGray = display.getSystemColor(SWT.COLOR_DARK_GRAY);
         final org.eclipse.swt.graphics.Color colorGray = new org.eclipse.swt.graphics.Color(display, 132, 144, 142);
         final org.eclipse.swt.graphics.Color colorSilver = new org.eclipse.swt.graphics.Color(display, 178,184,182);
         final org.eclipse.swt.graphics.Color colorSilver2 = new org.eclipse.swt.graphics.Color(display, 196,197,201);
@@ -172,22 +174,35 @@ public class DesktopMenu {
   	  	countPlayers.setMinimum(1);
   	  	countPlayers.setMaximum(10);
   	  	countPlayers.setSize(50, 40);
-  	  	countPlayers.setLocation(125, 150);
+  	  	countPlayers.setLocation(210, 230);
   	  	countPlayers.setBackground(colorGray);
   	  	countPlayers.setForeground(colorBlack);
   	  	
 	  	play = new Button(newGameComposite,SWT.PUSH);
 	  	play.setSize(200, 40);
 	  	play.setText("Play");
-	  	play.setLocation(60, 250);
+	  	play.setLocation(60, 300);
 	  	play.setFont(myfont);
 	  	
 	  	writeCountPlayers = new Label(newGameComposite,SWT.NONE);
 	  	writeCountPlayers.setSize(220, 20);
-	  	writeCountPlayers.setText("Write count players !");
-	  	writeCountPlayers.setLocation(68, 100);
+	  	writeCountPlayers.setText("Count players :");
+	  	writeCountPlayers.setLocation(68, 240);
 	  	writeCountPlayers.setForeground(colorSilver2);
 	  	writeCountPlayers.setFont(myfont);
+	  	
+	  	chooseOneMap = new Label(newGameComposite,SWT.NONE);
+	  	chooseOneMap.setSize(220, 20);
+	  	chooseOneMap.setText("Choose one map :");
+	  	chooseOneMap.setLocation(82, 85);
+	  	chooseOneMap.setForeground(colorSilver2);
+	  	chooseOneMap.setFont(myfont);
+	  	
+	  	createdMaps = new List(newGameComposite,SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.TRANSPARENT);
+	  	createdMaps.setBackground(colorGray);
+	  	createdMaps.setForeground(colorBlack);
+	  	createdMaps.setSize(200, 100);
+	  	createdMaps.setLocation(62, 110);
 	  	
 	  	backNewGame = new Button(newGameComposite,SWT.PUSH );
 	  	backNewGame.setSize(48, 48);
@@ -197,7 +212,7 @@ public class DesktopMenu {
         
         chooseGame = new Label(joinGameComposite,SWT.NULL);
         chooseGame.setSize(220, 20);
-        chooseGame.setText("Choose one game !");
+        chooseGame.setText("Choose one game :");
         chooseGame.setLocation(77, 100);
         chooseGame.setForeground(colorSilver2);
         chooseGame.setFont(myfont);
@@ -378,19 +393,26 @@ public class DesktopMenu {
 		
 		 Listener newGameL = new Listener() {
 		      public void handleEvent(Event event) {
-		    	  byte[] map = client.loadMap();
-		    	  Render.createImg(map);
-		    	  
 		    	  mainMenuComposite.setVisible(false);
 		    	  newGameComposite.setVisible(true);
+		    	  
+		    	  String maps = client.getMaps();
+		    	  
+		    	  createdMaps.removeAll();
+		    	  
+		    	  for(String a: maps.split(",")){
+		    		  if(!a.isEmpty()){
+		    			  createdMaps.add("Map : "+a);
+		    		  }
+		    	  }
+		    	  if(maps.length() > 0){
+		    		  createdMaps.select(0);
+		    	  }
 		      }
 		 };
 		 
 		 Listener joinGameL = new Listener() {
 		      public void handleEvent(Event event) {
-		    	  //byte[] map = client.loadMap();
-		    	  //Render.createImg(map);
-		    	  
 		    	  mainMenuComposite.setVisible(false);
 		    	  joinGameComposite.setVisible(true);
 		    	  
@@ -431,11 +453,32 @@ public class DesktopMenu {
 		 
 		 Listener playL = new Listener() {
 		      public void handleEvent(Event event) {
+		    	  String m = createdMaps.getItem(createdMaps.getSelectionIndex()).split(" ")[2];
+		    	  boolean mapIsLoaded = false;
+		    	  String a = null;
+		    	  File dir = new File("src/maps/");
+		    	  File[] directoryListing = dir.listFiles();
+		    	  if (directoryListing != null) {
+		    		  for (File child : directoryListing) {
+		    			  if(child.getName().endsWith(".png")){
+		    				  a = child.getName().subSequence(0, child.getName().length()-4).toString();
+		    				  if(a.equals(m)){
+		    					  mapIsLoaded = true;
+		    					  break;
+		    				  }
+		    			  }
+		    		  }
+		    	  }
+		    	  
+		    	  if(!mapIsLoaded){
+		    		  byte[] map = client.loadMap(m);
+			    	  Render.createImg(map,m);
+		    	  }
 		    	  
 		    	  int u = Integer.parseInt(countPlayers.getText());
 		    	  game.createCars(u);
 		    	  
-		    	  client.createGame(myDisplay, u, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent,filterComponent);
+		    	  client.createGame(m, myDisplay, u, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent,filterComponent);
 		    	  setComponentsToCar(game);
 		   
 		    	  newGameComposite.setVisible(false); 	  
@@ -471,6 +514,28 @@ public class DesktopMenu {
 		 Listener connectL = new Listener() {
 		      public void handleEvent(Event event) {
 		    	  int u = Integer.parseInt(createdGames.getItem(createdGames.getSelectionIndex()).split(" ")[2]);
+		    	  String m = client.getMapName(u);
+		    	  boolean mapIsLoaded = false;
+		    	  String a = null;
+		    	  File dir = new File("src/maps/");
+		    	  File[] directoryListing = dir.listFiles();
+		    	  if (directoryListing != null) {
+		    		  for (File child : directoryListing) {
+		    			  if(child.getName().endsWith(".png")){
+		    				  a = child.getName().subSequence(0, child.getName().length()-4).toString();
+		    				  if(a.equals(m)){
+		    					  mapIsLoaded = true;
+		    					  break;
+		    				  }
+		    			  }
+		    		  }
+		    	  }
+		    	  
+		    	  if(!mapIsLoaded){
+		    		  byte[] map = client.loadMap(m);
+			    	  Render.createImg(map,m);
+		    	  }
+		    	  game.setMapName(m);
 		    	  
 		    	  int cars = client.joinGame(u, myDisplay, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent,filterComponent);
 				  game.createCars(cars);
@@ -530,7 +595,7 @@ public class DesktopMenu {
 		    	  String karosery = Bodywork.bodyworks[bodyworkC.getSelectionIndex()].getCode();
 		    	  String glass = Glass.glasses[glassC.getSelectionIndex()].getCode();
 		    	  
-		    	  Image carImage = new Image(display, Render.class.getResourceAsStream("../images/"+karosery+glass+".png"));
+		    	  Image carImage = new Image(display, DesktopMenu.class.getResourceAsStream("../images/"+karosery+glass+".png"));
 		    	  carLabel.setSize(carImage.getBounds().width, carImage.getBounds().height);
 		    	  carLabel.setImage(carImage);
 		      }
@@ -595,7 +660,6 @@ public class DesktopMenu {
 		    	  Image carImage = new Image(display, Render.class.getResourceAsStream("../images/"+karosery+glass+".png"));
 		    	  carLabel.setSize(carImage.getBounds().width, carImage.getBounds().height);
 		    	  carLabel.setImage(carImage);
-				
 			}
 
 			@Override
@@ -794,8 +858,6 @@ public class DesktopMenu {
 	   myGame.getMap().cars.get(idPlayer).setNitro(Nitro.nitrous[nitroComponent]);
 	   myGame.getMap().cars.get(idPlayer).setBodywork(Bodywork.bodyworks[bodyworkComponent]);
 	   myGame.getMap().cars.get(idPlayer).setGlass(Glass.glasses[glassComponent]);
-	   
-	   System.out.println(Wheel.wheels[wheelComponent].getValue());
 	   
 	   myGame.getMap().cars.get(idPlayer).setTrajectory();
 	   

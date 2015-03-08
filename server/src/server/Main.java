@@ -1,6 +1,5 @@
 package server;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -11,8 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -51,6 +48,7 @@ public class Main {
 				{
 					final Game myGame = new Game(createdGame.size());
 					
+					String mapImgName = dis.readUTF();
 					double width = dis.readDouble();
 					double height = dis.readDouble();
 					int bodyworkIndex = dis.readInt();
@@ -60,7 +58,8 @@ public class Main {
 					double xSpeed = dis.readDouble();
 					int nitro = dis.readInt();
 					int filter = dis.readInt();
-				
+					
+					myGame.setMapImgName(mapImgName);
 					myGame.setCountPlay(countPlay);
 					
 					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter, myGame.getCountPlayers());
@@ -167,13 +166,19 @@ public class Main {
 					s.close();
 				}
 				else if(command==CommandClass.cmdLoadMap){
-					byte[] maap = getMap()
-					dos.writeInt(maap.length);
-					System.out.println(maap.length);
-					
-					dos.write(maap);
+					String m = dis.readUTF();
+					byte[] map = loadMap(m);
+					dos.writeInt(map.length);
+					dos.write(map);
 					dos.flush();
-					s.close();
+				}
+				else if(command==CommandClass.cmdGetMaps){
+					dos.writeUTF(getMaps());
+					dos.flush();
+				}
+				else if(command==CommandClass.cmdGetMapName){
+					dos.writeUTF(createdGame.get(dis.readInt()).getMapImgName());
+					dos.flush();
 				}
 				
 				if(command==CommandClass.cmdExit){
@@ -200,20 +205,33 @@ public class Main {
 		return idGames;
 	}
 	
-	public static byte[] getMap(){
+	public static byte[] loadMap(String mapName){
 		try {
-			byte[] imageInByte
-			BufferedImage bi = ImageIO.read(Main.class.getResourceAsStream("../maps/mapa.jpg"));
+			byte[] imageInByte;
+			BufferedImage bi = ImageIO.read(Main.class.getResourceAsStream("../maps/"+mapName+".png"));
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(bi, "jpg", baos);
+			ImageIO.write(bi, "png", baos);
 			baos.flush();
 			imageInByte = baos.toByteArray();
 			baos.close();
-			
 			return imageInByte;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
         return null;
+	}
+	
+	public static String getMaps(){
+		String name = "";
+		File dir = new File("src/maps/");
+		File[] directoryListing = dir.listFiles();
+		if (directoryListing != null) {
+			for (File child : directoryListing) {
+				if(child.getName().endsWith(".png")){
+		        	name += child.getName().subSequence(0, child.getName().length()-4)+",";
+		        }
+			}
+		}
+		return name;
 	}
 }
