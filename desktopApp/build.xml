@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="makejar" basedir=".">
+    <property name="name">${proj_name}</property>
+  <target name ="makejar" description="Create a jar for the HW project">
+    <jar manifest="manifest.mf" jarfile="${dist}/${name}.jar" >
+        <fileset dir="." includes="JNLP-INF/*.*"/>
+        <fileset dir="bin" />
+    </jar>
+    <jar manifest="manifest.mf" jarfile="swt_linux.jar" >
+        <fileset file="libs/swt.jar" />
+    </jar>
+    <copy toDir="${dist}" >
+        <fileset dir="JNLP-INF" includes="*.*"/>
+    </copy>
+    <copy toDir="${dist}" >
+        <fileset file="libs/swt.jar" includes="*.jar"/>
+    </copy>
+  </target>
+</project>

@@ -78,6 +78,7 @@ public class DesktopMenu {
     Label wheel;
     Label nitro;
     Label loadingText;
+    Label gameName;
     
     Combo engineC;
     Combo exhaustC;
@@ -167,6 +168,10 @@ public class DesktopMenu {
         newGame.setText("New Game");
         newGame.setLocation(60, 250);
         newGame.setFont(myfont);
+        
+        gameName = new Label(mainMenuComposite,SWT.NONE);
+        gameName.setSize(200, 105);
+        gameName.setLocation(60, 30);
         
         //New Game---------
         
@@ -425,6 +430,9 @@ public class DesktopMenu {
 		    			  createdGames.add("Game id: "+a);
 		    		  }
 		    	  }
+		    	  if(games.length() > 0){
+		    		  createdGames.select(0);
+		    	  }
 		      }
 		 };
 		 
@@ -453,54 +461,61 @@ public class DesktopMenu {
 		 
 		 Listener playL = new Listener() {
 		      public void handleEvent(Event event) {
-		    	  String m = createdMaps.getItem(createdMaps.getSelectionIndex()).split(" ")[2];
-		    	  boolean mapIsLoaded = false;
-		    	  String a = null;
-		    	  File dir = new File("src/maps/");
-		    	  File[] directoryListing = dir.listFiles();
-		    	  if (directoryListing != null) {
-		    		  for (File child : directoryListing) {
-		    			  if(child.getName().endsWith(".png")){
-		    				  a = child.getName().subSequence(0, child.getName().length()-4).toString();
-		    				  if(a.equals(m)){
-		    					  mapIsLoaded = true;
-		    					  break;
-		    				  }
-		    			  }
-		    		  }
-		    	  }
-		    	  
-		    	  if(!mapIsLoaded){
-		    		  byte[] map = client.loadMap(m);
-			    	  Render.createImg(map,m);
-		    	  }
-		    	  
-		    	  int u = Integer.parseInt(countPlayers.getText());
-		    	  game.createCars(u);
-		    	  
-		    	  client.createGame(m, myDisplay, u, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent,filterComponent);
-		    	  setComponentsToCar(game);
-		   
-		    	  newGameComposite.setVisible(false); 	  
-		    	  loadingComposite.setVisible(true);
-		    	  
-		    	  Thread t = new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						client.syncStart();
-						client.getImgs(game.getMap().cars);
-						display.syncExec(new Runnable() {
-							
-							@Override
-							public void run() {
-								loadingComposite.setVisible(false);
-							}
-						});
-						sp.Start();
-					}
-		    	  });
-		    	  t.start();
+		    	  if(createdMaps.getItemCount() > 0){
+			    	  String m = createdMaps.getItem(createdMaps.getSelectionIndex()).split(" ")[2];
+			    	  boolean mapIsLoaded = false;
+			    	  String a = null;
+			    	  
+			    	  File dir = new File("bin/maps/");
+			    	  File[] directoryListing = dir.listFiles();
+			    	  if (directoryListing != null) {
+			    		  for (File child : directoryListing) {
+			    			  if(child.getName().endsWith(".png")){
+			    				  a = child.getName().subSequence(0, child.getName().length()-4).toString();
+			    				  if(a.equals(m)){
+			    					  mapIsLoaded = true;
+			    					  break;
+			    				  }
+			    			  }
+			    		  }
+			    	  }
+			    	  
+			    	  String sdas = client.loadMapsObstacle(m);
+			    	  game.setMapObstacleAndStart(sdas);
+			    	  
+			    	  if(!mapIsLoaded){
+			    		  byte[] map = client.loadMap(m);
+				    	  Render.createImg(map,m);
+			    	  }
+			    	  game.setMapName(m);
+			    	  
+			    	  int u = Integer.parseInt(countPlayers.getText());
+			    	  game.createCars(u);
+			    	  
+			    	  client.createGame(m, myDisplay, u, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent,filterComponent);
+			    	  setComponentsToCar(game);
+			   
+			    	  newGameComposite.setVisible(false); 	  
+			    	  loadingComposite.setVisible(true);
+			    	  
+			    	  Thread t = new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							client.syncStart();
+							client.getImgs(game.getMap().cars);
+							display.syncExec(new Runnable() {
+								
+								@Override
+								public void run() {
+									loadingComposite.setVisible(false);
+								}
+							});
+							sp.Start();
+						}
+			    	  });
+			    	  t.start();
+			      }
 		      }
 		 };
 		 
@@ -513,54 +528,56 @@ public class DesktopMenu {
 		 
 		 Listener connectL = new Listener() {
 		      public void handleEvent(Event event) {
-		    	  int u = Integer.parseInt(createdGames.getItem(createdGames.getSelectionIndex()).split(" ")[2]);
-		    	  String m = client.getMapName(u);
-		    	  boolean mapIsLoaded = false;
-		    	  String a = null;
-		    	  File dir = new File("src/maps/");
-		    	  File[] directoryListing = dir.listFiles();
-		    	  if (directoryListing != null) {
-		    		  for (File child : directoryListing) {
-		    			  if(child.getName().endsWith(".png")){
-		    				  a = child.getName().subSequence(0, child.getName().length()-4).toString();
-		    				  if(a.equals(m)){
-		    					  mapIsLoaded = true;
-		    					  break;
-		    				  }
-		    			  }
-		    		  }
-		    	  }
-		    	  
-		    	  if(!mapIsLoaded){
-		    		  byte[] map = client.loadMap(m);
-			    	  Render.createImg(map,m);
-		    	  }
-		    	  game.setMapName(m);
-		    	  
-		    	  int cars = client.joinGame(u, myDisplay, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent,filterComponent);
-				  game.createCars(cars);
-				  setComponentsToCar(game);
-				  
-				  joinGameComposite.setVisible(false);
-				  
-				  loadingComposite.setVisible(true);
-		    	  Thread t = new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						client.syncStart();
-						client.getImgs(game.getMap().cars);
-						display.syncExec(new Runnable() {
-							
-							@Override
-							public void run() {
-								 loadingComposite.setVisible(false);
-							}
-						});
-						sp.Start();
-					}
-		    	  });
-		    	  t.start();
+		    	  if(createdGames.getItemCount() > 0){
+			    	  int u = Integer.parseInt(createdGames.getItem(createdGames.getSelectionIndex()).split(" ")[2]);
+			    	  String m = client.getMapName(u);
+			    	  boolean mapIsLoaded = false;
+			    	  String a = null;
+			    	  File dir = new File("bin/maps/");
+			    	  File[] directoryListing = dir.listFiles();
+			    	  if (directoryListing != null) {
+			    		  for (File child : directoryListing) {
+			    			  if(child.getName().endsWith(".png")){
+			    				  a = child.getName().subSequence(0, child.getName().length()-4).toString();
+			    				  if(a.equals(m)){
+			    					  mapIsLoaded = true;
+			    					  break;
+			    				  }
+			    			  }
+			    		  }
+			    	  }
+			    	  
+			    	  if(!mapIsLoaded){
+			    		  byte[] map = client.loadMap(m);
+				    	  Render.createImg(map,m);
+			    	  }
+			    	  game.setMapName(m);
+			    	  
+			    	  int cars = client.joinGame(u, myDisplay, game, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent,filterComponent);
+					  game.createCars(cars);
+					  setComponentsToCar(game);
+					  
+					  joinGameComposite.setVisible(false);
+					  
+					  loadingComposite.setVisible(true);
+			    	  Thread t = new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							client.syncStart();
+							client.getImgs(game.getMap().cars);
+							display.syncExec(new Runnable() {
+								
+								@Override
+								public void run() {
+									 loadingComposite.setVisible(false);
+								}
+							});
+							sp.Start();
+						}
+			    	  });
+			    	  t.start();
+			      }
 		      }
 		 };
 		 
@@ -727,8 +744,23 @@ public class DesktopMenu {
 				}
 			}
 		};
-				
-		 
+		
+		PaintListener backgroundPlace = new PaintListener() {
+			@Override
+			public void paintControl(PaintEvent e) {
+				if(e.widget instanceof Label)
+				{
+					Label label = (Label)e.widget;
+					Image image = new Image(display, Render.class.getResourceAsStream("../images/mapName.png"));
+					e.gc.drawImage(image,0,0,image.getBounds().width,image.getBounds().height,0,0,label.getBounds().width,label.getBounds().height);
+					e.gc.setForeground(colorBlack2);
+					e.gc.setFont(new Font(display, new FontData("Capture it", 18, SWT.NORMAL)));
+					e.gc.drawText("HIGHWAY\n RACING", 45, 25, true);
+				}
+			}
+		};
+		
+		gameName.addPaintListener(backgroundPlace);
 		newGame.addPaintListener(backgroundButtonPaintL);
 		joinGame.addPaintListener(backgroundButtonPaintL);
 		buildCar.addPaintListener(backgroundButtonPaintL);

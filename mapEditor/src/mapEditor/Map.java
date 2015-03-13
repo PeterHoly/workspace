@@ -2,7 +2,6 @@ package mapEditor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -142,12 +141,12 @@ public class Map{
 	Composite sc;
 	Canvas child;
 	
-	int width = 362/2;
+	int width = 400;
 	int height = 641;
 	int rect = 20;
 	int barrierWidth = 10;
 	int barrierHeight = 60;
-	int startWidth = 183;
+	int startWidth = 400;
 	int startHeight = 30;
 	int row = height/rect;
 	int col = width/rect;
@@ -213,7 +212,7 @@ public class Map{
 	    child = new Canvas(sc, SWT.NONE);
 	    child.setBackground(colorGreen);
 	    child.setSize(width,height);
-	    child.setLocation(width/2, 0);
+	    child.setLocation(0, 0);
 	    
 	    origin = new Point(0, 0);
 	    vBar = sc.getVerticalBar();
@@ -420,25 +419,25 @@ public class Map{
 		areaComposite.setSize(340, 580);
 		areaComposite.setBackgroundMode(SWT.INHERIT_FORCE);
 		areaComposite.setBackground(colorGray);
-		areaComposite.setLocation(5, 33);
+		areaComposite.setLocation(40, 33);
 		
 		barrierComposite = new Composite(mapFolder, SWT.NULL);
 		barrierComposite.setSize(340, 580);
 		barrierComposite.setBackgroundMode(SWT.INHERIT_FORCE);
 		barrierComposite.setBackground(colorGray);
-		barrierComposite.setLocation(5, 33);
+		barrierComposite.setLocation(40, 33);
 		
 		startComposite = new Composite(mapFolder, SWT.NULL);
 		startComposite.setSize(340, 580);
 		startComposite.setBackgroundMode(SWT.INHERIT_FORCE);
 		startComposite.setBackground(colorGray);
-		startComposite.setLocation(5, 33);
+		startComposite.setLocation(40, 33);
 		
 		rowComposite = new Composite(mapFolder, SWT.NULL);
 		rowComposite.setSize(340, 580);
 		rowComposite.setBackgroundMode(SWT.INHERIT_FORCE);
 		rowComposite.setBackground(colorGray);
-		rowComposite.setLocation(5, 33);
+		rowComposite.setLocation(40, 33);
 		
 		bArea = new TabItem(mapFolder, SWT.PUSH);
 		bArea.setText("Areas");
@@ -855,7 +854,7 @@ public class Map{
 			}
 		});
 		
-		startImage = new Image(display, Map.class.getResourceAsStream("../images/start.png"));
+		startImage = new Image(display, Map.class.getResourceAsStream("../images/startLab.png"));
 		startLabel = new Label(startComposite, SWT.TRANSPARENT);
 		startLabel.setLocation(80,150);
 		startLabel.setSize(startImage.getBounds().width, startImage.getBounds().height);
@@ -874,7 +873,7 @@ public class Map{
 			}
 		});
 		
-		finishImage = new Image(display, Map.class.getResourceAsStream("../images/finish.png"));
+		finishImage = new Image(display, Map.class.getResourceAsStream("../images/finishLab.png"));
 		finishLabel = new Label(startComposite, SWT.TRANSPARENT);
 		finishLabel.setLocation(80,200);
 		finishLabel.setSize(finishImage.getBounds().width, finishImage.getBounds().height);
@@ -1201,14 +1200,14 @@ public class Map{
 	
 				for (int temp = 0; temp < nodeList1.getLength(); temp++) {
 					Element eElement = (Element) nodeList1.item(temp);
-					obstacleStart[temp] = new Obstacle(Double.valueOf(eElement.getAttribute("x1")), Double.valueOf(eElement.getAttribute("y1")), Double.valueOf(eElement.getAttribute("x2")), Double.valueOf(eElement.getAttribute("y1")));
+					obstacleStart[temp] = new Obstacle(Double.valueOf(eElement.getAttribute("x1")), row*rect - Double.valueOf(eElement.getAttribute("y1")), Double.valueOf(eElement.getAttribute("x2")), row*rect - Double.valueOf(eElement.getAttribute("y1")));
 				}
 				
 				NodeList nodeList2 = nList.item(1).getChildNodes();
 	
 				for (int temp = 0; temp < nodeList2.getLength(); temp++) {
 					Element eElement = (Element) nodeList2.item(temp);
-					Obstacle o = new Obstacle(Double.valueOf(eElement.getAttribute("x1")), Double.valueOf(eElement.getAttribute("y1")), Double.valueOf(eElement.getAttribute("x1")), Double.valueOf(eElement.getAttribute("y2")));
+					Obstacle o = new Obstacle(Double.valueOf(eElement.getAttribute("x1")), row*rect - Double.valueOf(eElement.getAttribute("y1")), Double.valueOf(eElement.getAttribute("x1")), row*rect - Double.valueOf(eElement.getAttribute("y2")));
 					o.setAngle(Double.valueOf(eElement.getAttribute("angle")));
 					obstacleList.add(o);
 					for(int i=0; i<barriersSmall.length;i++){
@@ -1250,6 +1249,14 @@ public class Map{
 			addRow.setValue(String.valueOf(addRows));
 			rootElement.setAttributeNode(addRow);
 			
+			Attr mapWidth = doc.createAttribute("width");
+			mapWidth.setValue(String.valueOf(width-1));
+			rootElement.setAttributeNode(mapWidth);
+			
+			Attr mapHeight = doc.createAttribute("height");
+			mapHeight.setValue(String.valueOf(row*rect));
+			rootElement.setAttributeNode(mapHeight);
+			
 			doc.appendChild(rootElement);
 			
 	 
@@ -1262,15 +1269,15 @@ public class Map{
 					Element line = doc.createElement("line");
 					
 					Attr x1 = doc.createAttribute("x1");
-					x1.setValue(String.valueOf(obstacleStart[i].getX()));
+					x1.setValue(String.valueOf((int)obstacleStart[i].getX()));
 					line.setAttributeNode(x1);
 					
 					Attr x2 = doc.createAttribute("x2");
-					x2.setValue(String.valueOf(obstacleStart[i].getX2()));
+					x2.setValue(String.valueOf((int)obstacleStart[i].getX2()));
 					line.setAttributeNode(x2);
 					
 					Attr y1 = doc.createAttribute("y1");
-					y1.setValue(String.valueOf(obstacleStart[i].getY()));
+					y1.setValue(String.valueOf((int)(row*rect - obstacleStart[i].getY())));
 					line.setAttributeNode(y1);
 					
 					Attr img = doc.createAttribute("img");
@@ -1289,15 +1296,15 @@ public class Map{
 				Element obstacle = doc.createElement("obstacle");
 				
 				Attr x1 = doc.createAttribute("x1");
-				x1.setValue(String.valueOf(o.getX()));
+				x1.setValue(String.valueOf((int)o.getX()));
 				obstacle.setAttributeNode(x1);
 				
 				Attr y1 = doc.createAttribute("y1");
-				y1.setValue(String.valueOf(o.getY()));
+				y1.setValue(String.valueOf((int)(row*rect - o.getY())));
 				obstacle.setAttributeNode(y1);
 				
 				Attr y2 = doc.createAttribute("y2");
-				y2.setValue(String.valueOf(o.getY2()));
+				y2.setValue(String.valueOf((int)(row*rect - o.getY2())));
 				obstacle.setAttributeNode(y2);
 				
 				Attr anlge = doc.createAttribute("angle");

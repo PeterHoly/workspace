@@ -307,6 +307,7 @@ public class Client {
 		}
 		return null;
 	}
+	
 	public String getMapName(int id){
 		try {		
 			Socket s = new Socket(ip, port);
@@ -319,6 +320,24 @@ public class Client {
 			String mapName = dis.readUTF();
 			s.close();
 			return mapName;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String loadMapsObstacle(String map){
+		try {		
+			Socket s = new Socket(ip, port);
+			OutputStream os = s.getOutputStream();
+			DataInputStream dis = new DataInputStream(s.getInputStream());
+			DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+			os.write(CommandClass.cmdGetMapsObstacle);
+			dos.writeUTF(map);
+			dos.flush();
+			String obs = dis.readUTF();
+			s.close();
+			return obs;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

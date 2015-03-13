@@ -1,10 +1,5 @@
 package com.example.bcpokus;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import com.example.bclib.Client;
 import com.example.bclib.Display;
 import com.example.bclib.Game;
@@ -20,7 +15,6 @@ import com.example.bclib.components.Wheel;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -35,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TableRow;
+import android.widget.TwoLineListItem;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -98,10 +93,15 @@ public class MainActivity extends Activity {
 		
 		Button buildCarButton = (Button) findViewById(R.id.menu_button_build);
 		buildCarButton.setTypeface(tf);
+		
+		TextView name = (TextView) findViewById(R.id.game_name);
+		name.setTextColor(Color.BLACK);
+		name.setTextSize(24);
+		name.setTypeface(tf);
 	}
 	
 	public TableLayout tableLayout2;
-	public String mapName;
+	public String mapName = null;
 	public void newGame(View v){
 		setContentView(R.layout.new_game);
 		
@@ -156,74 +156,84 @@ public class MainActivity extends Activity {
 	  				}
 	  			});
 	  			tableLayout2.addView(trow);
+	  			
+	  			if(a.equals(maps.split(",")[0])){
+  	  				mapName = a;
+  	  				tableLayout2.getChildAt(0).setBackgroundColor(Color.DKGRAY);
+  	  			}
   	  		}
   	  	}
 	}
 	
 	public void playGame(View v){
-
-		boolean mapIsLoaded = false;
-		String a = null;
-		String[] directoryListing = this.getDir("maps", MODE_PRIVATE).list();
-		if (directoryListing != null) {
-			for (String child : directoryListing) {
-				if(child.equals(mapName)){
-					mapIsLoaded = true;
-					break;
+		if(mapName != null){
+			boolean mapIsLoaded = false;
+			String a = null;
+			String[] directoryListing = this.getDir("maps", MODE_PRIVATE).list();
+			if (directoryListing != null) {
+				for (String child : directoryListing) {
+					if(child.equals(mapName)){
+						mapIsLoaded = true;
+						break;
+					}
 				}
 			}
-		}
-  
-		if(!mapIsLoaded){
-			byte[] map = myClient.loadMap(mapName);
-			Render.createImg(map, mapName, this);
-		}
-  	  
-		Spinner countPlayers = (Spinner) findViewById(R.id.spinner);
-		final int u = Integer.parseInt(arraySpinner[countPlayers.getSelectedItemPosition()]);
-		myGame.createCars(u);
-		
-		Thread th = new Thread(new Runnable(){
-			@Override
-			public void run() {
-				myClient.createGame(mapName, myGame.getDisplay(), u, myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent, filterComponent);
-			}
-		});
-		th.start();
-		try {
-			th.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		setComponentsToCar(myGame);
-			  
-  	  	waitingForOpponents();
-  	  	
-  	  	Thread t = new Thread(new Runnable() {
 			
-			@Override
-			public void run() {
-				myClient.syncStart();
-				myClient.getImgs(myGame.getMap().cars);
-				mHandler.post(new Runnable() {
-
-					@Override
-					public void run() {
-						setContentView(R.layout.game_layout);
-						r = (RelativeLayout) findViewById(R.id.layout_game);
-						SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame, getPackageName(), getAssets());
-						r.addView(sp);
-						sp.Start();
-					}
-				});
+			String sdas = myClient.loadMapsObstacle(mapName);
+			myGame.setMapObstacleAndStart(sdas);
+			
+			if(!mapIsLoaded){
+				byte[] map = myClient.loadMap(mapName);
+				Render.createImg(map, mapName, this);
 			}
-  	  	});
-  	  	t.start();
+			myGame.setMapName(mapName);
+	  	  
+			Spinner countPlayers = (Spinner) findViewById(R.id.spinner);
+			final int u = Integer.parseInt(arraySpinner[countPlayers.getSelectedItemPosition()]);
+			myGame.createCars(u);
+			
+			Thread th = new Thread(new Runnable(){
+				@Override
+				public void run() {
+					myClient.createGame(mapName, myGame.getDisplay(), u, myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent, filterComponent);
+				}
+			});
+			th.start();
+			try {
+				th.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			setComponentsToCar(myGame);
+				  
+	  	  	waitingForOpponents();
+	  	  	
+	  	  	Thread t = new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					myClient.syncStart();
+					myClient.getImgs(myGame.getMap().cars);
+					mHandler.post(new Runnable() {
+	
+						@Override
+						public void run() {
+							setContentView(R.layout.game_layout);
+							r = (RelativeLayout) findViewById(R.id.layout_game);
+							SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame, getPackageName(), getAssets());
+							r.addView(sp);
+							sp.Start();
+						}
+					});
+				}
+	  	  	});
+	  	  	t.start();
+		}	  
 	}
 	
 	public TableLayout tableLayout;
-	public String gameId;
+	public String gameId = null;
 	public void joinGame(View v){
 		setContentView(R.layout.join_game);
 		
@@ -264,58 +274,65 @@ public class MainActivity extends Activity {
 	  					gameId = idGame;
 	  				}
 	  			});
-
 	  			tableLayout.addView(trow);
+	  			
+	  			if(a.equals(games.split(",")[0])){
+	  				gameId = a;
+  	  				tableLayout.getChildAt(0).setBackgroundColor(Color.DKGRAY);
+  	  			}
   	  		}
   	  	}	
 	}
 	
 	public void connect(View v){
-		String m = myClient.getMapName(Integer.parseInt(gameId));
-		boolean mapIsLoaded = false;
-		String a = null;
-		String[] directoryListing = this.getDir("maps", MODE_PRIVATE).list();
-		if (directoryListing != null) {
-			for (String child : directoryListing) {
-				if(child.equals(m)){
-					mapIsLoaded = true;
-					break;
+		if(gameId != null){
+			
+			String m = myClient.getMapName(Integer.parseInt(gameId));
+			boolean mapIsLoaded = false;
+			String a = null;
+			String[] directoryListing = this.getDir("maps", MODE_PRIVATE).list();
+			if (directoryListing != null) {
+				for (String child : directoryListing) {
+					if(child.equals(m)){
+						mapIsLoaded = true;
+						break;
+					}
 				}
 			}
-		}
-  
-		if(!mapIsLoaded){
-			byte[] map = myClient.loadMap(m);
-			Render.createImg(map, m, this);
-		}
-		myGame.setMapName(m);
-		
-  	  	int cars = myClient.joinGame(Integer.parseInt(gameId), myGame.getDisplay(), myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent, filterComponent);
-  	  	myGame.createCars(cars);
-  	  	setComponentsToCar(myGame);
-		  
-  	  	waitingForOpponents();
-  	  	
-  	  	Thread t = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				myClient.syncStart();
-				myClient.getImgs(myGame.getMap().cars);
-				mHandler.post(new Runnable() {
-					
-					@Override
-					public void run() {
-						setContentView(R.layout.game_layout);
-						r = (RelativeLayout) findViewById(R.id.layout_game);
-						SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame, getPackageName(), getAssets());
-						r.addView(sp);
-						sp.Start();
-					}
-				});
+	  
+			if(!mapIsLoaded){
+				byte[] map = myClient.loadMap(m);
+				Render.createImg(map, m, this);
 			}
-  	  	});
-  	  	t.start();
+			myGame.setMapName(m);
+			
+	  	  	int cars = myClient.joinGame(Integer.parseInt(gameId), myGame.getDisplay(), myGame, bodyworkComponent, glassComponent, ((Engine.engines[engineComponent].getValue()+Exhaust.exhausts[exhaustComponent].getValue())/2), ((Absorbers.absorbers[absorbersComponent].getValue()+Wheel.wheels[wheelComponent].getValue())/2),nitroComponent, filterComponent);
+	  	  	myGame.createCars(cars);
+	  	  	setComponentsToCar(myGame);
+			  
+	  	  	waitingForOpponents();
+	  	  	
+	  	  	Thread t = new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					myClient.syncStart();
+					myClient.getImgs(myGame.getMap().cars);
+					mHandler.post(new Runnable() {
+						
+						@Override
+						public void run() {
+							setContentView(R.layout.game_layout);
+							r = (RelativeLayout) findViewById(R.id.layout_game);
+							SurfacePanel sp = new  SurfacePanel(MainActivity.this, myClient, myGame, getPackageName(), getAssets());
+							r.addView(sp);
+							sp.Start();
+						}
+					});
+				}
+	  	  	});
+	  	  	t.start();
+		}
 	}
 
 	

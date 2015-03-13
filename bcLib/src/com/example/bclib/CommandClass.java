@@ -21,5 +21,6 @@ public class CommandClass {
 	public static final int cmdLoadMap = 16;
 	public static final int cmdGetMaps = 17;
 	public static final int cmdGetMapName = 18;
+	public static final int cmdGetMapsObstacle = 19;
 
 }

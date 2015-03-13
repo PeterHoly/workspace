@@ -30,25 +30,29 @@ public class Render {
 	private String[] imagesCarNitro = {"redfire1", "redfire2", "redfire3", "redfire4", "redfire5", "redfire6", "redfire7", "redfire8", 
 			"redfire9", "redfire10", "redfire11", "redfire12", "redfire13", "redfire14", "redfire15", "redfire16", "redfire17", 
 			"redfire18", "redfire19", "redfire20", "redfire21", "redfire22", "redfire23", "redfire24"};
+	String HP[] = {"HP 0", "HP 1", "HP 2", "HP 3", "HP 4", "HP 5", "HP 6", "HP 7", "HP 8", "HP 9", "HP 10"};
 	
 	public int numberImgCrash;
+	Image mapImg = null;
+	Image nitroBombPressedImg = null;
+	Image nitroBombImg = null;
+	Font myfont = null;
+	Color p1 = null;
+	Color p2 = null;
 	
 	public Render(com.example.bclib.Display d)
 	{
 		myDisplay = d;
 	}
 
-	public void draw(MapObject mo, PaintEvent e, Shell s, int crashCar){
+	public void draw(MapObject mo, PaintEvent e, Shell s, int crashCar, String mapName){
 		
-		Color p = new Color(s.getDisplay(), 0,0,0);
-		
-		if(mo instanceof Obstacle)
-		{
+		if(mo instanceof Obstacle){
+			Color p = new Color(e.display, 255, 255, 255);
 			e.gc.setForeground(p);
 			e.gc.drawLine((int)mo.getX(), (int)myDisplay.conversionY(mo.getY()), (int)((Obstacle)mo).getX2(), (int)myDisplay.conversionY(((Obstacle)mo).getY2()));
-			
 		}
-		else
+		else if(mo instanceof Car)
 		{
 			synchronized (mo) {
 				synchronized (myDisplay) {
@@ -76,7 +80,6 @@ public class Render {
 							t.translate(-(float)mo.getX(), -(float)myDisplay.conversionY(mo.getY()));
 							
 							e.gc.setTransform(t);
-							e.gc.setBackground(p);
 
 							e.gc.drawImage(myImage, 0, 0, myImage.getBounds().width, myImage.getBounds().height, (int)mo.getLeft()-myImage.getBounds().width, (int)Math.round(myDisplay.conversionY(mo.getTop()-mo.getHeight()/2)-(myImage.getBounds().height/2)),  myImage.getBounds().width, myImage.getBounds().height);
 
@@ -84,7 +87,7 @@ public class Render {
 							t.dispose();
 						}
 						
-						Image myImage = new Image(e.display, Render.class.getResourceAsStream("../images/"+((Car)mo).getImgCode()+".png"));
+						Image carImg = new Image(e.display, Render.class.getResourceAsStream("../images/"+((Car)mo).getImgCode()+".png"));
 				    	
 						Transform t = new Transform(e.display);
 						t.translate((float)mo.getX(), (float)myDisplay.conversionY(mo.getY()));
@@ -92,46 +95,75 @@ public class Render {
 						t.translate(-(float)mo.getX(), -(float)myDisplay.conversionY(mo.getY()));
 						
 						e.gc.setTransform(t);
-						e.gc.setBackground(p);
-						
-						//e.gc.drawRectangle((int)Math.round(mo.getLeft()), (int)Math.round(myDisplay.conversionY(mo.getTop())), (int)Math.round(mo.getWidth()), (int)Math.round(mo.getHeight()));
-						e.gc.drawImage(myImage, 0, 0, myImage.getBounds().width, myImage.getBounds().height,(int)Math.round(mo.getX()-mo.getWidth()/2), (int)Math.round(myDisplay.conversionY(mo.getY()+mo.getHeight()/2)), (int)Math.round(mo.getWidth()), (int)Math.round(mo.getHeight()));
-						
+						e.gc.drawImage(carImg, 0, 0, carImg.getBounds().width, carImg.getBounds().height,(int)Math.round(mo.getX()-mo.getWidth()/2), (int)Math.round(myDisplay.conversionY(mo.getY()+mo.getHeight()/2)), (int)Math.round(mo.getWidth()), (int)Math.round(mo.getHeight()));
 						e.gc.setTransform(null);
 						t.dispose();
 					}
 				}
 			}
 		}
+		else
+		{
+			if(this.mapImg == null)
+			{
+				mapImg = new Image(e.display, Render.class.getResourceAsStream("../maps/"+mapName+".png"));
+			}
+			
+			int srcY = (int)((myDisplay.getY() + myDisplay.getHeight()) * (mapImg.getBounds().width/myDisplay.getWidth()));
+			srcY = mapImg.getBounds().height - srcY;
+			
+			if(srcY>0){
+				
+				int srcX = 0;
+		        
+		        int srcWidth = (int)mapImg.getBounds().width;
+		        int srcHeight = (int)(myDisplay.getHeight()*(mapImg.getBounds().width/myDisplay.getWidth()));
+		        
+		        int destX = 0;
+		        int destY = 0;
+		        
+		        int destWidth = (int)myDisplay.getWidth();
+		        int destHeight = (int)myDisplay.getHeight();
+		        
+				e.gc.drawImage(mapImg, srcX, srcY, srcWidth, srcHeight, destX, destY, destWidth, destHeight);
+			}
+		}
 	}
 	
 	public void drawImg(PaintEvent e, Shell s, boolean nitroPressed, int hp){
-		Image myImage;
 		if(nitroPressed){
-			myImage = new Image(e.display, Render.class.getResourceAsStream("../images/nitroPressed.png"));
+			if(nitroBombPressedImg == null){
+				nitroBombPressedImg = new Image(e.display, Render.class.getResourceAsStream("../images/nitroPressed.png"));
+			}
+			e.gc.drawImage(nitroBombPressedImg, 0, 0, nitroBombPressedImg.getBounds().width, nitroBombPressedImg.getBounds().height, (int)myDisplay.getWidth()-60, (int)myDisplay.getHeight()-110,nitroBombPressedImg.getBounds().width/3, nitroBombPressedImg.getBounds().height/3);
 		}
 		else{
-			myImage = new Image(e.display, Render.class.getResourceAsStream("../images/nitro.png"));	
+			if(nitroBombImg == null){
+				nitroBombImg = new Image(e.display, Render.class.getResourceAsStream("../images/nitro.png"));
+			}
+			e.gc.drawImage(nitroBombImg, 0, 0, nitroBombImg.getBounds().width, nitroBombImg.getBounds().height, (int)myDisplay.getWidth()-60, (int)myDisplay.getHeight()-110,nitroBombImg.getBounds().width/3, nitroBombImg.getBounds().height/3);
 		}
 		
-		
-		Font myfont = new Font(e.display, new FontData("Capture it", 15, SWT.NORMAL));
-		Color p1 = new Color(e.display, 255, 255, 255);
-		Color p2 = new Color(e.display, 128, 128, 255);
+		if(myfont == null){
+			myfont = new Font(e.display, new FontData("Capture it", 15, SWT.NORMAL));
+		}
+		if(p1 == null){
+			p1 = new Color(e.display, 255, 255, 255);
+		}
+		if(p2 == null){
+			p2 = new Color(e.display, 128, 128, 255);
+		}
 		
 		e.gc.setFont(myfont);
 		e.gc.setForeground(p2);
-		e.gc.setBackground(p1);
-		e.gc.drawText("HP "+hp, (int)myDisplay.getWidth()-60, (int)myDisplay.getHeight()-390);
-		
-		e.gc.drawImage(myImage, 0, 0, myImage.getBounds().width, myImage.getBounds().height, (int)myDisplay.getWidth()-30, (int)myDisplay.getHeight()-90,myImage.getBounds().width/3, myImage.getBounds().height/3);
+		e.gc.drawText(HP[hp], (int)myDisplay.getWidth()-80, (int)myDisplay.getHeight()-400, true);
 	}
 	
 	public static void createImg(byte[] map, String name){
 		try {			
 			InputStream in = new ByteArrayInputStream(map);
 			BufferedImage bImageFromConvert = ImageIO.read(in);
-			ImageIO.write(bImageFromConvert, "png", new File("src/maps/"+name+".png"));
+			ImageIO.write(bImageFromConvert, "png", new File("bin/maps/"+name+".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

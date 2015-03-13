@@ -38,7 +38,7 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		this.m = myGame.getMap();
 		this.d = myGame.getDisplay();
 		this.am = am;
-		this.r = new Render(d, this.am);
+		this.r = new Render(context,d, this.am);
 		this.gameUI = new GameUI(d);
 		this.packageName = packageName;
 		
@@ -101,28 +101,23 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		if(event.getAction() == MotionEvent.ACTION_MOVE){
 			if(gameUI.getButtonLeft().contains((int)event.getX(), (int)event.getY()))
 			{		
-				//m.car.setIncrement(0.09f, 0.79f);
 				mythread.myClient.leftPush();
 			}
 			else if(gameUI.getButtonRight().contains((int)event.getX(), (int)event.getY()))
 			{		
-				//m.car.setIncrement(-0.09f, 0.79f);
 				mythread.myClient.rightPush();
 			}
 			else{
-				//m.car.setIncrement(0.09f, 0f);
 				mythread.myClient.release();
 			}
 		}
 		else if(event.getAction() == MotionEvent.ACTION_DOWN){
 				if(gameUI.getButtonLeft().contains((int)event.getX(), (int)event.getY()))
 				{			
-					//m.car.setIncrement(0.09f, 0.79f);
 					mythread.myClient.leftPush();
 				}
 				else if(gameUI.getButtonRight().contains((int)event.getX(), (int)event.getY()))
 				{					
-					//m.car.setIncrement(-0.09f, 0.79f);
 					mythread.myClient.rightPush();
 				}
 				else if(gameUI.getButtonNitro().contains((int)event.getX(), (int)event.getY()))
@@ -133,7 +128,6 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 				}
 		}
 		else if(event.getAction() == MotionEvent.ACTION_UP) {
-			//m.car.setIncrement(0.09f, 0f);
 			mythread.myClient.release();
 		}
 		
@@ -142,16 +136,17 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	
 	int crashCar = 0;
 	
-	void doDraw(Canvas canvas) throws InterruptedException
-	{
+	void doDraw(Canvas canvas) throws InterruptedException {
 		canvas.drawColor(Color.WHITE);
 		
-		for(Car c : m.cars){
-			r.draw(c, canvas, getResources(), this.packageName, crashCar);
+		r.draw(null, canvas, getResources(), this.packageName, crashCar, myGame.getMapName());
+		
+		for(Obstacle c : m.obstacles){
+			r.draw(c, canvas, getResources(), this.packageName, crashCar, myGame.getMapName());
 		}
 		
-		for (Obstacle o : m.obstacles){
-			r.draw(o, canvas, getResources(), this.packageName, crashCar);
+		for(Car c : m.cars){
+			r.draw(c, canvas, getResources(), this.packageName, crashCar, myGame.getMapName());
 		}
 		
 		r.drawButton(gameUI.getButtonLeft(), canvas, getResources(), this.packageName, "left");
@@ -167,8 +162,6 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		int idPlayer = myGame.getIDplayer();
 		r.drawHp(gameUI, canvas, myGame.getMap().cars.get(idPlayer).getHp());
 		
-		
 		crashCar++;
 	}
-
 }

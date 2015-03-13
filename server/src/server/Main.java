@@ -13,6 +13,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import com.example.bclib.CommandClass;
 
@@ -61,6 +67,7 @@ public class Main {
 					
 					myGame.setMapImgName(mapImgName);
 					myGame.setCountPlay(countPlay);
+					myGame.setMapObstacleAndStart(mapImgName);
 					
 					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter, myGame.getCountPlayers());
 					
@@ -176,6 +183,11 @@ public class Main {
 					dos.writeUTF(getMaps());
 					dos.flush();
 				}
+				else if(command==CommandClass.cmdGetMapsObstacle){
+					String m = dis.readUTF();
+					dos.writeUTF(loadObstacles(m));
+					dos.flush();
+				}
 				else if(command==CommandClass.cmdGetMapName){
 					dos.writeUTF(createdGame.get(dis.readInt()).getMapImgName());
 					dos.flush();
@@ -233,5 +245,48 @@ public class Main {
 			}
 		}
 		return name;
+	}
+	
+	public static String loadObstacles(String xmlName){
+		String xmlMap = "";
+		try {
+
+			File fXmlFile = new File("src/maps/"+xmlName+".xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+			doc.getDocumentElement().normalize();
+
+			xmlMap += doc.getDocumentElement().getAttribute("addRow")+",";
+			xmlMap += doc.getDocumentElement().getAttribute("width")+",";
+			xmlMap += doc.getDocumentElement().getAttribute("height");
+
+			NodeList nList = doc.getDocumentElement().getChildNodes();
+			
+			NodeList nodeList1 = nList.item(0).getChildNodes();
+			xmlMap += "/";
+			for (int temp = 0; temp < nodeList1.getLength(); temp++) {
+				Element eElement = (Element) nodeList1.item(temp);
+				xmlMap += eElement.getAttribute("x1")+",";
+				xmlMap += eElement.getAttribute("y1")+",";
+				xmlMap += eElement.getAttribute("x2")+",";
+				xmlMap += eElement.getAttribute("y1")+"=";
+			}
+			
+			NodeList nodeList2 = nList.item(1).getChildNodes();
+			xmlMap += "/";
+			for (int temp = 0; temp < nodeList2.getLength(); temp++) {
+				Element eElement = (Element) nodeList2.item(temp);
+				xmlMap += eElement.getAttribute("x1")+",";
+				xmlMap += eElement.getAttribute("y1")+",";
+				xmlMap += eElement.getAttribute("x1")+",";
+				xmlMap += eElement.getAttribute("y2")+",";
+				xmlMap += eElement.getAttribute("angle")+"=";
+			}
+		}
+		catch (Exception e) {
+		   	e.printStackTrace();
+		}
+		return xmlMap;
 	}
 }

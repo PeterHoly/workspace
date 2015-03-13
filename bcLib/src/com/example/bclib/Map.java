@@ -7,6 +7,8 @@ public class Map {
 	
 	public List <Obstacle> obstacles;
 	public List <Obstacle> visibleObstacles;
+	public Obstacle startObs;
+	public Obstacle cilObs;
 	public List <Car> cars;
 	public Car car;
 	
@@ -22,6 +24,7 @@ public class Map {
 		//y - niz
 		//y2 - vys
 		
+		/*
 		obstacles.add(new Obstacle(15, 30, 40, 170));
 		obstacles.add(new Obstacle(215, 30, 240, 170));
 		
@@ -45,7 +48,7 @@ public class Map {
 		
 		obstacles.add(new Obstacle(15, 1470, 40, 1670));
 		obstacles.add(new Obstacle(215, 1470, 240, 1670));
-
+		*/
 	}
 	
 	public int getCountCars(){

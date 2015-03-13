@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.example.bclib.Car;
 import com.example.bclib.Game;
 import com.example.bclib.Map;
+import com.example.bclib.MapObject;
 import com.example.bclib.Obstacle;
 
 public class SurfacePanel implements PaintListener {
@@ -22,7 +23,7 @@ public class SurfacePanel implements PaintListener {
 	private Display display;
 	private DesktopMenu menu;
 	private boolean nitroPressed = false;
-	private Game myGame = new Game(new com.example.bclib.Display(0,0,314,429-31));
+	private Game myGame = new Game(new com.example.bclib.Display(0,0,320,410));
 	
 	public SurfacePanel() {
 		
@@ -103,20 +104,20 @@ public class SurfacePanel implements PaintListener {
 	int crashCar = 0;
 	
 	public void paintControl(PaintEvent e) {
-
 		e.gc.setLineAttributes(new LineAttributes(1,SWT.CAP_FLAT,SWT.JOIN_MITER));
+
+		r.draw(null, e, shell, 0, myGame.getMapName());
 		
-		for(Car c : m.cars){
-			r.draw(c, e, shell, crashCar);
+		for(Obstacle c : m.obstacles){
+			r.draw(c, e, shell, crashCar, myGame.getMapName());
 		}
 		
-		for (Obstacle o : m.obstacles){
-			r.draw(o, e, shell, crashCar);
+		for(Car c : m.cars){
+			r.draw(c, e, shell, crashCar, myGame.getMapName());
 		}
 		
 		int idPlayer = myGame.getIDplayer();
 		r.drawImg(e, shell, nitroPressed, myGame.getMap().cars.get(idPlayer).getHp());
-		
 		
 		crashCar++;
 	}

@@ -1,11 +1,14 @@
 package server;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.example.bclib.Collision;
 import com.example.bclib.Display;
 import com.example.bclib.Map;
+import com.example.bclib.Obstacle;
 import com.example.bclib.Vector;
 import com.example.bclib.components.Bodywork;
 import com.example.bclib.components.Nitro;
@@ -156,5 +159,38 @@ public class Game {
 	
 	public void setMapImgName(String mapImgName){
 		this.mapImgName = mapImgName;
+	}
+	
+	public void setMapObstacleAndStart(String map) {
+		
+		this.map.obstacles.add(new Obstacle(15, 30, 40, 170));
+		this.map.obstacles.add(new Obstacle(215, 30, 240, 170));
+		/*
+		String  size = map.split("/")[0];
+		String startLines = map.split("/")[1];
+		String obstacles = map.split("/")[2];
+		
+		String addRow = size.split(",")[0];
+		String width = size.split(",")[1];
+		String height = size.split(",")[2];
+		
+		String start = startLines.split("=")[0];
+		String cil = startLines.split("=")[1];
+		
+		this.map.startObs = new Obstacle(Double.valueOf(start.split(",")[0]), Double.valueOf(start.split(",")[1]), Double.valueOf(start.split(",")[2]), Double.valueOf(start.split(",")[3]));
+		this.map.cilObs = new Obstacle(Double.valueOf(cil.split(",")[0]), Double.valueOf(cil.split(",")[1]), Double.valueOf(cil.split(",")[2]), Double.valueOf(cil.split(",")[3]));
+		
+		for(String o : obstacles.split("=")){
+			Obstacle obs = new Obstacle(Double.valueOf(o.split(",")[0]), Double.valueOf(o.split(",")[1]), Double.valueOf(o.split(",")[2]), Double.valueOf(o.split(",")[3]));
+			obs.setAngle(Double.valueOf(o.split(",")[4]));
+			this.map.obstacles.add(obs);
+		}
+		
+		Collections.sort(this.map.obstacles, new Comparator<Obstacle>() {
+	        @Override public int compare(Obstacle o1, Obstacle o2) {
+	            return (int)o1.getY() - (int)o2.getY();
+	        }
+	    });
+	    */
 	}
 }
