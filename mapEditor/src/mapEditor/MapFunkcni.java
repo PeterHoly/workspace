@@ -1171,7 +1171,7 @@ public class MapFunkcni{
 			
 			FileDialog fd = new FileDialog(shell, SWT.OPEN);
 	        fd.setText("Open");
-	        fd.setFilterPath("/home/peter/workspace/server/maps");
+	        fd.setFilterPath("/home/peter/workspace/server/src/maps");
 	        String[] filterExt = {"*.xml"};
 	        fd.setFilterExtensions(filterExt);
 	        String selected = fd.open();
@@ -1354,7 +1354,7 @@ public class MapFunkcni{
 			
 			FileDialog fd = new FileDialog(shell, SWT.SAVE);
 	        fd.setText("Save");
-	        fd.setFilterPath("/home/peter/workspace/server/maps");
+	        fd.setFilterPath("/home/peter/workspace/server/src/maps");
 	        String[] filterExt = {"*.xml"};
 	        fd.setFilterExtensions(filterExt);
 	        String selected = fd.open();

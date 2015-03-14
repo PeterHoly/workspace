@@ -108,37 +108,37 @@ public class DesktopMenu {
     public DesktopMenu(final Display display, Shell shell, final Client client, final com.example.bclib.Display myDisplay, final Game game, final SurfacePanel sp){
     	
         mainMenuComposite = new Composite(shell, SWT.NULL);
-        mainMenuComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("../images/menuWallpaper.png")));
+        mainMenuComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("/images/menuWallpaper.png")));
         mainMenuComposite.setSize(320, 410);
         mainMenuComposite.setBackgroundMode(SWT.INHERIT_FORCE);
         
         newGameComposite = new Composite(shell, SWT.NULL);
-        newGameComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("../images/menuWallpaper.png")));
+        newGameComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("/images/menuWallpaper.png")));
         newGameComposite.setSize(320, 410);
         newGameComposite.setBackgroundMode(SWT.INHERIT_FORCE);
         
         joinGameComposite = new Composite(shell, SWT.NULL);
-        joinGameComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("../images/menuWallpaper.png")));
+        joinGameComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("/images/menuWallpaper.png")));
         joinGameComposite.setSize(320, 410);
         joinGameComposite.setBackgroundMode(SWT.INHERIT_FORCE);
         
         buildCarComposite = new Composite(shell, SWT.NULL);
         buildCarComposite.setSize(320, 410);
-        buildCarComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("../images/buildWallpaper.png")));
+        buildCarComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("/images/buildWallpaper.png")));
         buildCarComposite.setBackgroundMode(SWT.INHERIT_FORCE);
         
         performanceComposite = new Composite(buildCarComposite, SWT.NULL);
-        performanceComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("../images/buildWallpaper.png")));
+        performanceComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("/images/buildWallpaper.png")));
         performanceComposite.setBackgroundMode(SWT.INHERIT_FORCE);
         performanceComposite.setSize(320, 410);
         
         appearanceComposite = new Composite(buildCarComposite, SWT.NULL);
-        appearanceComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("../images/buildWallpaperWithCarPlace.png")));
+        appearanceComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("/images/buildWallpaperWithCarPlace.png")));
         appearanceComposite.setBackgroundMode(SWT.INHERIT_FORCE);
         appearanceComposite.setSize(320, 410);
         
         loadingComposite = new Composite(shell, SWT.NULL);
-        loadingComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("../images/menuWallpaper.png")));
+        loadingComposite.setBackgroundImage(new Image(display, Render.class.getResourceAsStream("/images/menuWallpaper.png")));
         loadingComposite.setSize(320, 410);
         loadingComposite.setBackgroundMode(SWT.INHERIT_FORCE);
         
@@ -465,8 +465,7 @@ public class DesktopMenu {
 			    	  String m = createdMaps.getItem(createdMaps.getSelectionIndex()).split(" ")[2];
 			    	  boolean mapIsLoaded = false;
 			    	  String a = null;
-			    	  
-			    	  File dir = new File("bin/maps/");
+			    	  File dir = new File(".");
 			    	  File[] directoryListing = dir.listFiles();
 			    	  if (directoryListing != null) {
 			    		  for (File child : directoryListing) {
@@ -533,7 +532,7 @@ public class DesktopMenu {
 			    	  String m = client.getMapName(u);
 			    	  boolean mapIsLoaded = false;
 			    	  String a = null;
-			    	  File dir = new File("bin/maps/");
+			    	  File dir = new File(".");
 			    	  File[] directoryListing = dir.listFiles();
 			    	  if (directoryListing != null) {
 			    		  for (File child : directoryListing) {
@@ -612,7 +611,7 @@ public class DesktopMenu {
 		    	  String karosery = Bodywork.bodyworks[bodyworkC.getSelectionIndex()].getCode();
 		    	  String glass = Glass.glasses[glassC.getSelectionIndex()].getCode();
 		    	  
-		    	  Image carImage = new Image(display, DesktopMenu.class.getResourceAsStream("../images/"+karosery+glass+".png"));
+		    	  Image carImage = new Image(display, DesktopMenu.class.getResourceAsStream("/images/"+karosery+glass+".png"));
 		    	  carLabel.setSize(carImage.getBounds().width, carImage.getBounds().height);
 		    	  carLabel.setImage(carImage);
 		      }
@@ -674,7 +673,7 @@ public class DesktopMenu {
 				  String karosery = Bodywork.bodyworks[bodyworkC.getSelectionIndex()].getCode();
 		    	  String glass = Glass.glasses[glassC.getSelectionIndex()].getCode();
 		    	  
-		    	  Image carImage = new Image(display, Render.class.getResourceAsStream("../images/"+karosery+glass+".png"));
+		    	  Image carImage = new Image(display, Render.class.getResourceAsStream("/images/"+karosery+glass+".png"));
 		    	  carLabel.setSize(carImage.getBounds().width, carImage.getBounds().height);
 		    	  carLabel.setImage(carImage);
 			}
@@ -692,7 +691,7 @@ public class DesktopMenu {
 					  String karosery = Bodywork.bodyworks[bodyworkC.getSelectionIndex()].getCode();
 			    	  String glass = Glass.glasses[glassC.getSelectionIndex()].getCode();
 			    	  
-			    	  Image carImage = new Image(display, Render.class.getResourceAsStream("../images/"+karosery+glass+".png"));
+			    	  Image carImage = new Image(display, Render.class.getResourceAsStream("/images/"+karosery+glass+".png"));
 			    	  carLabel.setSize(carImage.getBounds().width, carImage.getBounds().height);
 			    	  carLabel.setImage(carImage);
 				}
@@ -739,7 +738,7 @@ public class DesktopMenu {
 					e.gc.setBackground(colorSilver);
 					e.gc.fillRoundRectangle(0, 0, button.getBounds().width, button.getBounds().height, 10, 10);
 					
-					Image image = new Image(display, Render.class.getResourceAsStream("../images/back2.png"));
+					Image image = new Image(display, Render.class.getResourceAsStream("/images/back2.png"));
 					e.gc.drawImage(image, 0, 0);
 				}
 			}
@@ -751,7 +750,7 @@ public class DesktopMenu {
 				if(e.widget instanceof Label)
 				{
 					Label label = (Label)e.widget;
-					Image image = new Image(display, Render.class.getResourceAsStream("../images/mapName.png"));
+					Image image = new Image(display, Render.class.getResourceAsStream("/images/mapName.png"));
 					e.gc.drawImage(image,0,0,image.getBounds().width,image.getBounds().height,0,0,label.getBounds().width,label.getBounds().height);
 					e.gc.setForeground(colorBlack2);
 					e.gc.setFont(new Font(display, new FontData("Capture it", 18, SWT.NORMAL)));

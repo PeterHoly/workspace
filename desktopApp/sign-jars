@@ -1,0 +1,4 @@
+#!/bin/sh
+
+jarsigner /home/peter/workspace/desktopApp/swt.jar klic
+jarsigner /home/peter/workspace/desktopApp/desktopApp.jar klic

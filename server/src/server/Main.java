@@ -220,7 +220,7 @@ public class Main {
 	public static byte[] loadMap(String mapName){
 		try {
 			byte[] imageInByte;
-			BufferedImage bi = ImageIO.read(Main.class.getResourceAsStream("../maps/"+mapName+".png"));
+			BufferedImage bi = ImageIO.read(new File("src/maps/"+mapName+".png"));
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(bi, "png", baos);
 			baos.flush();

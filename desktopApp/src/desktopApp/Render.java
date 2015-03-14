@@ -63,7 +63,7 @@ public class Render {
 						
 						if(numberImgCrash != -1){
 							
-							Image myImage = new Image(e.display, Render.class.getResourceAsStream("../images/"+imagesCarCrash[numberImgCrash]+".png"));
+							Image myImage = new Image(e.display, Render.class.getResourceAsStream("/images/"+imagesCarCrash[numberImgCrash]+".png"));
 							e.gc.drawImage(myImage, 0, 0, myImage.getBounds().width, myImage.getBounds().height,(int)(mo.getRight()-mo.getWidth()/2-myImage.getBounds().width/2), (int)(myDisplay.conversionY(mo.getBottom() + mo.getHeight()/2 + myImage.getBounds().height/2)), myImage.getBounds().width, myImage.getBounds().height);
 						}
 					}
@@ -72,7 +72,7 @@ public class Render {
 						if(((Car)mo).getnitroActived()){
 							Random rand = new Random();
 							int  n = rand.nextInt(23);
-							Image myImage = new Image(e.display, Render.class.getResourceAsStream("../images/"+imagesCarNitro[n]+".png"));
+							Image myImage = new Image(e.display, Render.class.getResourceAsStream("/images/"+imagesCarNitro[n]+".png"));
 							
 							Transform t = new Transform(e.display);
 							t.translate((float)mo.getX(), (float)myDisplay.conversionY(mo.getY()));
@@ -87,7 +87,7 @@ public class Render {
 							t.dispose();
 						}
 						
-						Image carImg = new Image(e.display, Render.class.getResourceAsStream("../images/"+((Car)mo).getImgCode()+".png"));
+						Image carImg = new Image(e.display, Render.class.getResourceAsStream("/images/"+((Car)mo).getImgCode()+".png"));
 				    	
 						Transform t = new Transform(e.display);
 						t.translate((float)mo.getX(), (float)myDisplay.conversionY(mo.getY()));
@@ -106,7 +106,7 @@ public class Render {
 		{
 			if(this.mapImg == null)
 			{
-				mapImg = new Image(e.display, Render.class.getResourceAsStream("../maps/"+mapName+".png"));
+				mapImg = new Image(e.display, mapName+".png");
 			}
 			
 			int srcY = (int)((myDisplay.getY() + myDisplay.getHeight()) * (mapImg.getBounds().width/myDisplay.getWidth()));
@@ -133,13 +133,13 @@ public class Render {
 	public void drawImg(PaintEvent e, Shell s, boolean nitroPressed, int hp){
 		if(nitroPressed){
 			if(nitroBombPressedImg == null){
-				nitroBombPressedImg = new Image(e.display, Render.class.getResourceAsStream("../images/nitroPressed.png"));
+				nitroBombPressedImg = new Image(e.display, Render.class.getResourceAsStream("/images/nitroPressed.png"));
 			}
 			e.gc.drawImage(nitroBombPressedImg, 0, 0, nitroBombPressedImg.getBounds().width, nitroBombPressedImg.getBounds().height, (int)myDisplay.getWidth()-60, (int)myDisplay.getHeight()-110,nitroBombPressedImg.getBounds().width/3, nitroBombPressedImg.getBounds().height/3);
 		}
 		else{
 			if(nitroBombImg == null){
-				nitroBombImg = new Image(e.display, Render.class.getResourceAsStream("../images/nitro.png"));
+				nitroBombImg = new Image(e.display, Render.class.getResourceAsStream("/images/nitro.png"));
 			}
 			e.gc.drawImage(nitroBombImg, 0, 0, nitroBombImg.getBounds().width, nitroBombImg.getBounds().height, (int)myDisplay.getWidth()-60, (int)myDisplay.getHeight()-110,nitroBombImg.getBounds().width/3, nitroBombImg.getBounds().height/3);
 		}
@@ -163,7 +163,7 @@ public class Render {
 		try {			
 			InputStream in = new ByteArrayInputStream(map);
 			BufferedImage bImageFromConvert = ImageIO.read(in);
-			ImageIO.write(bImageFromConvert, "png", new File("bin/maps/"+name+".png"));
+			ImageIO.write(bImageFromConvert, "png", new File(name+".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

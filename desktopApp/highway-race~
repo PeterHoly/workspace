@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export SWT_GTK3=0
+/usr/lib/jvm/java-6-openjdk-amd64/jre/bin/javaws desktopApp.jnlp &

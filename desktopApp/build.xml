@@ -5,9 +5,7 @@
     <jar manifest="manifest.mf" jarfile="${dist}/${name}.jar" >
         <fileset dir="." includes="JNLP-INF/*.*"/>
         <fileset dir="bin" />
-    </jar>
-    <jar manifest="manifest.mf" jarfile="swt_linux.jar" >
-        <fileset file="libs/swt.jar" />
+        <fileset dir="../bcLib/bin/classes" />
     </jar>
     <copy toDir="${dist}" >
         <fileset dir="JNLP-INF" includes="*.*"/>

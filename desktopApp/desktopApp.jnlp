@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp spec="1.0+" codebase="file:///home/peter/workspace/desktopApp" href="desktopApp.jnlp">
     <information>
-        <title>carRace</title>
-        <vendor></vendor>
+        <title>HighWayRacing</title>
+        <vendor>car</vendor>
+        <homepage href="http://localhost:8080/"></homepage>
     </information>
     <version>0.1</version>
     <resources>
@@ -15,12 +16,12 @@
 
   <!-- Linux OS -->
     <resources os="Linux">
-        <nativelib href="swt_linux.jar" />
+        <nativelib href="swt.jar" />
     </resources>
 
     <application-desc
          main-class=
-           "desktopApp.DesktopMenu"
+           "desktopApp.Main"
          width="300"
          height="300">
      </application-desc>

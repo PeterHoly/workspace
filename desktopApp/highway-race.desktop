@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Highway Race
+Name[cs]=Highway Race
+Comment=Highway Race
+Exec=/home/peter/workspace/desktopApp/highway-race
+Terminal=false
+Categories=Game

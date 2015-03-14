@@ -1,2 +1,6 @@
 Manifest-Version: 1.0
 Permissions: all-permissions
+Main-Class: desktopApp.Main
+Class-Path: swt.jar
+Application-Name: desktopApp
+Application-Library-Allowable-Codebase: /home/peter/workspace/desktopApp

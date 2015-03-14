@@ -165,6 +165,7 @@ public class Game {
 		
 		this.map.obstacles.add(new Obstacle(15, 30, 40, 170));
 		this.map.obstacles.add(new Obstacle(215, 30, 240, 170));
+		
 		/*
 		String  size = map.split("/")[0];
 		String startLines = map.split("/")[1];
@@ -190,7 +191,7 @@ public class Game {
 	        @Override public int compare(Obstacle o1, Obstacle o2) {
 	            return (int)o1.getY() - (int)o2.getY();
 	        }
-	    });
+	    });   
 	    */
 	}
 }

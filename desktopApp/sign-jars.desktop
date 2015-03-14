@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Sign JARs
+Name[cs]=Podepsat JARy
+Comment=Sign JARs
+Exec=/home/peter/workspace/desktopApp/sign-jars
+Terminal=true
