@@ -25,6 +25,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class Render {
 	
@@ -134,13 +135,13 @@ public class Render {
 				}
 			}
 			
-			int srcTop = (int)((myDisplay.getY() + myDisplay.getHeight()) * (mapImg.getBounds().width()/myDisplay.getWidth()));
-			srcTop = mapImg.getBounds().height() - srcTop;
+			int srcTop = (int)((myDisplay.getY() + myDisplay.getHeight()) * (mapImgBitMap.getWidth()/myDisplay.getWidth()));
+			srcTop = mapImgBitMap.getHeight() - srcTop;
 			
 			int srcLeft = 0;
 		    int srcRight = (int)mapImgBitMap.getWidth();
-		    int srcBottom = srcTop + (int)(myDisplay.getHeight()*(mapImg.getBounds().width()/myDisplay.getWidth()));
-		        
+		    int srcBottom = srcTop + (int)(myDisplay.getHeight()*(mapImgBitMap.getWidth()/myDisplay.getWidth()));
+		    
 		    int destLeft = 0;
 		    int destTop = 0;
 		    int destRight = (int)myDisplay.getWidth();

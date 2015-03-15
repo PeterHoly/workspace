@@ -108,9 +108,9 @@ public class SurfacePanel implements PaintListener {
 
 		r.draw(null, e, shell, 0, myGame.getMapName());
 		
-		for(Obstacle c : m.obstacles){
+		/*for(Obstacle c : m.obstacles){
 			r.draw(c, e, shell, crashCar, myGame.getMapName());
-		}
+		}*/
 		
 		for(Car c : m.cars){
 			r.draw(c, e, shell, crashCar, myGame.getMapName());

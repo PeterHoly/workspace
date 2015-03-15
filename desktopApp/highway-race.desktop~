@@ -4,5 +4,6 @@ Name=Highway Race
 Name[cs]=Highway Race
 Comment=Highway Race
 Exec=/home/peter/workspace/desktopApp/highway-race
-Terminal=true
+Terminal=false
 Categories=Game
+Icon=/home/peter/workspace/desktopApp/src/images/redCar.png

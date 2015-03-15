@@ -1,6 +1,7 @@
 package desktopApp;
 
 import java.io.File;
+import java.net.ConnectException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;

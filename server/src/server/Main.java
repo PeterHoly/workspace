@@ -67,7 +67,6 @@ public class Main {
 					
 					myGame.setMapImgName(mapImgName);
 					myGame.setCountPlay(countPlay);
-					myGame.setMapObstacleAndStart(mapImgName);
 					
 					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter, myGame.getCountPlayers());
 					
@@ -75,6 +74,7 @@ public class Main {
 					dos.flush();
 					
 					myGame.addPlayer(p);
+					myGame.setMapObstacleAndStart(loadObstacles(mapImgName));
 					createdGame.add(myGame);
 					
 					System.out.println("created!");

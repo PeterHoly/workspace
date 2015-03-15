@@ -40,7 +40,7 @@ public class Player {
 		socket = s;
 		game = g;
 		ID = g.getCountPlayers();
-		myCar = new Car(100+50*order, 100, Bodywork.bodyworks[indexBodywork].getWidth(), Bodywork.bodyworks[indexGlass].getHeight());
+		myCar = new Car(100+50*order, 0, Bodywork.bodyworks[indexBodywork].getWidth(), Bodywork.bodyworks[indexGlass].getHeight());
 		myCar.getTrajectory().setXwithComponent(xSpeed);
 		myCar.getTrajectory().setYwithComponent(ySpeed);
 		myCar.getTrajectory().setFilter(Filter.filters[filter].getValue());

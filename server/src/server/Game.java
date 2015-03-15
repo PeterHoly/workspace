@@ -6,11 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.example.bclib.Collision;
-import com.example.bclib.Display;
 import com.example.bclib.Map;
 import com.example.bclib.Obstacle;
-import com.example.bclib.Vector;
-import com.example.bclib.components.Bodywork;
 import com.example.bclib.components.Nitro;
 
 public class Game {
@@ -29,6 +26,8 @@ public class Game {
 	}
 	
 	public void run(){
+		setStartLineToCar();
+		
 		while(true){
 			synchronized (players) {
 				
@@ -108,6 +107,13 @@ public class Game {
 		}
 	}
 	
+	public void setStartLineToCar(){
+		for(Player p : players){
+			p.myCar.setY(map.startObs.getY()-p.myCar.getWidth());
+		}
+		
+	}
+	
 	public void setCountPlay(int c){
 		countPlayers = c;
 	}
@@ -163,27 +169,45 @@ public class Game {
 	
 	public void setMapObstacleAndStart(String map) {
 		
-		this.map.obstacles.add(new Obstacle(15, 30, 40, 170));
-		this.map.obstacles.add(new Obstacle(215, 30, 240, 170));
-		
-		/*
 		String  size = map.split("/")[0];
 		String startLines = map.split("/")[1];
 		String obstacles = map.split("/")[2];
 		
-		String addRow = size.split(",")[0];
-		String width = size.split(",")[1];
-		String height = size.split(",")[2];
+		double addRow = Double.valueOf(size.split(",")[0]);
+		double width = Double.valueOf(size.split(",")[1]);
+		double height = Double.valueOf(size.split(",")[2]);
 		
 		String start = startLines.split("=")[0];
 		String cil = startLines.split("=")[1];
 		
-		this.map.startObs = new Obstacle(Double.valueOf(start.split(",")[0]), Double.valueOf(start.split(",")[1]), Double.valueOf(start.split(",")[2]), Double.valueOf(start.split(",")[3]));
-		this.map.cilObs = new Obstacle(Double.valueOf(cil.split(",")[0]), Double.valueOf(cil.split(",")[1]), Double.valueOf(cil.split(",")[2]), Double.valueOf(cil.split(",")[3]));
+		double displayWidthDouble = players.get(0).display.getWidth();
+		
+		double x1start = (Double.valueOf(start.split(",")[0])/width)*displayWidthDouble;
+		double y1start = (Double.valueOf(start.split(",")[1])/width)*displayWidthDouble;
+		double x2start = (Double.valueOf(start.split(",")[2])/width)*displayWidthDouble;
+		double y2start = (Double.valueOf(start.split(",")[3])/width)*displayWidthDouble;
+		
+		this.map.startObs = new Obstacle(x1start,y1start,x2start,y2start);
+		
+		double x1cil = (Double.valueOf(cil.split(",")[0])/width)*displayWidthDouble;
+		double y1cil = (Double.valueOf(cil.split(",")[1])/width)*displayWidthDouble;
+		double x2cil = (Double.valueOf(cil.split(",")[2])/width)*displayWidthDouble;
+		double y2cil = (Double.valueOf(cil.split(",")[3])/width)*displayWidthDouble;
+		
+		this.map.cilObs = new Obstacle(x1cil,y1cil,x2cil,y2cil);
 		
 		for(String o : obstacles.split("=")){
-			Obstacle obs = new Obstacle(Double.valueOf(o.split(",")[0]), Double.valueOf(o.split(",")[1]), Double.valueOf(o.split(",")[2]), Double.valueOf(o.split(",")[3]));
+			
+			double x1 = (Double.valueOf(o.split(",")[0])/width)*displayWidthDouble;
+			double y1 = (Double.valueOf(o.split(",")[1])/width)*displayWidthDouble;
+			double x2 = (Double.valueOf(o.split(",")[2])/width)*displayWidthDouble;
+			double y2 = (Double.valueOf(o.split(",")[3])/width)*displayWidthDouble;
+			
+			double y = (y2-y1)/2+y1;
+			
+			Obstacle obs = new Obstacle(x1, y2, x2, y1);
 			obs.setAngle(Double.valueOf(o.split(",")[4]));
+			obs.rotate(-Math.toRadians(Double.valueOf(o.split(",")[4])), x1, y);
 			this.map.obstacles.add(obs);
 		}
 		
@@ -191,7 +215,6 @@ public class Game {
 	        @Override public int compare(Obstacle o1, Obstacle o2) {
 	            return (int)o1.getY() - (int)o2.getY();
 	        }
-	    });   
-	    */
+	    });
 	}
 }

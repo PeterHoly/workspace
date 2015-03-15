@@ -1,5 +1,7 @@
 package com.example.bcpokus;
 
+import java.net.ConnectException;
+
 import com.example.bclib.Client;
 import com.example.bclib.Display;
 import com.example.bclib.Game;
@@ -17,7 +19,6 @@ import android.os.Handler;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TableRow;
-import android.widget.TwoLineListItem;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
 	
 	public TableLayout tableLayout2;
 	public String mapName = null;
-	public void newGame(View v){
+	public void newGame(View v) throws ConnectException{
 		setContentView(R.layout.new_game);
 		
 		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/capture_it.ttf");

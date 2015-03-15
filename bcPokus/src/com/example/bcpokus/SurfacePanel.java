@@ -141,9 +141,9 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		
 		r.draw(null, canvas, getResources(), this.packageName, crashCar, myGame.getMapName());
 		
-		for(Obstacle c : m.obstacles){
+		/*for(Obstacle c : m.obstacles){
 			r.draw(c, canvas, getResources(), this.packageName, crashCar, myGame.getMapName());
-		}
+		}*/
 		
 		for(Car c : m.cars){
 			r.draw(c, canvas, getResources(), this.packageName, crashCar, myGame.getMapName());

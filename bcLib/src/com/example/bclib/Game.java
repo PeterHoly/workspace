@@ -3,6 +3,8 @@ package com.example.bclib;
 import java.util.Collections;
 import java.util.Comparator;
 
+import android.util.Log;
+
 public class Game {
 
 	private Display display;
@@ -25,7 +27,6 @@ public class Game {
 	
 	public void createCars(int count){
 		for(int i=0; i<count; i++){
-			//pozice a velikosti auta nejsou podstatne
 			map.cars.add(new Car(100, 100, 40, 20));
 		}
 	}
@@ -63,7 +64,7 @@ public class Game {
 		this.map.cilObs = new Obstacle(Double.valueOf(cil.split(",")[0]), Double.valueOf(cil.split(",")[1]), Double.valueOf(cil.split(",")[2]), Double.valueOf(cil.split(",")[3]));
 		
 		double displayWidthDouble = display.getWidth();
-		
+
 		for(String o : obstacles.split("=")){
 			
 			double x1 = (Double.valueOf(o.split(",")[0])/width)*displayWidthDouble;
@@ -73,7 +74,7 @@ public class Game {
 			
 			double y = (y2-y1)/2+y1;
 			
-			Obstacle obs = new Obstacle(x1, y1, x2, y2);
+			Obstacle obs = new Obstacle(x1, y2, x2, y1);
 			obs.setAngle(Double.valueOf(o.split(",")[4]));
 			obs.rotate(-Math.toRadians(Double.valueOf(o.split(",")[4])), x1, y);
 			this.map.obstacles.add(obs);

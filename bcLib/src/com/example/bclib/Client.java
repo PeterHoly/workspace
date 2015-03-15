@@ -2,15 +2,12 @@ package com.example.bclib;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 import java.util.List;
 
 import com.example.bclib.components.Bodywork;
@@ -27,6 +24,7 @@ public class Client {
 	private DataInputStream dis  = null;
 	
 	private String games;
+	private String maps;
 	
 	public Client(String ip, int port) {
 		this.ip = ip;
@@ -193,19 +191,15 @@ public class Client {
 	public String getGames(){
 		try {
 			Socket s = new Socket(ip, port);
-			
 			OutputStream os = s.getOutputStream();
 			DataInputStream dis = new DataInputStream(s.getInputStream());
-
 			os.write(CommandClass.cmdGetGame);
 			os.flush();
 			this.games = dis.readUTF();
-			
 			s.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			return "";
 		}
-		
 		return this.games;
 	}
 	
@@ -292,20 +286,19 @@ public class Client {
 		return null;
 	}
 	
-	public String getMaps(){
+	public String getMaps() {
 		try {		
 			Socket s = new Socket(ip, port);
 			OutputStream os = s.getOutputStream();
 			DataInputStream dis = new DataInputStream(s.getInputStream());
 			os.write(CommandClass.cmdGetMaps);
 			os.flush();
-			String maps = dis.readUTF();
+			this.maps = dis.readUTF();
 			s.close();
-			return maps;
 		} catch (IOException e) {
-			e.printStackTrace();
+			return "";
 		}
-		return null;
+		return this.maps;
 	}
 	
 	public String getMapName(int id){
