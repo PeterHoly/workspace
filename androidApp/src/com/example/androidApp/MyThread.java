@@ -1,4 +1,4 @@
-package com.example.bcpokus;
+package com.example.androidApp;
 
 import com.example.bclib.Car;
 import com.example.bclib.Game;

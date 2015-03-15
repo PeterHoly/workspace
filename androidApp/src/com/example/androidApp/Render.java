@@ -1,4 +1,4 @@
-package com.example.bcpokus;
+package com.example.androidApp;
 
 import java.io.File;
 import java.io.FileInputStream;
