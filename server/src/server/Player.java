@@ -31,6 +31,7 @@ public class Player {
 	public double settingAnle;
 	public double pomAngle;
 	public int iSA=0;
+	public boolean isOffline=false;
 	
 	public Car myCar;
 	
@@ -50,9 +51,13 @@ public class Player {
 		nitroIndex = nitro;
 	}
 	
+	public boolean isOffline(){
+		return isOffline;
+	}
+	
 	public void run(){
 		
-		while(!socket.isClosed()){
+		while(true){
 			
 			int command = -1;
 			OutputStream os = null;
@@ -66,21 +71,30 @@ public class Player {
 				dos = new DataOutputStream(os);
 				dis = new DataInputStream(is);
 				command = is.read();
+				
+				if(command == -1){
+					isOffline = true;
+					break;
+				}
 			
 				if(command==CommandClass.cmdSetPos)
 				{
-					
 					myCar.setX(dis.readDouble());
 					myCar.setY(dis.readDouble());
 					myCar.setAngle(dis.readDouble());
 				}
 				else if(command == CommandClass.cmdGetPoses){
 					for(Player p : game.getPlayers()){
+						dos.writeBoolean(p.isOffline());
+						if(p.isOffline()) continue;
+						
 						dos.writeDouble(p.myCar.getX());
 						dos.writeDouble(p.myCar.getY());
 						dos.writeDouble(p.myCar.getAngle());
 						dos.writeInt(p.myCar.getHp());
 						dos.writeBoolean(p.myCar.getnitroActived());
+						dos.writeInt(p.myCar.getWin());
+						
 					}
 				}
 				else if(command==CommandClass.cmdGetPos)
@@ -108,11 +122,15 @@ public class Player {
 				}
 				else if(command==CommandClass.cmdLeftPush)
 				{
-					myCar.setIncrement(0.09f, 0.79f);
+					if(myCar.getY() < game.getMap().cilObs.getY()){
+						myCar.setIncrement(0.09f, 0.79f);
+					}
 				}
 				else if(command==CommandClass.cmdRightPush)
 				{
-					myCar.setIncrement(-0.09f, 0.79f);
+					if(myCar.getY() < game.getMap().cilObs.getY()){
+						myCar.setIncrement(-0.09f, 0.79f);
+					}
 				}
 				else if(command==CommandClass.cmdNitroPush)
 				{

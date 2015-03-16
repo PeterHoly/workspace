@@ -70,11 +70,16 @@ public class Main {
 					
 					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter, myGame.getCountPlayers());
 					
-					dos.writeInt(p.ID);
-					dos.flush();
+					//dos.writeInt(p.ID);
+					//dos.flush();
 					
 					myGame.addPlayer(p);
 					myGame.setMapObstacleAndStart(loadObstacles(mapImgName));
+					
+					dos.writeInt(p.ID);
+					dos.writeDouble(myGame.getMap().cilObs.getY());
+					dos.flush();
+					
 					createdGame.add(myGame);
 					
 					System.out.println("created!");
@@ -107,6 +112,7 @@ public class Main {
 							
 							t.start();
 							myGame.run();
+							createdGame.remove(myGame);
 						}
 					});
 					
@@ -130,6 +136,7 @@ public class Main {
 					myGame.addPlayer(p);
 					
 					dos.writeInt(p.ID);
+					dos.writeDouble(myGame.getMap().cilObs.getY());
 					dos.writeInt(myGame.getCountPlay());
 					dos.flush();
 					
@@ -212,7 +219,9 @@ public class Main {
 	public static String getIdGames(ArrayList<Game> games){
 		String idGames = "";
 		for(Game g : games){
-			idGames += g.getId()+",";
+			//if(!g.isStarted()){
+				idGames += g.getId()+",";
+			//}
 		}
 		return idGames;
 	}

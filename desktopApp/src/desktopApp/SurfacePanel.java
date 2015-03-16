@@ -119,6 +119,10 @@ public class SurfacePanel implements PaintListener {
 		int idPlayer = myGame.getIDplayer();
 		r.drawImg(e, shell, nitroPressed, myGame.getMap().cars.get(idPlayer).getHp());
 		
+		if(myGame.getMap().cars.get(idPlayer).getWin() != -1){
+			r.drawWin(e, shell, myGame.getMap().cars.get(idPlayer).getWin());
+		}
+		
 		crashCar++;
 	}
 }

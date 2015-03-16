@@ -110,17 +110,22 @@ public class Client {
 			dos.flush();
 			
 			for(Car car : cars){
+				
+				if(dis.readBoolean()) continue;
+				
 				double positionX = dis.readDouble();
 				double positionY = dis.readDouble();
 				double angle = dis.readDouble();
 				int hp = dis.readInt();
 				boolean nitroActived = dis.readBoolean();
+				int win = dis.readInt();
 				
 				car.setX(positionX);
 				car.setY(positionY);
 				car.setAngle(angle);
 				car.setHp(hp);
 				car.setnitroActived(nitroActived);
+				car.setWin(win);
 			}
 			
 		} catch (IOException e) {
@@ -182,6 +187,8 @@ public class Client {
 			dos.writeInt(filter);
 			dos.flush();
 			game.setIDplayer(dis.readInt());
+			double cilY = dis.readDouble();
+			game.getMap().cilObs = new Obstacle(0, cilY, 0, cilY);
 		
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -220,6 +227,8 @@ public class Client {
 			dos.flush();
 			
 			game.setIDplayer(dis.readInt());
+			double cilY = dis.readDouble();
+			game.getMap().cilObs = new Obstacle(0, cilY, 0, cilY);
 			
 			return dis.readInt();
 			

@@ -162,6 +162,10 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		int idPlayer = myGame.getIDplayer();
 		r.drawHp(gameUI, canvas, myGame.getMap().cars.get(idPlayer).getHp());
 		
+		if(myGame.getMap().cars.get(idPlayer).getWin() != -1){
+			r.drawWin(gameUI, canvas, myGame.getMap().cars.get(idPlayer).getWin());
+		}
+		
 		crashCar++;
 	}
 }

@@ -395,7 +395,7 @@ public class DesktopMenu {
         
     	shell.setSize(320,430);
 		shell.setMinimumSize(320, 430);
-    	shell.setText("Menu");
+    	shell.setText("Highway Race");
 		
 		 Listener newGameL = new Listener() {
 		      public void handleEvent(Event event) {

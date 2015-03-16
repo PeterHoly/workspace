@@ -151,6 +151,20 @@ public class Render {
 		}
 	}
 	
+	public void drawWin(GameUI gameUI, Canvas myCanvas, int w){
+		Paint winPaint = new Paint();
+		winPaint.setColor(Color.BLUE);
+		winPaint.setTypeface(tf);
+		winPaint.setTextSize(35);
+		
+		if(w == 0){
+			myCanvas.drawText(gameUI.win[w], (float)myDisplay.getWidth()/3 -5, (float)myDisplay.getHeight()/3, winPaint);
+		}
+		else if(w == 1){
+			myCanvas.drawText(gameUI.win[w], (float)myDisplay.getWidth()/4 -10, (float)myDisplay.getHeight()/3, winPaint);
+		}
+	}
+	
 	public void drawButton(Rect rect, Canvas myCanvas, Resources res, String packageName, String fileName){
 		if(fileName.equals("right")){
 			myCanvas.drawRect(rect.left, rect.top-3, rect.right+5, rect.bottom+5, grayPaint);

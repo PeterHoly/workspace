@@ -80,8 +80,9 @@ public class Logic {
 		
 		myGame.getMap().setAllCars(myGame, client);
 		
-		y = myGame.getMap().cars.get(myGame.getIDplayer()).getY() - y;
-		
-		myGame.getDisplay().update(y);
+		if(myGame.getMap().cars.get(myGame.getIDplayer()).getY() < myGame.getMap().cilObs.getY()){
+			y = myGame.getMap().cars.get(myGame.getIDplayer()).getY() - y;
+			myGame.getDisplay().update(y);
+		}
 	}
 }

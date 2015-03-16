@@ -12,6 +12,7 @@ import com.example.bclib.components.Wheel;
 public class Car extends Vehicle {
 
 	private int hp;
+	private int win;
 	private double angle2;
 	private int crashImg;
 	private boolean nitroActived = false;
@@ -38,6 +39,7 @@ public class Car extends Vehicle {
 		angle = Math.PI/2;
 		hp = 10;
 		angle2 = 0;
+		win = -1;
 	}
 	
 	public void reductionHP(){
@@ -154,6 +156,14 @@ public class Car extends Vehicle {
 	
 	public void setHp(int hp){
 		this.hp = hp;
+	}
+	
+	public int getWin(){
+		return this.win;
+	}
+	
+	public void setWin(int win){
+		this.win = win;
 	}
 	
 	int number;

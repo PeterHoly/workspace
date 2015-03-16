@@ -18,6 +18,8 @@ public class Game {
 	private Map map;
 	private double centerAngle = 1.570796327;
 	private String mapImgName;
+	private boolean isStarted = false;
+	private boolean isWinner = true;
 	
 	public Game(int id){
 		this.ID=id;
@@ -25,16 +27,53 @@ public class Game {
 		this.map = new Map();
 	}
 	
+	public boolean isOffline(){
+		for(Player p : players){
+			if(!p.isOffline()){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean isStarted(){
+		return this.isStarted;
+	}
+	
 	public void run(){
 		setStartLineToCar();
-		
+		isStarted = true;
 		while(true){
 			synchronized (players) {
+				/*for(int i=0; i<players.size(); i++){
+					if(players.get(i).isOffline()){
+						players.remove(i);
+						i--;
+					}
+				}*/
 				
+				if(isOffline()){
+					break;
+				}
+								
 				for(Player p : players){
+					
+					if(p.isOffline()) continue;
+					
 					//aktualizace pozice a uhlu
 					if(p.myCar.setPositionAndAngle(p.myCar.getAngle2())){
 						p.myCar.setAngle2(0);
+					}
+					
+					//rozhodovani o vitezi a porazenem
+					if(p.myCar.getY() > map.cilObs.getY() && isWinner){
+						p.myCar.setWin(0);
+						isWinner = false;
+					}
+					else if(p.myCar.getY() > map.cilObs.getY() || p.myCar.getHp() == 0){
+						if(p.myCar.getWin() == -1){
+							p.myCar.setWin(1);
+						}
 					}
 								
 					//aktualizace displeje
@@ -42,12 +81,7 @@ public class Game {
 					
 					//test kolizi mezi autem a prekazkou
 					double col = Collision.TestCollision(map, p.display, p.myCar);
-					/*
-					if(col != -1){
-						p.myCar.setAngle2(col);
-						p.myCar.reductionHP();
-					}
-					*/
+
 					if(col != -1){
 						p.settingAnle = (col-centerAngle)/5;
 						p.pomAngle = centerAngle;
@@ -75,7 +109,9 @@ public class Game {
 				
 				//test kolizi mezi auty
 				for(int i=0; i<players.size(); i++){
+					if(players.get(i).isOffline()) continue;
 					for(int j=0; j<players.size(); j++){
+						if(players.get(j).isOffline()) continue;
 						if(i==j) continue;
 						
 						if(Collision.TestCollisionBetweenCars(players.get(i).myCar, players.get(j).myCar)){
@@ -111,7 +147,6 @@ public class Game {
 		for(Player p : players){
 			p.myCar.setY(map.startObs.getY()-p.myCar.getWidth());
 		}
-		
 	}
 	
 	public void setCountPlay(int c){
@@ -167,15 +202,19 @@ public class Game {
 		this.mapImgName = mapImgName;
 	}
 	
+	public Map getMap(){
+		return this.map;
+	}
+	
 	public void setMapObstacleAndStart(String map) {
 		
 		String  size = map.split("/")[0];
 		String startLines = map.split("/")[1];
 		String obstacles = map.split("/")[2];
 		
-		double addRow = Double.valueOf(size.split(",")[0]);
+		//double addRow = Double.valueOf(size.split(",")[0]);
 		double width = Double.valueOf(size.split(",")[1]);
-		double height = Double.valueOf(size.split(",")[2]);
+		//double height = Double.valueOf(size.split(",")[2]);
 		
 		String start = startLines.split("=")[0];
 		String cil = startLines.split("=")[1];

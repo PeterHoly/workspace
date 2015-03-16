@@ -30,7 +30,8 @@ public class Render {
 	private String[] imagesCarNitro = {"redfire1", "redfire2", "redfire3", "redfire4", "redfire5", "redfire6", "redfire7", "redfire8", 
 			"redfire9", "redfire10", "redfire11", "redfire12", "redfire13", "redfire14", "redfire15", "redfire16", "redfire17", 
 			"redfire18", "redfire19", "redfire20", "redfire21", "redfire22", "redfire23", "redfire24"};
-	String HP[] = {"HP 0", "HP 1", "HP 2", "HP 3", "HP 4", "HP 5", "HP 6", "HP 7", "HP 8", "HP 9", "HP 10"};
+	private String HP[] = {"HP 0", "HP 1", "HP 2", "HP 3", "HP 4", "HP 5", "HP 6", "HP 7", "HP 8", "HP 9", "HP 10"};
+	private String win[] = {"WINNER", "GAME OVER"};
 	
 	public int numberImgCrash;
 	Image mapImg = null;
@@ -127,6 +128,22 @@ public class Render {
 		        
 				e.gc.drawImage(mapImg, srcX, srcY, srcWidth, srcHeight, destX, destY, destWidth, destHeight);
 			}
+		}
+	}
+	
+	public void drawWin(PaintEvent e, Shell s, int w){
+		Font winFont = new Font(e.display, new FontData("Capture it", 20, SWT.NORMAL));
+		
+		if(p2 == null){
+			p2 = new Color(e.display, 128, 128, 255);
+		}
+		e.gc.setFont(winFont);
+		e.gc.setForeground(p2);
+		if(w == 0){
+			e.gc.drawText(win[w], (int)myDisplay.getWidth()/3 +5, (int)myDisplay.getHeight()/3, true);
+		}
+		else if(w == 1){
+			e.gc.drawText(win[w], (int)myDisplay.getWidth()/4 +5, (int)myDisplay.getHeight()/3, true);
 		}
 	}
 	

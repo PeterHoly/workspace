@@ -11,6 +11,7 @@ public class GameUI {
 	private String text = "";
 	private Display d;
 	public String[] HP = {"HP 0","HP 1","HP 2","HP 3","HP 4","HP 5","HP 6","HP 7","HP 8","HP 9","HP 10"};
+	public String[] win = {"WINNER", "GAME OVER"};
 	
 	public GameUI(Display d){
 		
