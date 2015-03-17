@@ -22,10 +22,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.view.ViewPager.LayoutParams;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class Render {
 	
@@ -46,6 +50,7 @@ public class Render {
 	private Context context;
 	
 	private double widthAndheightExplosion = 32;
+	private Boolean backBool = false;
 	
 	public Render(Context context, Display d, AssetManager am)
 	{
@@ -149,6 +154,21 @@ public class Render {
 			
 			myCanvas.drawBitmap(mapImgBitMap, new Rect(srcLeft,srcTop,srcRight,srcBottom), new Rect(destLeft,destTop,destRight,destBottom), null);
 		}
+	}
+	
+	public void drawMenuButton(Rect rect, Canvas myCanvas, Resources res, String packageName){
+		
+		int resourceID = res.getIdentifier("buildperandapp", "drawable", packageName);
+		Drawable d = res.getDrawable(resourceID);
+		d.setBounds(rect.left, rect.top, rect.right, rect.bottom);
+		d.draw(myCanvas);
+		
+		Paint backPaint = new Paint();
+		backPaint.setColor(Color.GRAY);
+		backPaint.setTypeface(tf);
+		backPaint.setTextSize(18);
+		
+		myCanvas.drawText("BACK TO MENU", rect.left+15, rect.top+30, backPaint);
 	}
 	
 	public void drawWin(GameUI gameUI, Canvas myCanvas, int w){

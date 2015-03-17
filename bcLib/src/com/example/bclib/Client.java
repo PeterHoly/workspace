@@ -31,6 +31,18 @@ public class Client {
 		this.port = port;
 	}
 	
+	public void closeSocket() {
+		try {
+			s.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Socket getSocket() {
+		return s;
+	}
+	
 	private void initSocket() {
 		if(s == null) {
 			try {

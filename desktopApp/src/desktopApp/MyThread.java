@@ -47,26 +47,19 @@ public class MyThread extends Thread{
 						@Override
 						public void run() {
 							synchronized (myGame) {
-								//long cas = System.currentTimeMillis();
-								
+
 								if(myShell.isDisposed()){
 									setRunning(false);
 								}
 								else{
-								
-									//myLogic.increaseValue(myGame, myClient);
 									myLogic.increaseValue2(myGame, myClient);
 									
-									myShell.redraw();	
+									myShell.redraw();
 									myShell.update();
 								}
-								
-								//System.out.println(System.currentTimeMillis()-cas);
 							}
 						}
 					});
-				}else{
-					System.out.println("null");
 				}
 							
 				synchronized (o) {

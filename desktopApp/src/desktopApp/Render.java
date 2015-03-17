@@ -11,11 +11,16 @@ import javax.imageio.ImageIO;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Transform;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 import com.example.bclib.Car;
@@ -39,7 +44,11 @@ public class Render {
 	Image nitroBombImg = null;
 	Font myfont = null;
 	Color p1 = null;
-	Color p2 = null;
+	
+	Color colorBlack2;
+	Color colorSilver;
+	
+	Boolean backBool = false;
 	
 	public Render(com.example.bclib.Display d)
 	{
@@ -131,14 +140,63 @@ public class Render {
 		}
 	}
 	
+	public boolean drawMenuButton(PaintEvent e, Shell s){
+		
+		Font backFont = new Font(e.display, new FontData("Capture it", 12, SWT.NORMAL));
+		
+		Button backToMenu = new Button(s,SWT.PUSH);
+		backToMenu.setSize(128, 30);
+		backToMenu.setText("Back to menu");
+		backToMenu.setLocation(10, 10);
+		backToMenu.setFont(backFont);
+		
+		backToMenu.addPaintListener(backgroundButtonPaintL);
+		backToMenu.addListener(SWT.Selection, backToMenuL);
+		
+		return backBool;
+	}
+	
+	Listener backToMenuL = new Listener() {
+	      public void handleEvent(Event event) {
+	    	  backBool = true;
+	      }
+	 };
+	
+	PaintListener backgroundButtonPaintL = new PaintListener() {
+		@Override
+		public void paintControl(PaintEvent e) {
+			if(e.widget instanceof Button)
+			{
+				Button button = (Button)e.widget;
+				
+				colorBlack2 = new org.eclipse.swt.graphics.Color(e.display, 40, 45, 45);
+				colorSilver = new org.eclipse.swt.graphics.Color(e.display, 178,184,182);
+			
+				e.gc.setBackground(colorSilver);
+				e.gc.fillRoundRectangle(0, 0, button.getBounds().width, button.getBounds().height, 0, 0);
+				
+				e.gc.setBackground(colorBlack2);
+				e.gc.fillRoundRectangle(3, 3, button.getBounds().width-6, button.getBounds().height-6, 5, 5);
+				
+				e.gc.setForeground(colorSilver);
+				
+				Point textSize = e.gc.stringExtent(button.getText());
+				int x = (button.getBounds().width-textSize.x)/2;
+				int y = (button.getBounds().height-textSize.y)/2;
+				
+				e.gc.drawText(button.getText(), x, y);
+			}
+		}
+	};
+	
 	public void drawWin(PaintEvent e, Shell s, int w){
 		Font winFont = new Font(e.display, new FontData("Capture it", 20, SWT.NORMAL));
 		
-		if(p2 == null){
-			p2 = new Color(e.display, 128, 128, 255);
+		if(p1 == null){
+			p1 = new Color(e.display, 128, 128, 255);
 		}
 		e.gc.setFont(winFont);
-		e.gc.setForeground(p2);
+		e.gc.setForeground(p1);
 		if(w == 0){
 			e.gc.drawText(win[w], (int)myDisplay.getWidth()/3 +5, (int)myDisplay.getHeight()/3, true);
 		}
@@ -164,15 +222,13 @@ public class Render {
 		if(myfont == null){
 			myfont = new Font(e.display, new FontData("Capture it", 15, SWT.NORMAL));
 		}
+
 		if(p1 == null){
-			p1 = new Color(e.display, 255, 255, 255);
-		}
-		if(p2 == null){
-			p2 = new Color(e.display, 128, 128, 255);
+			p1 = new Color(e.display, 128, 128, 255);
 		}
 		
 		e.gc.setFont(myfont);
-		e.gc.setForeground(p2);
+		e.gc.setForeground(p1);
 		e.gc.drawText(HP[hp], (int)myDisplay.getWidth()-80, (int)myDisplay.getHeight()-400, true);
 	}
 	

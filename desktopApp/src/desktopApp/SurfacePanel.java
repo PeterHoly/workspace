@@ -12,8 +12,6 @@ import org.eclipse.swt.widgets.Shell;
 import com.example.bclib.Car;
 import com.example.bclib.Game;
 import com.example.bclib.Map;
-import com.example.bclib.MapObject;
-import com.example.bclib.Obstacle;
 
 public class SurfacePanel implements PaintListener {
 	int i;
@@ -25,7 +23,10 @@ public class SurfacePanel implements PaintListener {
 	private boolean nitroPressed = false;
 	private Game myGame = new Game(new com.example.bclib.Display(0,0,320,410));
 	
-	public SurfacePanel() {
+	private String[] args;
+	
+	public SurfacePanel(String[] args) {
+		this.args = args;
 		
 		display = new Display();
 		shell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN);
@@ -108,10 +109,6 @@ public class SurfacePanel implements PaintListener {
 
 		r.draw(null, e, shell, 0, myGame.getMapName());
 		
-		/*for(Obstacle c : m.obstacles){
-			r.draw(c, e, shell, crashCar, myGame.getMapName());
-		}*/
-		
 		for(Car c : m.cars){
 			r.draw(c, e, shell, crashCar, myGame.getMapName());
 		}
@@ -121,6 +118,13 @@ public class SurfacePanel implements PaintListener {
 		
 		if(myGame.getMap().cars.get(idPlayer).getWin() != -1){
 			r.drawWin(e, shell, myGame.getMap().cars.get(idPlayer).getWin());
+
+			if(r.drawMenuButton(e, shell)){
+				this.myThread.setRunning(false);
+				this.myThread.myClient.closeSocket();
+				this.display.dispose();
+				Main.main(this.args);
+			}
 		}
 		
 		crashCar++;

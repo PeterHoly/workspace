@@ -8,6 +8,7 @@ import com.example.bclib.Map;
 import com.example.bclib.Obstacle;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -29,10 +30,12 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	private String packageName;
 	private boolean nitroPressed = false;
 	private AssetManager am;
+	private Context context;
 	
 	public SurfacePanel(Context context, Client myClient, Game myGame, String packageName, AssetManager am) {
 		super(context);
-		Log.i("vypis", "konstruktor");
+		
+		this.context = context;
 		this.myClient = myClient;
 		this.myGame = myGame;
 		this.m = myGame.getMap();
@@ -124,7 +127,14 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 				{
 					mythread.myClient.nitroPush();
 					nitroPressed = true;
-					Log.i("asd","nitro");
+				}
+				else if(gameUI.getButtonBackToMenu().contains((int)event.getX(), (int)event.getY()) && endGame)
+				{
+					this.mythread.setRunning(false);
+					this.mythread.myClient.closeSocket();
+					Intent intent = new Intent(context, MainActivity.class);
+		            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		            context.startActivity(intent);
 				}
 		}
 		else if(event.getAction() == MotionEvent.ACTION_UP) {
@@ -135,15 +145,12 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	}
 	
 	int crashCar = 0;
+	boolean endGame = false;
 	
 	void doDraw(Canvas canvas) throws InterruptedException {
 		canvas.drawColor(Color.WHITE);
 		
 		r.draw(null, canvas, getResources(), this.packageName, crashCar, myGame.getMapName());
-		
-		/*for(Obstacle c : m.obstacles){
-			r.draw(c, canvas, getResources(), this.packageName, crashCar, myGame.getMapName());
-		}*/
 		
 		for(Car c : m.cars){
 			r.draw(c, canvas, getResources(), this.packageName, crashCar, myGame.getMapName());
@@ -164,6 +171,8 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		
 		if(myGame.getMap().cars.get(idPlayer).getWin() != -1){
 			r.drawWin(gameUI, canvas, myGame.getMap().cars.get(idPlayer).getWin());
+			r.drawMenuButton(gameUI.getButtonBackToMenu(), canvas, getResources(), this.packageName);
+			endGame = true;
 		}
 		
 		crashCar++;

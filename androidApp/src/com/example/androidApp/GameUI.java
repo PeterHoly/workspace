@@ -8,6 +8,7 @@ public class GameUI {
 	private Rect buttonLeft;
 	private Rect buttonRight;
 	private Rect buttonNitro;
+	private Rect buttonBackToMenu;
 	private String text = "";
 	private Display d;
 	public String[] HP = {"HP 0","HP 1","HP 2","HP 3","HP 4","HP 5","HP 6","HP 7","HP 8","HP 9","HP 10"};
@@ -18,6 +19,8 @@ public class GameUI {
 		buttonLeft = new Rect(2,(int)d.getHeight()-10,(int)d.getWidth()/2-1,(int)d.getHeight()+48);
 		buttonRight = new Rect((int)d.getWidth()/2+1,(int)d.getHeight()-10,(int)d.getWidth()-2,(int)d.getHeight()+48);
 		buttonNitro = new Rect((int)d.getWidth()-54,(int)d.getHeight()-175,(int)d.getWidth()-4,(int)d.getHeight()-25);
+		buttonBackToMenu = new Rect(10, 10,160,60);
+		
 	}
 	
 	public Rect getButtonLeft(){
@@ -30,6 +33,10 @@ public class GameUI {
 	
 	public Rect getButtonNitro(){
 		return buttonNitro;
+	}
+	
+	public Rect getButtonBackToMenu(){
+		return buttonBackToMenu;
 	}
 	
 	public String getText(){

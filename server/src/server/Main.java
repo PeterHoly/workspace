@@ -219,9 +219,9 @@ public class Main {
 	public static String getIdGames(ArrayList<Game> games){
 		String idGames = "";
 		for(Game g : games){
-			//if(!g.isStarted()){
+			if(!g.isStarted()){
 				idGames += g.getId()+",";
-			//}
+			}
 		}
 		return idGames;
 	}
