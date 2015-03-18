@@ -3,12 +3,12 @@ package desktopApp;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import com.example.bclib.Client;
 import com.example.bclib.Game;
 import com.example.bclib.Logic;
-import com.example.bclib.Client;
 
-public class MyThread extends Thread{
-	
+public class MyThread extends Thread {
+
 	private SurfacePanel surfacePanel;
 	private boolean mRun = false;
 	private Game myGame;
@@ -18,7 +18,7 @@ public class MyThread extends Thread{
 	private Object o = new Object();
 
 	private Client myClient = new Client("127.0.0.1", 8096);
-	
+
 	public MyThread(SurfacePanel sp, Game myGame, Shell shell, Display display) {
 		this.surfacePanel = sp;
 		this.myGame = myGame;
@@ -26,35 +26,32 @@ public class MyThread extends Thread{
 		this.myShell = shell;
 		this.myDisplay = display;
 	}
-	
-	public void setRunning(boolean bRun){
+
+	public void setRunning(boolean bRun) {
 		mRun = bRun;
 	}
-	
-	public Client getClient(){
+
+	public Client getClient() {
 		return this.myClient;
 	}
-	
+
 	@Override
-	public void run()
-	{
-		while(mRun)
-		{				
+	public void run() {
+		while (mRun) {
 			try {
-				
-				if(myDisplay != null){
+
+				if (myDisplay != null) {
 					myDisplay.asyncExec(new Runnable() {
-						
+
 						@Override
 						public void run() {
 							synchronized (myGame) {
 
-								if(myShell.isDisposed()){
+								if (myShell.isDisposed()) {
 									setRunning(false);
-								}
-								else{
+								} else {
 									myLogic.increaseValue(myGame, myClient);
-									
+
 									myShell.redraw();
 									myShell.update();
 								}
@@ -62,7 +59,7 @@ public class MyThread extends Thread{
 						}
 					});
 				}
-							
+
 				synchronized (o) {
 					o.wait(40);
 				}

@@ -3,8 +3,8 @@
     android:id="@+id/layout_panel"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@drawable/menuwallpaper" >
+    android:background="@drawable/menuwallpaper"
+    android:orientation="vertical" >
 
     <Button
         android:id="@+id/menu_button_join"
@@ -50,8 +50,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:src="@drawable/mapname"
-        android:contentDescription="@string/game_name" />
+        android:contentDescription="@string/game_name"
+        android:src="@drawable/mapname" />
 
     <TextView
         android:id="@+id/game_name"
@@ -60,8 +60,8 @@
         android:layout_alignTop="@+id/imageView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
-        android:text="@string/game_name"
         android:gravity="center_horizontal"
+        android:text="@string/game_name"
         android:textColorHint="@android:color/black" />
 
 </RelativeLayout>

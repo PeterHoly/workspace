@@ -27,33 +27,32 @@ public class Main {
 	public static void main(String[] args) {
 		boolean a = true;
 		ServerSocket server = null;
-		
+
 		final ArrayList<Game> createdGame = new ArrayList<Game>();
-		
+
 		try {
 			server = new ServerSocket(8096);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
-		while(a){
-			
+
+		while (a) {
+
 			try {
 				System.out.println("waiting");
 				final Socket s = server.accept();
 				System.out.println("connected");
-				
+
 				OutputStream os = s.getOutputStream();
 				InputStream is = s.getInputStream();
 				DataInputStream dis = new DataInputStream(is);
 				final DataOutputStream dos = new DataOutputStream(os);
-				
+
 				int command = is.read();
-				
-				if(command==CommandClass.cmdCreate)
-				{
+
+				if (command == CommandClass.cmdCreate) {
 					final Game myGame = new Game(createdGame.size());
-					
+
 					String mapImgName = dis.readUTF();
 					double width = dis.readDouble();
 					double height = dis.readDouble();
@@ -64,35 +63,38 @@ public class Main {
 					double xSpeed = dis.readDouble();
 					int nitro = dis.readInt();
 					int filter = dis.readInt();
-					
+
 					myGame.setMapImgName(mapImgName);
 					myGame.setCountPlay(countPlay);
-					
-					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter, myGame.getCountPlayers());
-					
+
+					final Player p = new Player(s, myGame, width, height,
+							bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro,
+							filter, myGame.getCountPlayers());
+
 					myGame.addPlayer(p);
 					myGame.setMapObstacleAndStart(loadObstacles(mapImgName));
-					
+
 					dos.writeInt(p.getID());
 					dos.writeDouble(myGame.getMap().getCilObs().getY());
 					dos.flush();
-					
+
 					createdGame.add(myGame);
-					
+
 					System.out.println("created!");
-					
-					final Thread t = new Thread (new Runnable() {
+
+					final Thread t = new Thread(new Runnable() {
 						@Override
 						public void run() {
 							p.run();
 						}
 					});
-					
-					Thread t2 = new Thread (new Runnable() {
+
+					Thread t2 = new Thread(new Runnable() {
 						@Override
 						public void run() {
-							while(myGame.getCountPlay() != myGame.getCountPlayers()){
-								
+							while (myGame.getCountPlay() != myGame
+									.getCountPlayers()) {
+
 								try {
 									Thread.sleep(100);
 								} catch (InterruptedException e) {
@@ -100,24 +102,23 @@ public class Main {
 								}
 							}
 							try {
-								//synchronizace startu
+								// synchronizace startu
 								dos.writeBoolean(true);
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-							
+
 							t.start();
 							myGame.run();
 							createdGame.remove(myGame);
 						}
 					});
-					
+
 					t2.start();
-				
-				}
-				else if(command==CommandClass.cmdJoin){
+
+				} else if (command == CommandClass.cmdJoin) {
 					final Game myGame = createdGame.get(dis.readInt());
-					
+
 					double width = dis.readDouble();
 					double height = dis.readDouble();
 					int bodyworkIndex = dis.readInt();
@@ -126,105 +127,104 @@ public class Main {
 					double xSpeed = dis.readDouble();
 					int nitro = dis.readInt();
 					int filter = dis.readInt();
-					
-					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter, myGame.getCountPlayers());
+
+					final Player p = new Player(s, myGame, width, height,
+							bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro,
+							filter, myGame.getCountPlayers());
 					myGame.addPlayer(p);
-					
+
 					dos.writeInt(p.getID());
 					dos.writeDouble(myGame.getMap().getCilObs().getY());
 					dos.writeInt(myGame.getCountPlay());
 					dos.flush();
-					
+
 					System.out.println("join!");
-					
-					final Thread t = new Thread (new Runnable() {
+
+					final Thread t = new Thread(new Runnable() {
 						@Override
 						public void run() {
 							p.run();
 						}
 					});
-					
-					Thread t2 = new Thread (new Runnable() {
+
+					Thread t2 = new Thread(new Runnable() {
 						@Override
 						public void run() {
-							while(myGame.getCountPlay() != myGame.getCountPlayers()){
-								
+							while (myGame.getCountPlay() != myGame
+									.getCountPlayers()) {
+
 								try {
 									Thread.sleep(100);
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
 							}
-							
+
 							try {
-								//synchronizace startu
+								// synchronizace startu
 								dos.writeBoolean(true);
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-							
+
 							t.start();
 						}
 					});
-					
+
 					t2.start();
-				}
-				else if(command==CommandClass.cmdGetGame){
+				} else if (command == CommandClass.cmdGetGame) {
 					dos.writeUTF(getIdGames(createdGame));
 					dos.flush();
 					s.close();
-				}
-				else if(command==CommandClass.cmdLoadMap){
+				} else if (command == CommandClass.cmdLoadMap) {
 					String m = dis.readUTF();
 					byte[] map = loadMap(m);
 					dos.writeInt(map.length);
 					dos.write(map);
 					dos.flush();
-				}
-				else if(command==CommandClass.cmdGetMaps){
+				} else if (command == CommandClass.cmdGetMaps) {
 					dos.writeUTF(getMaps());
 					dos.flush();
-				}
-				else if(command==CommandClass.cmdGetMapsObstacle){
+				} else if (command == CommandClass.cmdGetMapsObstacle) {
 					String m = dis.readUTF();
 					dos.writeUTF(loadObstacles(m));
 					dos.flush();
-				}
-				else if(command==CommandClass.cmdGetMapName){
+				} else if (command == CommandClass.cmdGetMapName) {
 					dos.writeUTF(createdGame.get(dis.readInt()).getMapImgName());
 					dos.flush();
 				}
-				
-				if(command==CommandClass.cmdExit){
+
+				if (command == CommandClass.cmdExit) {
 					break;
 				}
-				
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		try {
 			server.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static String getIdGames(ArrayList<Game> games){
+
+	public static String getIdGames(ArrayList<Game> games) {
 		String idGames = "";
-		for(Game g : games){
-			if(!g.isStarted()){
-				idGames += g.getId()+",";
+		for (Game g : games) {
+			if (!g.isStarted()) {
+				idGames += g.getId() + ",";
 			}
 		}
 		return idGames;
 	}
-	
-	public static byte[] loadMap(String mapName){
+
+	public static byte[] loadMap(String mapName) {
 		try {
 			byte[] imageInByte;
-			BufferedImage bi = ImageIO.read(new File("src/maps/"+mapName+".png"));
+			BufferedImage bi = ImageIO.read(new File("src/maps/" + mapName
+					+ ".png"));
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ImageIO.write(bi, "png", baos);
 			baos.flush();
@@ -234,62 +234,64 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        return null;
+		return null;
 	}
-	
-	public static String getMaps(){
+
+	public static String getMaps() {
 		String name = "";
 		File dir = new File("src/maps/");
 		File[] directoryListing = dir.listFiles();
 		if (directoryListing != null) {
 			for (File child : directoryListing) {
-				if(child.getName().endsWith(".png")){
-		        	name += child.getName().subSequence(0, child.getName().length()-4)+",";
-		        }
+				if (child.getName().endsWith(".png")) {
+					name += child.getName().subSequence(0,
+							child.getName().length() - 4)
+							+ ",";
+				}
 			}
 		}
 		return name;
 	}
-	
-	public static String loadObstacles(String xmlName){
+
+	public static String loadObstacles(String xmlName) {
 		String xmlMap = "";
 		try {
 
-			File fXmlFile = new File("src/maps/"+xmlName+".xml");
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			File fXmlFile = new File("src/maps/" + xmlName + ".xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+					.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(fXmlFile);
 			doc.getDocumentElement().normalize();
 
-			xmlMap += doc.getDocumentElement().getAttribute("addRow")+",";
-			xmlMap += doc.getDocumentElement().getAttribute("width")+",";
+			xmlMap += doc.getDocumentElement().getAttribute("addRow") + ",";
+			xmlMap += doc.getDocumentElement().getAttribute("width") + ",";
 			xmlMap += doc.getDocumentElement().getAttribute("height");
 
 			NodeList nList = doc.getDocumentElement().getChildNodes();
-			
+
 			NodeList nodeList1 = nList.item(0).getChildNodes();
 			xmlMap += "/";
 			for (int temp = 0; temp < nodeList1.getLength(); temp++) {
 				Element eElement = (Element) nodeList1.item(temp);
-				xmlMap += eElement.getAttribute("x1")+",";
-				xmlMap += eElement.getAttribute("y1")+",";
-				xmlMap += eElement.getAttribute("x2")+",";
-				xmlMap += eElement.getAttribute("y1")+"=";
+				xmlMap += eElement.getAttribute("x1") + ",";
+				xmlMap += eElement.getAttribute("y1") + ",";
+				xmlMap += eElement.getAttribute("x2") + ",";
+				xmlMap += eElement.getAttribute("y1") + "=";
 			}
-			
+
 			NodeList nodeList2 = nList.item(1).getChildNodes();
 			xmlMap += "/";
 			for (int temp = 0; temp < nodeList2.getLength(); temp++) {
 				Element eElement = (Element) nodeList2.item(temp);
-				xmlMap += eElement.getAttribute("x1")+",";
-				xmlMap += eElement.getAttribute("y1")+",";
-				xmlMap += eElement.getAttribute("x1")+",";
-				xmlMap += eElement.getAttribute("y2")+",";
-				xmlMap += eElement.getAttribute("angle")+"=";
+				xmlMap += eElement.getAttribute("x1") + ",";
+				xmlMap += eElement.getAttribute("y1") + ",";
+				xmlMap += eElement.getAttribute("x1") + ",";
+				xmlMap += eElement.getAttribute("y2") + ",";
+				xmlMap += eElement.getAttribute("angle") + "=";
 			}
-		}
-		catch (Exception e) {
-		   	e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return xmlMap;
 	}

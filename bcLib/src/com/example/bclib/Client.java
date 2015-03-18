@@ -15,43 +15,48 @@ import com.example.bclib.components.Glass;
 public class Client {
 	private String ip;
 	private int port;
-	
+
 	private Socket s = null;
 	private OutputStream os = null;
 	private InputStream is = null;
 	private DataOutputStream dos = null;
-	private DataInputStream dis  = null;
-	
+	private DataInputStream dis = null;
+
 	private String games;
 	private String maps;
-	
+
 	public Client(String ip, int port) {
 		this.ip = ip;
 		this.port = port;
 	}
-	
+
 	public void closeSocket() {
 		try {
-			s.close();
+			os.write(CommandClass.cmdCloseSocket);
+			os.flush();
+
+			if (dis.readBoolean()) {
+				s.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public Socket getSocket() {
 		return s;
 	}
-	
+
 	private void initSocket() {
-		if(s == null) {
+		if (s == null) {
 			try {
 				s = new Socket(ip, port);
-				
+
 				os = s.getOutputStream();
 				is = s.getInputStream();
 				dos = new DataOutputStream(os);
 				dis = new DataInputStream(is);
-				
+
 			} catch (UnknownHostException e1) {
 				e1.printStackTrace();
 			} catch (IOException e1) {
@@ -59,8 +64,8 @@ public class Client {
 			}
 		}
 	}
-	
-	public int getCountPlayers(){
+
+	public int getCountPlayers() {
 		int countPlayers = -1;
 		try {
 			os.write(CommandClass.cmdGetCountPlayers);
@@ -71,16 +76,16 @@ public class Client {
 		}
 		return countPlayers;
 	}
-	
-	public void syncStart(){
+
+	public void syncStart() {
 		try {
 			dis.readBoolean();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void setPos(Car car){
+
+	public void setPos(Car car) {
 		try {
 			os.write(CommandClass.cmdSetPos);
 			dos.writeDouble(car.getX());
@@ -91,8 +96,8 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-	
-	public void setIter(int idIterace){
+
+	public void setIter(int idIterace) {
 		try {
 			os.write(CommandClass.cmdSetIter);
 			dos.writeInt(idIterace);
@@ -101,36 +106,37 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-	
-	public int getIter(){
+
+	public int getIter() {
 		int serverIDiter = -1;
 		try {
 			os.write(CommandClass.cmdGetIter);
 			os.flush();
-			
+
 			serverIDiter = dis.readInt();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return serverIDiter;
 	}
-	
-	public void getPosesAndHp(List <Car> cars){
+
+	public void getPosesAndHp(List<Car> cars) {
 		try {
 			os.write(CommandClass.cmdGetPoses);
 			dos.flush();
-			
-			for(Car car : cars){
-				
-				if(dis.readBoolean()) continue;
-				
+
+			for (Car car : cars) {
+
+				if (dis.readBoolean())
+					continue;
+
 				double positionX = dis.readDouble();
 				double positionY = dis.readDouble();
 				double angle = dis.readDouble();
 				int hp = dis.readInt();
 				boolean nitroActived = dis.readBoolean();
 				int win = dis.readInt();
-				
+
 				car.setX(positionX);
 				car.setY(positionY);
 				car.setAngle(angle);
@@ -138,52 +144,54 @@ public class Client {
 				car.setnitroActived(nitroActived);
 				car.setWin(win);
 			}
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void getImgs(List <Car> cars){
+
+	public void getImgs(List<Car> cars) {
 		try {
 			os.write(CommandClass.cmdGetImgs);
 			dos.flush();
-			
-			for(Car car : cars){
+
+			for (Car car : cars) {
 				int bodyworkIndex = dis.readInt();
 				int glassIndex = dis.readInt();
-				
+
 				car.setBodywork(Bodywork.bodyworks[bodyworkIndex]);
 				car.setGlass(Glass.glasses[glassIndex]);
 			}
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void getPos(int i, Car car){
+
+	public void getPos(int i, Car car) {
 		try {
 			os.write(CommandClass.cmdGetPos);
 			dos.writeInt(i);
 			dos.flush();
-			
+
 			double positionX = dis.readDouble();
 			double positionY = dis.readDouble();
 			double angle = dis.readDouble();
-			
+
 			car.setX(positionX);
 			car.setY(positionY);
 			car.setAngle(angle);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void createGame(String m, Display display, int countPlay, Game game, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro, int filter){
+
+	public void createGame(String m, Display display, int countPlay, Game game,
+			int indexBodywork, int indexGlass, double ySpeed, double xSpeed,
+			int nitro, int filter) {
 		initSocket();
-		
+
 		try {
 			os.write(CommandClass.cmdCreate);
 			dos.writeUTF(m);
@@ -200,13 +208,13 @@ public class Client {
 			game.setIDplayer(dis.readInt());
 			double cilY = dis.readDouble();
 			game.getMap().setCilObs(new Obstacle(0, cilY, 0, cilY));
-		
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public String getGames(){
+
+	public String getGames() {
 		try {
 			Socket s = new Socket(ip, port);
 			OutputStream os = s.getOutputStream();
@@ -220,11 +228,12 @@ public class Client {
 		}
 		return this.games;
 	}
-	
-	public int joinGame(int u, Display display, Game game, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro, int filter){
+
+	public int joinGame(int u, Display display, Game game, int indexBodywork,
+			int indexGlass, double ySpeed, double xSpeed, int nitro, int filter) {
 		initSocket();
-		
-		try {			
+
+		try {
 			os.write(CommandClass.cmdJoin);
 			dos.writeInt(u);
 			dos.writeDouble(display.getWidth());
@@ -236,57 +245,57 @@ public class Client {
 			dos.writeInt(nitro);
 			dos.writeInt(filter);
 			dos.flush();
-			
+
 			game.setIDplayer(dis.readInt());
 			double cilY = dis.readDouble();
 			game.getMap().setCilObs(new Obstacle(0, cilY, 0, cilY));
-			
+
 			return dis.readInt();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			return -1;
 		}
 	}
-	
-	public void leftPush(){
-		try {			
+
+	public void leftPush() {
+		try {
 			os.write(CommandClass.cmdLeftPush);
 			os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void rightPush(){
-		try {			
+
+	public void rightPush() {
+		try {
 			os.write(CommandClass.cmdRightPush);
 			os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void nitroPush(){
-		try {			
+
+	public void nitroPush() {
+		try {
 			os.write(CommandClass.cmdNitroPush);
 			os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void release(){
-		try {			
+
+	public void release() {
+		try {
 			os.write(CommandClass.cmdRelease);
 			os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public byte[] loadMap(String map){
-		try {		
+
+	public byte[] loadMap(String map) {
+		try {
 			byte[] array = null;
 			Socket s = new Socket(ip, port);
 			OutputStream os = s.getOutputStream();
@@ -305,9 +314,9 @@ public class Client {
 		}
 		return null;
 	}
-	
+
 	public String getMaps() {
-		try {		
+		try {
 			Socket s = new Socket(ip, port);
 			OutputStream os = s.getOutputStream();
 			DataInputStream dis = new DataInputStream(s.getInputStream());
@@ -320,9 +329,9 @@ public class Client {
 		}
 		return this.maps;
 	}
-	
-	public String getMapName(int id){
-		try {		
+
+	public String getMapName(int id) {
+		try {
 			Socket s = new Socket(ip, port);
 			OutputStream os = s.getOutputStream();
 			DataInputStream dis = new DataInputStream(s.getInputStream());
@@ -338,9 +347,9 @@ public class Client {
 		}
 		return null;
 	}
-	
-	public String loadMapsObstacle(String map){
-		try {		
+
+	public String loadMapsObstacle(String map) {
+		try {
 			Socket s = new Socket(ip, port);
 			OutputStream os = s.getOutputStream();
 			DataInputStream dis = new DataInputStream(s.getInputStream());

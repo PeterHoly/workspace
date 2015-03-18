@@ -1,46 +1,46 @@
 package com.example.bclib;
 
 public class Display {
-	
-	private double width,height;
-	private double x,y;
-	
-	public Display(double x, double y, double width, double height){
+
+	private double width, height;
+	private double x, y;
+
+	public Display(double x, double y, double width, double height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 	}
-	
-	public double getX(){
+
+	public double getX() {
 		return this.x;
 	}
-	
-	public double getY(){
+
+	public double getY() {
 		return this.y;
 	}
-	
-	public double getWidth(){
+
+	public double getWidth() {
 		return this.width;
 	}
-	
-	public double getHeight(){
+
+	public double getHeight() {
 		return this.height;
 	}
-	
-	public double getTop(){
+
+	public double getTop() {
 		return this.height + this.y;
 	}
-	
-	public double getBottom(){
+
+	public double getBottom() {
 		return this.y;
 	}
-	
-	public double conversionY(double y){
+
+	public double conversionY(double y) {
 		return height - y + this.y;
 	}
-	
-	public void update(double y){
+
+	public void update(double y) {
 		this.y += y;
 	}
 }

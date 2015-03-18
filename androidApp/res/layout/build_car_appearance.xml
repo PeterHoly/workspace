@@ -33,9 +33,9 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/back_button4"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-		android:layout_above="@+id/back_button4">
+        android:layout_marginBottom="16dp" >
 
         <Button
             android:id="@+id/button_performance2"
@@ -53,9 +53,9 @@
             android:id="@+id/button_appearance2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/button_performance2"
-            android:layout_alignParentBottom="true"
             android:background="@drawable/buildperandapp"
             android:onClick="appearance"
             android:text="@string/appearance"

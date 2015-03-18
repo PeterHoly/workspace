@@ -1,31 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0+" codebase="file:///home/peter/workspace/desktopApp" href="desktopApp.jnlp">
+<jnlp
+    codebase="file:///home/peter/workspace/desktopApp"
+    href="desktopApp.jnlp"
+    spec="1.0+" >
+
     <information>
-        <title>carRace</title>
-        <vendor></vendor>
+
+        <title>
+carRace
+        </title>
+
+        <vendor>
+        </vendor>
     </information>
-    <version>0.1</version>
+
+    <version>
+0.1
+    </version>
+
     <resources>
+
         <!-- Application Resources -->
-        <j2se version="1.6+"
-              href="http://java.sun.com/products/autodl/j2se"/>
-        <jar href="desktopApp.jar"
+
+        <j2se
+            href="http://java.sun.com/products/autodl/j2se"
+            version="1.6+" />
+
+        <jar
+            href="desktopApp.jar"
             main="true" />
     </resources>
 
-  <!-- Linux OS -->
-    <resources os="Linux">
+    <!-- Linux OS -->
+
+    <resources os="Linux" >
+
         <nativelib href="swt_linux.jar" />
     </resources>
 
     <application-desc
-         main-class=
-           "desktopApp.DesktopMenu"
-         width="300"
-         height="300">
-     </application-desc>
-     <update check="background"/>
-     <security >
-      <all-permissions/>
-     </security>
+        height="300"
+        main-class="desktopApp.DesktopMenu"
+        width="300" >
+    </application-desc>
+
+    <update check="background" />
+
+    <security>
+
+        <all-permissions />
+    </security>
+
 </jnlp>

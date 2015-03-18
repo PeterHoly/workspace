@@ -24,20 +24,25 @@ public class Player {
 	private int nitroIndex;
 	private boolean nitrous = false;
 	private boolean nitroIsUsed = true;
-	private int i=0;
+	private int i = 0;
 	private double settingAnle;
 	private double pomAngle;
-	private int iSA=0;
-	private boolean isOffline=false;
-	
+	private int iSA = 0;
+	private boolean isOffline = false;
+	private boolean mRun = true;
+
 	private Car myCar;
 	private Display display;
-	
-	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro, int filter, int order){
+
+	public Player(Socket s, Game g, double width, double height,
+			int indexBodywork, int indexGlass, double ySpeed, double xSpeed,
+			int nitro, int filter, int order) {
 		socket = s;
 		game = g;
 		ID = g.getCountPlayers();
-		myCar = new Car(100+50*order, 0, Bodywork.bodyworks[indexBodywork].getWidth(), Bodywork.bodyworks[indexGlass].getHeight());
+		myCar = new Car(100 + 50 * order, 0,
+				Bodywork.bodyworks[indexBodywork].getWidth(),
+				Bodywork.bodyworks[indexGlass].getHeight());
 		myCar.getTrajectory().setXwithComponent(xSpeed);
 		myCar.getTrajectory().setYwithComponent(ySpeed);
 		myCar.getTrajectory().setFilter(Filter.filters[filter].getValue());
@@ -46,167 +51,158 @@ public class Player {
 		glassIndex = indexGlass;
 		nitroIndex = nitro;
 	}
-	
-	public boolean isOffline(){
+
+	public boolean isOffline() {
 		return isOffline;
 	}
-	
-	public double getSettingAngle(){
+
+	public double getSettingAngle() {
 		return this.settingAnle;
 	}
-	
-	public double getPomAngle(){
+
+	public double getPomAngle() {
 		return this.pomAngle;
 	}
-	
-	public void setSettingAngle(double a){
+
+	public void setSettingAngle(double a) {
 		this.settingAnle = a;
 	}
-	
-	public void setPomAngle(double a){
+
+	public void setPomAngle(double a) {
 		this.pomAngle = a;
 	}
-	
-	public int getISA(){
+
+	public int getISA() {
 		return this.iSA;
 	}
-	
-	public void setISA(int isa){
+
+	public void setISA(int isa) {
 		this.iSA = isa;
 	}
-	
-	public int getI(){
+
+	public int getI() {
 		return this.i;
 	}
-	
-	public void setI(int i){
+
+	public void setI(int i) {
 		this.i = i;
 	}
-	
-	public boolean getNitroIsUsed(){
+
+	public boolean getNitroIsUsed() {
 		return this.nitroIsUsed;
 	}
-	
-	public void setNitroIsUsed(boolean b){
+
+	public void setNitroIsUsed(boolean b) {
 		this.nitroIsUsed = b;
 	}
-	
-	public boolean getNitrous(){
+
+	public boolean getNitrous() {
 		return this.nitrous;
 	}
-	
-	public int getNitroIndex(){
+
+	public int getNitroIndex() {
 		return this.nitroIndex;
 	}
-	
-	public int getID(){
+
+	public int getID() {
 		return this.ID;
 	}
-	
-	public int getIDiterace(){
+
+	public int getIDiterace() {
 		return this.IDiterace;
 	}
-	
-	public Display getDisplay(){
+
+	public Display getDisplay() {
 		return this.display;
 	}
-	
-	public Car getCar(){
+
+	public Car getCar() {
 		return this.myCar;
 	}
-	
-	public void run(){
-		
-		while(true){
-			
+
+	public void setRunning(boolean bRun) {
+		mRun = bRun;
+	}
+
+	public void run() {
+
+		while (mRun) {
+
 			int command = -1;
 			OutputStream os = null;
 			InputStream is = null;
 			DataInputStream dis = null;
 			DataOutputStream dos = null;
-			
+
 			try {
 				os = socket.getOutputStream();
 				is = socket.getInputStream();
 				dos = new DataOutputStream(os);
 				dis = new DataInputStream(is);
 				command = is.read();
-				
-				if(command == -1){
+
+				if (command == -1) {
 					isOffline = true;
+					this.setRunning(false);
 					break;
 				}
-			
-				if(command==CommandClass.cmdSetPos)
-				{
+
+				if (command == CommandClass.cmdSetPos) {
 					myCar.setX(dis.readDouble());
 					myCar.setY(dis.readDouble());
 					myCar.setAngle(dis.readDouble());
-				}
-				else if(command == CommandClass.cmdGetPoses){
-					for(Player p : game.getPlayers()){
+				} else if (command == CommandClass.cmdGetPoses) {
+					for (Player p : game.getPlayers()) {
 						dos.writeBoolean(p.isOffline());
-						if(p.isOffline()) continue;
-						
+						if (p.isOffline())
+							continue;
+
 						dos.writeDouble(p.myCar.getX());
 						dos.writeDouble(p.myCar.getY());
 						dos.writeDouble(p.myCar.getAngle());
 						dos.writeInt(p.myCar.getHp());
 						dos.writeBoolean(p.myCar.getnitroActived());
 						dos.writeInt(p.myCar.getWin());
-						
+
 					}
-				}
-				else if(command==CommandClass.cmdGetPos)
-				{
+				} else if (command == CommandClass.cmdGetPos) {
 					int j = dis.readInt();
 					Player p = game.getPlayer(j);
-					
+
 					dos.writeDouble(p.myCar.getX());
 					dos.writeDouble(p.myCar.getY());
 					dos.writeDouble(p.myCar.getAngle());
-				}
-				else if(command==CommandClass.cmdGetCountPlayers)
-				{
+				} else if (command == CommandClass.cmdGetCountPlayers) {
 					dos.writeInt(game.getCountPlayers());
-				}
-				else if(command==CommandClass.cmdGetIter)
-				{
+				} else if (command == CommandClass.cmdGetIter) {
 					dos.writeInt(game.getIDiterace());
-				}
-				else if(command==CommandClass.cmdSetIter)
-				{
+				} else if (command == CommandClass.cmdSetIter) {
 					IDiterace = dis.readInt();
 					game.setIDiterace(IDiterace);
-				}
-				else if(command==CommandClass.cmdLeftPush)
-				{
-					if(myCar.getY() < game.getMap().getCilObs().getY()){
+				} else if (command == CommandClass.cmdLeftPush) {
+					if (myCar.getY() < game.getMap().getCilObs().getY()) {
 						myCar.setIncrement(0.09f, 0.79f);
 					}
-				}
-				else if(command==CommandClass.cmdRightPush)
-				{
-					if(myCar.getY() < game.getMap().getCilObs().getY()){
+				} else if (command == CommandClass.cmdRightPush) {
+					if (myCar.getY() < game.getMap().getCilObs().getY()) {
 						myCar.setIncrement(-0.09f, 0.79f);
 					}
-				}
-				else if(command==CommandClass.cmdNitroPush)
-				{
-					if(!nitrous){
+				} else if (command == CommandClass.cmdNitroPush) {
+					if (!nitrous) {
 						nitrous = true;
-						myCar.getTrajectory().setYwithComponent(Nitro.nitrous[nitroIndex].getValue());
-						
+						myCar.getTrajectory().setYwithComponent(
+								Nitro.nitrous[nitroIndex].getValue());
+
 						myCar.setnitroActived(true);
 					}
-				}
-				else if(command==CommandClass.cmdRelease)
-				{
+				} else if (command == CommandClass.cmdRelease) {
 					myCar.setIncrement(0.09f, 0f);
-				}
-				else if(command==CommandClass.cmdGetImgs)
-				{
-					for(Player p : game.getPlayers()){
+				} else if (command == CommandClass.cmdCloseSocket) {
+					this.isOffline = true;
+					this.setRunning(false);
+					dos.writeBoolean(true);
+				} else if (command == CommandClass.cmdGetImgs) {
+					for (Player p : game.getPlayers()) {
 						dos.writeInt(p.bodyworkIndex);
 						dos.writeInt(p.glassIndex);
 					}
@@ -218,4 +214,3 @@ public class Player {
 		}
 	}
 }
-	
