@@ -2,10 +2,7 @@ package com.example.androidApp;
 
 import com.example.bclib.Car;
 import com.example.bclib.Client;
-import com.example.bclib.Display;
 import com.example.bclib.Game;
-import com.example.bclib.Map;
-import com.example.bclib.Obstacle;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,13 +21,13 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 	private Client myClient;
 	private Game myGame;
 	private GameUI gameUI;
-	private Map m;
-	private Display d;
 	private Render r;
 	private String packageName;
 	private boolean nitroPressed = false;
 	private AssetManager am;
 	private Context context;
+	private int crashCar = 0;
+	private boolean endGame = false;
 	
 	public SurfacePanel(Context context, Client myClient, Game myGame, String packageName, AssetManager am) {
 		super(context);
@@ -38,17 +35,12 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		this.context = context;
 		this.myClient = myClient;
 		this.myGame = myGame;
-		this.m = myGame.getMap();
-		this.d = myGame.getDisplay();
 		this.am = am;
-		this.r = new Render(context,d, this.am);
-		this.gameUI = new GameUI(d);
+		this.r = new Render(context,this.myGame.getDisplay(), this.am);
+		this.gameUI = new GameUI(this.myGame.getDisplay(), context);
 		this.packageName = packageName;
 		
-		
 		getHolder().addCallback(this);
-		
-		Log.i("bc", "baf");
 	}
 
 	@Override
@@ -104,55 +96,51 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 		if(event.getAction() == MotionEvent.ACTION_MOVE){
 			if(gameUI.getButtonLeft().contains((int)event.getX(), (int)event.getY()))
 			{		
-				mythread.myClient.leftPush();
+				mythread.getClient().leftPush();
 			}
 			else if(gameUI.getButtonRight().contains((int)event.getX(), (int)event.getY()))
 			{		
-				mythread.myClient.rightPush();
+				mythread.getClient().rightPush();
 			}
 			else{
-				mythread.myClient.release();
+				mythread.getClient().release();
 			}
 		}
 		else if(event.getAction() == MotionEvent.ACTION_DOWN){
 				if(gameUI.getButtonLeft().contains((int)event.getX(), (int)event.getY()))
 				{			
-					mythread.myClient.leftPush();
+					mythread.getClient().leftPush();
 				}
 				else if(gameUI.getButtonRight().contains((int)event.getX(), (int)event.getY()))
 				{					
-					mythread.myClient.rightPush();
+					mythread.getClient().rightPush();
 				}
 				else if(gameUI.getButtonNitro().contains((int)event.getX(), (int)event.getY()))
 				{
-					mythread.myClient.nitroPush();
+					mythread.getClient().nitroPush();
 					nitroPressed = true;
 				}
 				else if(gameUI.getButtonBackToMenu().contains((int)event.getX(), (int)event.getY()) && endGame)
 				{
 					this.mythread.setRunning(false);
-					this.mythread.myClient.closeSocket();
+					this.mythread.getClient().closeSocket();
 					Intent intent = new Intent(context, MainActivity.class);
 		            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		            context.startActivity(intent);
 				}
 		}
 		else if(event.getAction() == MotionEvent.ACTION_UP) {
-			mythread.myClient.release();
+			mythread.getClient().release();
 		}
 		
 		return true;
 	}
-	
-	int crashCar = 0;
-	boolean endGame = false;
-	
-	void doDraw(Canvas canvas) throws InterruptedException {
-		canvas.drawColor(Color.WHITE);
+
+	public void doDraw(Canvas canvas) throws InterruptedException {
 		
-		r.draw(null, canvas, getResources(), this.packageName, crashCar, myGame.getMapName());
+		r.draw(null, canvas, getResources(), this.packageName, 0, myGame.getMapName());
 		
-		for(Car c : m.cars){
+		for(Car c : myGame.getMap().getCars()){
 			r.draw(c, canvas, getResources(), this.packageName, crashCar, myGame.getMapName());
 		}
 		
@@ -166,15 +154,13 @@ public class SurfacePanel extends SurfaceView implements SurfaceHolder.Callback{
 			r.drawButton(gameUI.getButtonNitro(), canvas, getResources(), this.packageName, "nitro");
 		}
 		
-		int idPlayer = myGame.getIDplayer();
-		r.drawHp(gameUI, canvas, myGame.getMap().cars.get(idPlayer).getHp());
+		r.drawHp(gameUI, canvas, myGame.getMap().getCars().get(myGame.getIDplayer()).getHp());
 		
-		if(myGame.getMap().cars.get(idPlayer).getWin() != -1){
-			r.drawWin(gameUI, canvas, myGame.getMap().cars.get(idPlayer).getWin());
+		if(myGame.getMap().getCars().get(myGame.getIDplayer()).getWin() != -1){
+			r.drawWin(gameUI, canvas, myGame.getMap().getCars().get(myGame.getIDplayer()).getWin());
 			r.drawMenuButton(gameUI.getButtonBackToMenu(), canvas, getResources(), this.packageName);
 			endGame = true;
 		}
-		
 		crashCar++;
 	}
 }

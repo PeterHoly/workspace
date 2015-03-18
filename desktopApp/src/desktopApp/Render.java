@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.example.bclib.Car;
 import com.example.bclib.MapObject;
-import com.example.bclib.Obstacle;
 
 public class Render {
 	
@@ -38,17 +37,17 @@ public class Render {
 	private String HP[] = {"HP 0", "HP 1", "HP 2", "HP 3", "HP 4", "HP 5", "HP 6", "HP 7", "HP 8", "HP 9", "HP 10"};
 	private String win[] = {"WINNER", "GAME OVER"};
 	
-	public int numberImgCrash;
-	Image mapImg = null;
-	Image nitroBombPressedImg = null;
-	Image nitroBombImg = null;
-	Font myfont = null;
-	Color p1 = null;
+	private int numberImgCrash;
+	private Image mapImg = null;
+	private Image nitroBombPressedImg = null;
+	private Image nitroBombImg = null;
+	private Font myfont = null;
+	private Color p1 = null;
 	
-	Color colorBlack2;
-	Color colorSilver;
+	private Color colorBlack2;
+	private Color colorSilver;
 	
-	Boolean backBool = false;
+	private Boolean backBool = false;
 	
 	public Render(com.example.bclib.Display d)
 	{
@@ -57,12 +56,7 @@ public class Render {
 
 	public void draw(MapObject mo, PaintEvent e, Shell s, int crashCar, String mapName){
 		
-		if(mo instanceof Obstacle){
-			Color p = new Color(e.display, 255, 255, 255);
-			e.gc.setForeground(p);
-			e.gc.drawLine((int)mo.getX(), (int)myDisplay.conversionY(mo.getY()), (int)((Obstacle)mo).getX2(), (int)myDisplay.conversionY(((Obstacle)mo).getY2()));
-		}
-		else if(mo instanceof Car)
+		if(mo instanceof Car)
 		{
 			synchronized (mo) {
 				synchronized (myDisplay) {
@@ -156,13 +150,13 @@ public class Render {
 		return backBool;
 	}
 	
-	Listener backToMenuL = new Listener() {
+	private Listener backToMenuL = new Listener() {
 	      public void handleEvent(Event event) {
 	    	  backBool = true;
 	      }
 	 };
 	
-	PaintListener backgroundButtonPaintL = new PaintListener() {
+	private PaintListener backgroundButtonPaintL = new PaintListener() {
 		@Override
 		public void paintControl(PaintEvent e) {
 			if(e.widget instanceof Button)

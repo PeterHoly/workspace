@@ -1,6 +1,7 @@
 package com.example.bclib;
 
 public class CommandClass {
+	
 	public static final int cmdGetCountPlayers = 1;
 	public static final int cmdGetIter = 2;
 	public static final int cmdGetPos = 3;

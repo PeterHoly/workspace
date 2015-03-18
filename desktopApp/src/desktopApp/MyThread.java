@@ -1,6 +1,5 @@
 package desktopApp;
 
-import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -9,17 +8,16 @@ import com.example.bclib.Logic;
 import com.example.bclib.Client;
 
 public class MyThread extends Thread{
+	
 	private SurfacePanel surfacePanel;
-	private PaintEvent paintEvent;
 	private boolean mRun = false;
 	private Game myGame;
 	private Shell myShell;
 	private Display myDisplay;
 	private Logic myLogic = new Logic();
 	private Object o = new Object();
-	//public Client myClient = new Client("192.168.0.21", 8096);
-	//public Client myClient = new Client("192.168.43.37", 8096);
-	public Client myClient = new Client("127.0.0.1", 8096);
+
+	private Client myClient = new Client("127.0.0.1", 8096);
 	
 	public MyThread(SurfacePanel sp, Game myGame, Shell shell, Display display) {
 		this.surfacePanel = sp;
@@ -29,9 +27,12 @@ public class MyThread extends Thread{
 		this.myDisplay = display;
 	}
 	
-	void setRunning(boolean bRun)
-	{
+	public void setRunning(boolean bRun){
 		mRun = bRun;
+	}
+	
+	public Client getClient(){
+		return this.myClient;
 	}
 	
 	@Override
@@ -52,7 +53,7 @@ public class MyThread extends Thread{
 									setRunning(false);
 								}
 								else{
-									myLogic.increaseValue2(myGame, myClient);
+									myLogic.increaseValue(myGame, myClient);
 									
 									myShell.redraw();
 									myShell.update();

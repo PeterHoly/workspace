@@ -1,18 +1,15 @@
 package com.example.bclib;
 
-
 public class Display {
 	
 	private double width,height;
 	private double x,y;
-	
 	
 	public Display(double x, double y, double width, double height){
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		
 	}
 	
 	public double getX(){
@@ -46,6 +43,4 @@ public class Display {
 	public void update(double y){
 		this.y += y;
 	}
-	
-	
 }

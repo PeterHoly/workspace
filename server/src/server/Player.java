@@ -15,27 +15,23 @@ import com.example.bclib.components.Filter;
 import com.example.bclib.components.Nitro;
 
 public class Player {
-	public Socket socket;
-	public Game game;
-	public double positionX;
-	public double positionY;
-	public double angle;
-	public int ID;
-	public int IDiterace;
-	public int bodyworkIndex;
-	public int glassIndex;
-	public int nitroIndex;
-	public boolean nitrous = false;
-	public boolean nitroIsUsed = true;
-	public int i=0;
-	public double settingAnle;
-	public double pomAngle;
-	public int iSA=0;
-	public boolean isOffline=false;
+	private Socket socket;
+	private Game game;
+	private int ID;
+	private int IDiterace;
+	private int bodyworkIndex;
+	private int glassIndex;
+	private int nitroIndex;
+	private boolean nitrous = false;
+	private boolean nitroIsUsed = true;
+	private int i=0;
+	private double settingAnle;
+	private double pomAngle;
+	private int iSA=0;
+	private boolean isOffline=false;
 	
-	public Car myCar;
-	
-	public Display display;
+	private Car myCar;
+	private Display display;
 	
 	public Player(Socket s, Game g, double width, double height, int indexBodywork, int indexGlass, double ySpeed, double xSpeed, int nitro, int filter, int order){
 		socket = s;
@@ -53,6 +49,70 @@ public class Player {
 	
 	public boolean isOffline(){
 		return isOffline;
+	}
+	
+	public double getSettingAngle(){
+		return this.settingAnle;
+	}
+	
+	public double getPomAngle(){
+		return this.pomAngle;
+	}
+	
+	public void setSettingAngle(double a){
+		this.settingAnle = a;
+	}
+	
+	public void setPomAngle(double a){
+		this.pomAngle = a;
+	}
+	
+	public int getISA(){
+		return this.iSA;
+	}
+	
+	public void setISA(int isa){
+		this.iSA = isa;
+	}
+	
+	public int getI(){
+		return this.i;
+	}
+	
+	public void setI(int i){
+		this.i = i;
+	}
+	
+	public boolean getNitroIsUsed(){
+		return this.nitroIsUsed;
+	}
+	
+	public void setNitroIsUsed(boolean b){
+		this.nitroIsUsed = b;
+	}
+	
+	public boolean getNitrous(){
+		return this.nitrous;
+	}
+	
+	public int getNitroIndex(){
+		return this.nitroIndex;
+	}
+	
+	public int getID(){
+		return this.ID;
+	}
+	
+	public int getIDiterace(){
+		return this.IDiterace;
+	}
+	
+	public Display getDisplay(){
+		return this.display;
+	}
+	
+	public Car getCar(){
+		return this.myCar;
 	}
 	
 	public void run(){
@@ -100,7 +160,6 @@ public class Player {
 				else if(command==CommandClass.cmdGetPos)
 				{
 					int j = dis.readInt();
-					//Player p = game.getPlayer((ID+j+1) % game.getCountPlayers());
 					Player p = game.getPlayer(j);
 					
 					dos.writeDouble(p.myCar.getX());
@@ -122,13 +181,13 @@ public class Player {
 				}
 				else if(command==CommandClass.cmdLeftPush)
 				{
-					if(myCar.getY() < game.getMap().cilObs.getY()){
+					if(myCar.getY() < game.getMap().getCilObs().getY()){
 						myCar.setIncrement(0.09f, 0.79f);
 					}
 				}
 				else if(command==CommandClass.cmdRightPush)
 				{
-					if(myCar.getY() < game.getMap().cilObs.getY()){
+					if(myCar.getY() < game.getMap().getCilObs().getY()){
 						myCar.setIncrement(-0.09f, 0.79f);
 					}
 				}
@@ -148,8 +207,6 @@ public class Player {
 				else if(command==CommandClass.cmdGetImgs)
 				{
 					for(Player p : game.getPlayers()){
-						//System.out.println("get " + p.ID + ": " + p.myCar.getTrajectory().x+", "+p.myCar.getTrajectory().y);
-						
 						dos.writeInt(p.bodyworkIndex);
 						dos.writeInt(p.glassIndex);
 					}

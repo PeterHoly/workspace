@@ -70,20 +70,16 @@ public class Main {
 					
 					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter, myGame.getCountPlayers());
 					
-					//dos.writeInt(p.ID);
-					//dos.flush();
-					
 					myGame.addPlayer(p);
 					myGame.setMapObstacleAndStart(loadObstacles(mapImgName));
 					
-					dos.writeInt(p.ID);
-					dos.writeDouble(myGame.getMap().cilObs.getY());
+					dos.writeInt(p.getID());
+					dos.writeDouble(myGame.getMap().getCilObs().getY());
 					dos.flush();
 					
 					createdGame.add(myGame);
 					
 					System.out.println("created!");
-					
 					
 					final Thread t = new Thread (new Runnable() {
 						@Override
@@ -118,7 +114,6 @@ public class Main {
 					
 					t2.start();
 				
-					
 				}
 				else if(command==CommandClass.cmdJoin){
 					final Game myGame = createdGame.get(dis.readInt());
@@ -135,8 +130,8 @@ public class Main {
 					final Player p = new Player(s, myGame, width, height, bodyworkIndex, glassIndex, ySpeed, xSpeed, nitro, filter, myGame.getCountPlayers());
 					myGame.addPlayer(p);
 					
-					dos.writeInt(p.ID);
-					dos.writeDouble(myGame.getMap().cilObs.getY());
+					dos.writeInt(p.getID());
+					dos.writeDouble(myGame.getMap().getCilObs().getY());
 					dos.writeInt(myGame.getCountPlay());
 					dos.flush();
 					

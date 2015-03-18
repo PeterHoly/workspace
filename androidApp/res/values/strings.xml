@@ -8,8 +8,8 @@
     <string name="join_game">JOIN GAME</string>
     <string name="build_car">BUILD CAR</string>
     <string name="play">PLAY</string>
-    <string name="write_count_players">    Count\nplayers :</string>
-    <string name="choose_one_game">Choose one game :</string>
+    <string name="write_count_players">Count\nplayers:</string>
+    <string name="choose_one_game">Choose one game</string>
     <string name="connect">Connect</string>
     <string name="save">Save</string>
     <string name="performance">Performance</string>
@@ -24,8 +24,8 @@
     <string name="bodywork">BODYWORK</string>
     <string name="glass">GLASS</string>
     <string name="image_notfound">Image not found.</string>
-    <string name="choose_one_map">Choose one map :</string>
-    <string name="game_name">HIGHWAY \n    RACING</string>
+    <string name="choose_one_map">Choose one map</string>
+    <string name="game_name">HIGHWAY\nRACING</string>
     
 
 </resources>

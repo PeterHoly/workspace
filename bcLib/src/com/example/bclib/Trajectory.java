@@ -1,12 +1,11 @@
 package com.example.bclib;
 
-
 public class Trajectory {
 		
-	public double x,y;
-	public double filter;
-	public double accteleration;
-	public double speed;
+	private double x,y;
+	private double filter;
+	private double accteleration;
+	private double speed;
 	private int i;
 	
 	public Trajectory(){

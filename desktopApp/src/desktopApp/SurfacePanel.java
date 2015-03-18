@@ -11,19 +11,19 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.example.bclib.Car;
 import com.example.bclib.Game;
-import com.example.bclib.Map;
 
 public class SurfacePanel implements PaintListener {
-	int i;
-	boolean pressed = false;
+	
+	private boolean pressed = false;
 	private MyThread myThread;
 	private Shell shell;
 	private Display display;
 	private DesktopMenu menu;
 	private boolean nitroPressed = false;
 	private Game myGame = new Game(new com.example.bclib.Display(0,0,320,410));
-	
 	private String[] args;
+	private Render r = new Render(myGame.getDisplay());
+	private int crashCar = 0;
 	
 	public SurfacePanel(String[] args) {
 		this.args = args;
@@ -32,6 +32,8 @@ public class SurfacePanel implements PaintListener {
 		shell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN);
 		shell.setSize(320,430);
 		shell.setMinimumSize(320, 430);
+		
+		shell.setLocation((display.getClientArea().width-shell.getSize().x)/2, (display.getClientArea().height-shell.getSize().y)/2);
 		
 		org.eclipse.swt.graphics.Color color = display.getSystemColor(SWT.COLOR_WHITE);
 		shell.setBackground(color);
@@ -52,7 +54,7 @@ public class SurfacePanel implements PaintListener {
 	
 	private void OnCreate(){
 		this.myThread = new MyThread(this,myGame,shell,display);
-		this.menu = new DesktopMenu(display, shell, this.myThread.myClient, d, myGame, this);
+		this.menu = new DesktopMenu(display, shell, this.myThread.getClient(), myGame.getDisplay(), myGame, this);
 	}
 	
 	public void Start(){
@@ -60,73 +62,61 @@ public class SurfacePanel implements PaintListener {
 		myThread.start();
 	}
 	
-	KeyAdapter keyAdapter = new KeyAdapter()
+	private KeyAdapter keyAdapter = new KeyAdapter()
 	{	
 		public void keyPressed(KeyEvent e)
 		{
-			synchronized (myThread.myClient) {
+			synchronized (myThread.getClient()) {
 				if(!pressed) {
 					pressed = true;
 					synchronized (myGame) {
 						if(e.keyCode == SWT.ARROW_LEFT){
-							//myGame.getMap().car.setIncrement(0.09f, 0.79f);//0.79
-							myThread.myClient.leftPush();
+							myThread.getClient().leftPush();
 						}
 						else if(e.keyCode == SWT.ARROW_RIGHT){
-							//myGame.getMap().car.setIncrement(-0.09f, 0.79f);
-							myThread.myClient.rightPush();
+							myThread.getClient().rightPush();
 						}
 						else if(e.keyCode == SWT.SPACE){
-							//myGame.getMap().car.setIncrement(-0.09f, 0.79f);
-							myThread.myClient.nitroPush();
+							myThread.getClient().nitroPush();
 							nitroPressed = true;
 						}
 					}
-				
 				}
 			}
 		}
 		
 		public void keyReleased(KeyEvent e)
 		{
-			synchronized (myThread.myClient) {
+			synchronized (myThread.getClient()) {
 				pressed = false;
 				synchronized (myGame) {
-					//myGame.getMap().car.setIncrement(0.09f, 0f);
-					myThread.myClient.release();
+					myThread.getClient().release();
 				}
 			}
 		}
 	};
-	
-	Map m = myGame.getMap();
-	com.example.bclib.Display d = myGame.getDisplay();
-	Render r = new Render(d);
-	int crashCar = 0;
-	
+
 	public void paintControl(PaintEvent e) {
 		e.gc.setLineAttributes(new LineAttributes(1,SWT.CAP_FLAT,SWT.JOIN_MITER));
 
 		r.draw(null, e, shell, 0, myGame.getMapName());
 		
-		for(Car c : m.cars){
+		for(Car c : myGame.getMap().getCars()){
 			r.draw(c, e, shell, crashCar, myGame.getMapName());
 		}
 		
-		int idPlayer = myGame.getIDplayer();
-		r.drawImg(e, shell, nitroPressed, myGame.getMap().cars.get(idPlayer).getHp());
+		r.drawImg(e, shell, nitroPressed, myGame.getMap().getCars().get(myGame.getIDplayer()).getHp());
 		
-		if(myGame.getMap().cars.get(idPlayer).getWin() != -1){
-			r.drawWin(e, shell, myGame.getMap().cars.get(idPlayer).getWin());
+		if(myGame.getMap().getCars().get(myGame.getIDplayer()).getWin() != -1){
+			r.drawWin(e, shell, myGame.getMap().getCars().get(myGame.getIDplayer()).getWin());
 
 			if(r.drawMenuButton(e, shell)){
 				this.myThread.setRunning(false);
-				this.myThread.myClient.closeSocket();
-				this.display.dispose();
+				this.myThread.getClient().closeSocket();
+				this.display.close();
 				Main.main(this.args);
 			}
 		}
-		
 		crashCar++;
 	}
 }

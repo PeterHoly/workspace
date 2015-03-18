@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -15,7 +14,7 @@ import com.example.bclib.components.Glass;
 
 public class Client {
 	private String ip;
-	int port;
+	private int port;
 	
 	private Socket s = null;
 	private OutputStream os = null;
@@ -200,7 +199,7 @@ public class Client {
 			dos.flush();
 			game.setIDplayer(dis.readInt());
 			double cilY = dis.readDouble();
-			game.getMap().cilObs = new Obstacle(0, cilY, 0, cilY);
+			game.getMap().setCilObs(new Obstacle(0, cilY, 0, cilY));
 		
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -240,7 +239,7 @@ public class Client {
 			
 			game.setIDplayer(dis.readInt());
 			double cilY = dis.readDouble();
-			game.getMap().cilObs = new Obstacle(0, cilY, 0, cilY);
+			game.getMap().setCilObs(new Obstacle(0, cilY, 0, cilY));
 			
 			return dis.readInt();
 			

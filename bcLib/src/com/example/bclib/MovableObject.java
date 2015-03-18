@@ -1,6 +1,5 @@
 package com.example.bclib;
 
-
 public class MovableObject extends MapObject {
 
 	protected Trajectory trajectory;

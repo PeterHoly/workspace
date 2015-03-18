@@ -1,13 +1,10 @@
 package com.example.bclib;
 
-
 public class Vector {
 	
 	private double x,y;
 	
-	public Vector(){
-
-	}
+	public Vector(){}
 	
 	public Vector(double x, double y){
 		this.x = x;

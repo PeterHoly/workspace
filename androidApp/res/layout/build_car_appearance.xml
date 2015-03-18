@@ -6,8 +6,7 @@
     android:background="@drawable/buildwallpaperwithcarplace"
     android:orientation="vertical"
     android:padding="5dp" >
-    
-    
+
     <Button
         android:id="@+id/back_button4"
         android:layout_width="wrap_content"
@@ -31,79 +30,84 @@
         android:textStyle="italic"
         android:typeface="normal" />
 
-    <Button
-        android:id="@+id/button_performance2"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button_appearance2"
-        android:layout_alignBottom="@+id/button_appearance2"
-        android:layout_alignLeft="@+id/back_button4"
-        android:layout_marginLeft="20dp"
-        android:background="@drawable/buildperandapp"
-        android:onClick="performance" 
-        android:text="@string/performance"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="16sp" />
-
-    <Button
-        android:id="@+id/button_appearance2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/back_button4"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/button_performance2"
-        android:background="@drawable/buildperandapp"
-        android:onClick="appearance" 
-        android:text="@string/appearance"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="16sp" />
-    
-    <TextView
-        android:id="@+id/textGlass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_performance2"
-        android:layout_alignLeft="@+id/button_performance2"
-        android:layout_marginBottom="60dp"
-        android:layout_marginLeft="20dp"
-        android:text="@string/glass"
-        android:textSize="18sp" />
-    
-    <TextView
-        android:id="@+id/textBodywork"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textGlass"
-        android:layout_alignLeft="@+id/textGlass"
-        android:layout_marginBottom="23dp"
-        android:text="@string/bodywork"
-        android:textSize="18sp" />
-    
-    <Spinner
-        android:id="@+id/spinnerGlass"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_alignRight="@+id/button_appearance2"
-        android:layout_above="@+id/button_appearance2"
-        android:layout_marginBottom="50dp" />
+		android:layout_above="@+id/back_button4">
 
-    <Spinner
-        android:id="@+id/spinnerBodywork"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_alignLeft="@+id/spinnerGlass"
-        android:layout_above="@+id/spinnerGlass"
-        android:layout_marginBottom="4dp" />
+        <Button
+            android:id="@+id/button_performance2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/button_appearance2"
+            android:layout_alignBottom="@+id/button_appearance2"
+            android:background="@drawable/buildperandapp"
+            android:onClick="performance"
+            android:text="@string/performance"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp" />
 
-    <ImageView
-        android:id="@+id/imageCar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/spinnerBodywork"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="75dp"
-        android:contentDescription="@string/image_notfound"
-        android:src="@drawable/t1bgbl" />
- 
+        <Button
+            android:id="@+id/button_appearance2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/button_performance2"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/buildperandapp"
+            android:onClick="appearance"
+            android:text="@string/appearance"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textGlass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/button_performance2"
+            android:layout_alignLeft="@+id/button_performance2"
+            android:layout_marginBottom="60dp"
+            android:layout_marginLeft="20dp"
+            android:text="@string/glass"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textBodywork"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textGlass"
+            android:layout_alignLeft="@+id/textGlass"
+            android:layout_marginBottom="23dp"
+            android:text="@string/bodywork"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:id="@+id/spinnerGlass"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_above="@+id/button_appearance2"
+            android:layout_alignRight="@+id/button_appearance2"
+            android:layout_marginBottom="50dp" />
+
+        <Spinner
+            android:id="@+id/spinnerBodywork"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_above="@+id/spinnerGlass"
+            android:layout_alignLeft="@+id/spinnerGlass"
+            android:layout_marginBottom="4dp" />
+
+        <ImageView
+            android:id="@+id/imageCar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/spinnerBodywork"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="80dp"
+            android:contentDescription="@string/image_notfound"
+            android:src="@drawable/t1bgbl" />
+    </RelativeLayout>
+
 </RelativeLayout>

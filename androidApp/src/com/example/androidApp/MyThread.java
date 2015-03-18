@@ -1,23 +1,22 @@
 package com.example.androidApp;
 
-import com.example.bclib.Car;
 import com.example.bclib.Game;
 import com.example.bclib.Logic;
 import com.example.bclib.Client;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class MyThread extends Thread {
+	
 	private SurfacePanel mySurfacePanel;
 	private boolean mRun = false;
 	private SurfaceHolder holder;
 	private Game myGame;
 	private Object o = new Object();
 	private Logic myLogic = new Logic();
-	public Canvas mcanvas;
-	public Client myClient;
+	private Canvas mcanvas;
+	private Client myClient;
 	
 	
 	public MyThread(SurfaceHolder holder, Game game, SurfacePanel panel, Client myClient) {
@@ -28,9 +27,13 @@ public class MyThread extends Thread {
 		this.myClient = myClient;
 	}
 	
-	void setRunning(boolean bRun)
+	public void setRunning(boolean bRun)
 	{
 		mRun = bRun;
+	}
+	
+	public Client getClient(){
+		return this.myClient;
 	}
 
 	@Override
@@ -43,10 +46,7 @@ public class MyThread extends Thread {
 			if(mcanvas != null)
 			{
 				try {
-					
-					//myLogic.increaseValue(myGame, myClient);
-					myLogic.increaseValue2(myGame, myClient);
-					
+					myLogic.increaseValue(myGame, myClient);
 					mySurfacePanel.doDraw(mcanvas);
 					
 					synchronized (o) {
@@ -56,10 +56,7 @@ public class MyThread extends Thread {
 					e.printStackTrace();
 				}
 				holder.unlockCanvasAndPost(mcanvas);
-
 			}	
 		}
-	}
-			
-			
+	}	
 }

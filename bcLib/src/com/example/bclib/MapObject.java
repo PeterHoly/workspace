@@ -1,6 +1,5 @@
 package com.example.bclib;
 
-
 public class MapObject {
 	protected double x,y,width,height;
 	protected double angle;
@@ -75,5 +74,4 @@ public class MapObject {
 		this.x = nX;
 		this.y = nY;
 	}
-	
 }

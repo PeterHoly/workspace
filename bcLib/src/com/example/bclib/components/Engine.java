@@ -1,7 +1,5 @@
 package com.example.bclib.components;
 
-import java.util.jar.Attributes.Name;
-
 public class Engine {
 	private String name;
 	private int id;
@@ -38,5 +36,4 @@ public class Engine {
 	public void setValue(double value) {
 		this.value = value;
 	}
-	
 }

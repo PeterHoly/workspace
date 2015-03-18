@@ -1,8 +1,5 @@
 package com.example.bclib;
 
-import java.util.ArrayList;
-
-
 public class Collision {
 		
 	public static boolean findingsCollision(Car car, Obstacle obs){

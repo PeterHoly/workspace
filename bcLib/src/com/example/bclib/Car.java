@@ -25,9 +25,10 @@ public class Car extends Vehicle {
 	private Absorbers absorbers = Absorbers.absorbers[0];
 	private Wheel wheel = Wheel.wheels[0];
 	
-	//zrychleni ze startu po dobu 2s
+	//zrychleni ze startu po urcitou dobu
 	private Filter filter = Filter.filters[0];
 	
+	//okamzite zrychleni po urcitou dobu
 	private Nitro nitro = Nitro.nitrous[0];
 	
 	//vzhled auta

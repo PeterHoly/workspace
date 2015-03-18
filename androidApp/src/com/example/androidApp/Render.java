@@ -11,7 +11,6 @@ import java.util.Random;
 import com.example.bclib.Car;
 import com.example.bclib.Display;
 import com.example.bclib.MapObject;
-import com.example.bclib.Obstacle;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -22,14 +21,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.view.ViewPager.LayoutParams;
-import android.util.Log;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.view.WindowManager;
 
 public class Render {
 	
@@ -42,27 +37,35 @@ public class Render {
 			"redfire9", "redfire10", "redfire11", "redfire12", "redfire13", "redfire14", "redfire15", "redfire16", "redfire17", 
 			"redfire18", "redfire19", "redfire20", "redfire21", "redfire22", "redfire23", "redfire24"};
 	
-	public int numberImgCrash;
+	private int numberImgCrash;
 	private double widthFire = 17;
 	private double heightFire = 10;
 	private Drawable mapImg = null;
 	private Bitmap mapImgBitMap = null;
 	private Context context;
+	private float dp;
+	private float sp;
+	private android.view.Display display;
 	
-	private double widthAndheightExplosion = 32;
-	private Boolean backBool = false;
+	private double widthAndHeightExplosion = 32;
 	
 	public Render(Context context, Display d, AssetManager am)
 	{
 		myDisplay = d;
 		this.context = context;
 		
+		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		display = wm.getDefaultDisplay();
+		this.dp = display.getWidth()/320.0f;
+				
+		this.sp = this.context.getResources().getDisplayMetrics().scaledDensity;
+		
 		tf = Typeface.createFromAsset(am, "fonts/capture_it.ttf");
 		
 		paint = new Paint();
 		paint.setColor(Color.BLUE);
 		paint.setTypeface(tf);
-		paint.setTextSize(30);
+		paint.setTextSize(30*this.sp);
 		
 		grayPaint = new Paint();
 		grayPaint.setColor(Color.DKGRAY);
@@ -70,13 +73,7 @@ public class Render {
 
 	public void draw(MapObject mo, Canvas myCanvas, Resources res, String packageName, int crashCar, String mapName){
 		
-		if(mo instanceof Obstacle)
-		{
-			Paint p = new Paint();
-			p.setColor(Color.WHITE);
-			myCanvas.drawLine((float)mo.getX(), (float)myDisplay.conversionY(mo.getY()), (float)((Obstacle)mo).getX2(), (float)myDisplay.conversionY(((Obstacle)mo).getY2()), p);
-		}
-		else if(mo instanceof Car){	
+		if(mo instanceof Car){	
 			if(((Car)mo).getHp() <= 0){
 				
 				numberImgCrash = ((Car)mo).getCrashImg(crashCar);
@@ -87,7 +84,12 @@ public class Render {
 					   
 					Drawable drawable = res.getDrawable(resourceID);
 					
-					drawable.setBounds((int)(mo.getRight()-mo.getWidth()/2-widthAndheightExplosion/2), (int)(myDisplay.conversionY(mo.getBottom() + mo.getHeight()/2 + widthAndheightExplosion/2)),(int)(mo.getRight()-mo.getWidth()/2+widthAndheightExplosion/2),(int)(myDisplay.conversionY(mo.getBottom() + mo.getHeight()/2 - widthAndheightExplosion/2)));
+					int left = (int)((mo.getRight()-mo.getWidth()/2-widthAndHeightExplosion/2)*dp);
+					int top = (int)((myDisplay.conversionY(mo.getBottom() + mo.getHeight()/2 + widthAndHeightExplosion/2))*dp);
+					int right = (int)((mo.getRight()-mo.getWidth()/2+widthAndHeightExplosion/2)*dp);
+					int bottom = (int)((myDisplay.conversionY(mo.getBottom() + mo.getHeight()/2 - widthAndHeightExplosion/2))*dp);
+					
+					drawable.setBounds(left, top, right, bottom);
 					
 					myCanvas.save();
 					drawable.draw(myCanvas);
@@ -103,9 +105,15 @@ public class Render {
 					int resourceID = res.getIdentifier(imagesCarNitro[n], "drawable", packageName);
 					   
 					Drawable drawable = res.getDrawable(resourceID);
-					drawable.setBounds((int)(mo.getLeft()-widthFire), (int)myDisplay.conversionY(mo.getTop()-mo.getHeight()/2+heightFire/2), (int)mo.getLeft(), (int)myDisplay.conversionY(mo.getTop()-mo.getHeight()/2-heightFire/2));
+					
+					int left = (int)((mo.getLeft()-widthFire)*dp); 
+					int top = (int)(myDisplay.conversionY(mo.getTop()-mo.getHeight()/2+heightFire/2)*dp);
+					int right = (int)(mo.getLeft()*dp);
+					int bottom = (int)(myDisplay.conversionY(mo.getTop()-mo.getHeight()/2-heightFire/2)*dp);
+					
+					drawable.setBounds(left, top, right, bottom);
 					myCanvas.save();
-					myCanvas.rotate((float) Math.toDegrees(-mo.getAngle()),(float)mo.getX(),(float)myDisplay.conversionY(mo.getY()));
+					myCanvas.rotate((float) Math.toDegrees(-mo.getAngle()),(float)mo.getX()*dp,(float)myDisplay.conversionY(mo.getY())*dp);
 					drawable.draw(myCanvas);
 					myCanvas.restore();
 				}
@@ -117,9 +125,15 @@ public class Render {
 				int resourceID = res.getIdentifier(code, "drawable", packageName);
 				
 				Drawable drawable = res.getDrawable(resourceID);
-				drawable.setBounds((int)mo.getLeft(), (int)myDisplay.conversionY(mo.getTop()), (int)mo.getRight(), (int)myDisplay.conversionY(mo.getBottom()));
+				
+				int left = (int)(mo.getLeft()*dp);
+				int top = (int)(myDisplay.conversionY(mo.getTop())*dp);
+				int right = (int)(mo.getRight()*dp);
+				int bottom = (int)(myDisplay.conversionY(mo.getBottom())*dp);
+				
+				drawable.setBounds(left, top, right, bottom);
 				myCanvas.save();
-				myCanvas.rotate((float) Math.toDegrees(-mo.getAngle()),(float)mo.getX(),(float)myDisplay.conversionY(mo.getY()));
+				myCanvas.rotate((float) Math.toDegrees(-mo.getAngle()),(float)mo.getX()*dp,(float)myDisplay.conversionY(mo.getY())*dp);
 				drawable.draw(myCanvas);
 				myCanvas.restore();	
 			}
@@ -149,58 +163,54 @@ public class Render {
 		    
 		    int destLeft = 0;
 		    int destTop = 0;
-		    int destRight = (int)myDisplay.getWidth();
-		    int destBottom = (int)myDisplay.getHeight();
-			
+		    int destRight = (int) (myDisplay.getWidth()*dp);
+		    int destBottom = (int) (myDisplay.getHeight()*dp);
+		    
 			myCanvas.drawBitmap(mapImgBitMap, new Rect(srcLeft,srcTop,srcRight,srcBottom), new Rect(destLeft,destTop,destRight,destBottom), null);
 		}
 	}
 	
 	public void drawMenuButton(Rect rect, Canvas myCanvas, Resources res, String packageName){
-		
 		int resourceID = res.getIdentifier("buildperandapp", "drawable", packageName);
 		Drawable d = res.getDrawable(resourceID);
 		d.setBounds(rect.left, rect.top, rect.right, rect.bottom);
 		d.draw(myCanvas);
-		
 		Paint backPaint = new Paint();
 		backPaint.setColor(Color.GRAY);
 		backPaint.setTypeface(tf);
-		backPaint.setTextSize(18);
-		
-		myCanvas.drawText("BACK TO MENU", rect.left+15, rect.top+30, backPaint);
+		backPaint.setTextSize(18*sp);
+		myCanvas.drawText("BACK TO MENU", rect.left+15*dp, rect.top+30*dp, backPaint);
 	}
 	
 	public void drawWin(GameUI gameUI, Canvas myCanvas, int w){
 		Paint winPaint = new Paint();
 		winPaint.setColor(Color.BLUE);
 		winPaint.setTypeface(tf);
-		winPaint.setTextSize(35);
+		winPaint.setTextSize(35*sp);
 		
 		if(w == 0){
-			myCanvas.drawText(gameUI.win[w], (float)myDisplay.getWidth()/3 -5, (float)myDisplay.getHeight()/3, winPaint);
+			myCanvas.drawText(gameUI.getWin()[w], (float)(myDisplay.getWidth()/3 -5)*dp, (float)(myDisplay.getHeight()/3)*dp, winPaint);
 		}
 		else if(w == 1){
-			myCanvas.drawText(gameUI.win[w], (float)myDisplay.getWidth()/4 -10, (float)myDisplay.getHeight()/3, winPaint);
+			myCanvas.drawText(gameUI.getWin()[w], (float)(myDisplay.getWidth()/4 -10)*dp, (float)(myDisplay.getHeight()/3)*dp, winPaint);
 		}
 	}
 	
 	public void drawButton(Rect rect, Canvas myCanvas, Resources res, String packageName, String fileName){
 		if(fileName.equals("right")){
-			myCanvas.drawRect(rect.left, rect.top-3, rect.right+5, rect.bottom+5, grayPaint);
+		myCanvas.drawRect(rect.left, rect.top-3*dp, rect.right+5*dp, rect.bottom+5*dp, grayPaint);
 		}
 		else if(fileName.equals("left")){
-			myCanvas.drawRect(rect.left-5, rect.top-3, rect.right+2, rect.bottom+5, grayPaint);
+		myCanvas.drawRect(rect.left-5*dp, rect.top-3*dp, rect.right+2*dp, rect.bottom+5*dp, grayPaint);
 		}
-		
 		int resourceID = res.getIdentifier(fileName, "drawable", packageName);
 		Drawable d = res.getDrawable(resourceID);
 		d.setBounds(rect.left, rect.top, rect.right, rect.bottom);
-		d.draw(myCanvas);	
+		d.draw(myCanvas);
 	}
 	
 	public void drawHp(GameUI gameUI, Canvas myCanvas, int hp){
-		myCanvas.drawText(gameUI.HP[hp], (float)myDisplay.getWidth()-80, (float)myDisplay.getHeight()-400, paint);
+		myCanvas.drawText(gameUI.getHP()[hp], (float)(myDisplay.getWidth()-80)*dp, 40*dp, paint);
 	}
 	
 	public static void createImg(byte[] map, String name, Context context){

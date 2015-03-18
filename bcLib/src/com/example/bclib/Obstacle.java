@@ -1,6 +1,5 @@
 package com.example.bclib;
 
-
 public class Obstacle extends MapObject {
 	
 	private double x2,y2;

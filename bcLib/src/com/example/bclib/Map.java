@@ -2,27 +2,43 @@ package com.example.bclib;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Map {
 	
-	public List <Obstacle> obstacles;
-	public List <Obstacle> visibleObstacles;
-	public Obstacle startObs;
-	public Obstacle cilObs;
-	public List <Car> cars;
-	public Car car;
+	private List <Obstacle> obstacles;
+	private List <Obstacle> visibleObstacles;
+	private Obstacle startObs;
+	private Obstacle cilObs;
+	private List <Car> cars;
 	
 	public Map(){
 		
 		visibleObstacles = new ArrayList<Obstacle>();
 		obstacles = new ArrayList <Obstacle>();
 		cars = new ArrayList<Car>();
-
-		//vkladat serazene podle Y
-		//y - niz
-		//y2 - vys
-		
-		//obstacles.add(new Obstacle(15, 30, 40, 170));
+	}
+	
+	public List<Car> getCars(){
+		return cars;
+	}
+	
+	public List<Obstacle> getObstacles(){
+		return obstacles;
+	}
+	
+	public Obstacle getStartObs(){
+		return startObs;
+	}
+	
+	public Obstacle getCilObs(){
+		return cilObs;
+	}
+	
+	public void setStartObs(Obstacle o){
+		startObs = o;
+	}
+	
+	public void setCilObs(Obstacle o){
+		cilObs = o;
 	}
 	
 	public int getCountCars(){
@@ -68,7 +84,6 @@ public class Map {
 		}
 	}
 	
-	//boolean
 	public Obstacle testVisibleObstacle(Display display, Car car){
 
 		if(visibleObstacles.size() == 0){

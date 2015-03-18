@@ -36,74 +36,73 @@ import com.example.bclib.components.Wheel;
 
 public class DesktopMenu {
 	
-	public String[] textKomponents = {"increase the speed of the car","increase control car","increase acceleration car","instant acceleration car \n \t  - push space"};
-	
-	public int idGame;
-	public boolean saveAllCarComponents = false;
-	
-	int engineComponent;
-	int exhaustComponent;
-	int wheelComponent;
-	int absorbersComponent;
-	int filterComponent;
-	int nitroComponent;
-	int bodyworkComponent;
-	int glassComponent;
+	private String[] textKomponents = {"increase the speed of the car","increase control car","increase acceleration car","instant acceleration car \n \t  - push space"};
 
-    Button newGame;
-    Button joinGame;
-    Button buildCar;
-    Button play;
-    Button backNewGame;
-    Button backJoinGame;
-    Button backBuildCar;
-    Button connect;
-    Button save;
-    Button performance;
-    Button appearance;
+	private boolean saveAllCarComponents = false;
+	
+	private int engineComponent;
+	private int exhaustComponent;
+	private int wheelComponent;
+	private int absorbersComponent;
+	private int filterComponent;
+	private int nitroComponent;
+	private int bodyworkComponent;
+	private int glassComponent;
+
+	private Button newGame;
+	private Button joinGame;
+	private Button buildCar;
+	private Button play;
+	private Button backNewGame;
+	private Button backJoinGame;
+	private Button backBuildCar;
+	private Button connect;
+	private Button save;
+	private Button performance;
+	private Button appearance;
     
-    List createdGames;
-    List createdMaps;
+	private List createdGames;
+	private List createdMaps;
     
-    Spinner countPlayers;
-    Label writeCountPlayers;
-    Label chooseOneMap;
-    Label chooseGame;
-    Label textKomp;
+	private Spinner countPlayers;
+	private Label writeCountPlayers;
+	private Label chooseOneMap;
+	private Label chooseGame;
+	private Label textKomp;
     
-    Label engine;
-    Label exhaust;
-    Label filter;
-    Label absorber;
-    Label wheel;
-    Label nitro;
-    Label loadingText;
-    Label gameName;
+	private Label engine;
+	private Label exhaust;
+	private Label filter;
+	private Label absorber;
+	private Label wheel;
+	private Label nitro;
+	private Label loadingText;
+	private Label gameName;
     
-    Combo engineC;
-    Combo exhaustC;
-    Combo filterC;
-    Combo absorberC;
-    Combo wheelC;
-    Combo nitroC;
+	private Combo engineC;
+	private Combo exhaustC;
+	private Combo filterC;
+	private Combo absorberC;
+	private Combo wheelC;
+	private Combo nitroC;
     
-    Label bodywork;
-    Label glass;
+	private Label bodywork;
+	private Label glass;
     
-    Combo bodyworkC;
-    Combo glassC;
+	private Combo bodyworkC;
+	private Combo glassC;
     
-    ProgressBar loading;
+	private ProgressBar loading;
     
-    Composite mainMenuComposite;
-    Composite newGameComposite;
-    Composite joinGameComposite;
-    Composite buildCarComposite;
-    Composite performanceComposite;
-    Composite appearanceComposite;
-    Composite loadingComposite;
+	private Composite mainMenuComposite;
+	private Composite newGameComposite;
+	private Composite joinGameComposite;
+	private Composite buildCarComposite;
+	private Composite performanceComposite;
+	private Composite appearanceComposite;
+	private Composite loadingComposite;
      
-    Label carLabel;
+	private Label carLabel;
     
     public DesktopMenu(final Display display, Shell shell, final Client client, final com.example.bclib.Display myDisplay, final Game game, final SurfacePanel sp){
     	
@@ -238,9 +237,7 @@ public class DesktopMenu {
 	  	connect.setLocation(241, 366);
 	  	Font italicFont = new Font(display, new FontData("Arial", 11, SWT.ITALIC ));
 	  	connect.setFont(italicFont);
-	  	
-        
-	  	
+	  		
 	  	//Build car---------	  	
 	  	
 	  	backBuildCar = new Button(buildCarComposite,SWT.PUSH);
@@ -479,9 +476,6 @@ public class DesktopMenu {
 			    		  }
 			    	  }
 			    	  
-			    	  String sdas = client.loadMapsObstacle(m);
-			    	  game.setMapObstacleAndStart(sdas);
-			    	  
 			    	  if(!mapIsLoaded){
 			    		  byte[] map = client.loadMap(m);
 				    	  Render.createImg(map,m);
@@ -502,7 +496,7 @@ public class DesktopMenu {
 						@Override
 						public void run() {
 							client.syncStart();
-							client.getImgs(game.getMap().cars);
+							client.getImgs(game.getMap().getCars());
 							display.syncExec(new Runnable() {
 								
 								@Override
@@ -564,7 +558,7 @@ public class DesktopMenu {
 						@Override
 						public void run() {
 							client.syncStart();
-							client.getImgs(game.getMap().cars);
+							client.getImgs(game.getMap().getCars());
 							display.syncExec(new Runnable() {
 								
 								@Override
@@ -797,7 +791,6 @@ public class DesktopMenu {
 		performance.addListener(SWT.Selection, performanceL);
 		appearance.addListener(SWT.Selection, appearanceL);
 		
-		
 		loadingComposite.setVisible(false);
 		appearanceComposite.pack();
 		appearanceComposite.setVisible(false);
@@ -878,24 +871,24 @@ public class DesktopMenu {
 		glassC.select(0);
 	}
 	
-   private boolean setComponentsToCar(Game myGame){
+	private boolean setComponentsToCar(Game myGame){
 	   int idPlayer = myGame.getIDplayer();
 	   
-	   myGame.getMap().cars.get(idPlayer).setEngine(Engine.engines[engineComponent]);
-	   myGame.getMap().cars.get(idPlayer).setExhaust(Exhaust.exhausts[exhaustComponent]);
-	   myGame.getMap().cars.get(idPlayer).setFilter(Filter.filters[filterComponent]);
-	   myGame.getMap().cars.get(idPlayer).setAbsorbers(Absorbers.absorbers[absorbersComponent]);
-	   myGame.getMap().cars.get(idPlayer).setWheel(Wheel.wheels[wheelComponent]);
-	   myGame.getMap().cars.get(idPlayer).setNitro(Nitro.nitrous[nitroComponent]);
-	   myGame.getMap().cars.get(idPlayer).setBodywork(Bodywork.bodyworks[bodyworkComponent]);
-	   myGame.getMap().cars.get(idPlayer).setGlass(Glass.glasses[glassComponent]);
+	   myGame.getMap().getCars().get(idPlayer).setEngine(Engine.engines[engineComponent]);
+	   myGame.getMap().getCars().get(idPlayer).setExhaust(Exhaust.exhausts[exhaustComponent]);
+	   myGame.getMap().getCars().get(idPlayer).setFilter(Filter.filters[filterComponent]);
+	   myGame.getMap().getCars().get(idPlayer).setAbsorbers(Absorbers.absorbers[absorbersComponent]);
+	   myGame.getMap().getCars().get(idPlayer).setWheel(Wheel.wheels[wheelComponent]);
+	   myGame.getMap().getCars().get(idPlayer).setNitro(Nitro.nitrous[nitroComponent]);
+	   myGame.getMap().getCars().get(idPlayer).setBodywork(Bodywork.bodyworks[bodyworkComponent]);
+	   myGame.getMap().getCars().get(idPlayer).setGlass(Glass.glasses[glassComponent]);
 	   
-	   myGame.getMap().cars.get(idPlayer).setTrajectory();
+	   myGame.getMap().getCars().get(idPlayer).setTrajectory();
 	   
 	   return true;
-   }
+   	}
    
-   private boolean saveAllCarComponents(){
+   	private boolean saveAllCarComponents(){
 	   engineComponent = engineC.getSelectionIndex();
 	   exhaustComponent = exhaustC.getSelectionIndex();
 	   filterComponent = filterC.getSelectionIndex();
@@ -907,9 +900,9 @@ public class DesktopMenu {
 	   glassComponent = glassC.getSelectionIndex();
 	   
 	   return true;
-   }
+   	}
    
-   private void setAllCarComponents(){
+   	private void setAllCarComponents(){
 	   engineC.select(engineComponent);
 	   exhaustC.select(exhaustComponent);
 	   filterC.select(filterComponent);
@@ -919,7 +912,7 @@ public class DesktopMenu {
 	   
 	   bodyworkC.select(bodyworkComponent);
 	   glassC.select(glassComponent);
-   }
+   	}
 	
 	private void nullCombo(){
 		bodyworkC.select(0);

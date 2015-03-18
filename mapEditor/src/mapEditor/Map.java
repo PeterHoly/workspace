@@ -56,129 +56,123 @@ import com.example.bclib.Obstacle;
 
 public class Map{
 	
-	public Display display = new Display();
-	Shell shell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN);
+	private Display display = new Display();
+	private Shell shell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN);
 	
-	final org.eclipse.swt.graphics.Color colorBlack = display.getSystemColor(SWT.COLOR_BLACK);
-    final org.eclipse.swt.graphics.Color colorWhite = display.getSystemColor(SWT.COLOR_WHITE);
-    final org.eclipse.swt.graphics.Color colorGray = display.getSystemColor(SWT.COLOR_GRAY);
-    final org.eclipse.swt.graphics.Color colorGreen = display.getSystemColor(SWT.COLOR_GREEN);
-    final org.eclipse.swt.graphics.Color colorYellow = display.getSystemColor(SWT.COLOR_YELLOW);
+	private final org.eclipse.swt.graphics.Color colorGray = display.getSystemColor(SWT.COLOR_GRAY);
+	private final org.eclipse.swt.graphics.Color colorGreen = display.getSystemColor(SWT.COLOR_GREEN);
 
-	TabFolder mapFolder;
-	Composite areaComposite;
-	Composite barrierComposite;
-	Composite rowComposite;
-	Composite startComposite;
+	private TabFolder mapFolder;
+	private Composite areaComposite;
+	private Composite barrierComposite;
+	private Composite rowComposite;
+	private Composite startComposite;
 	
-	TabItem bArea;
-	TabItem bBarrier;
-	TabItem bRows;
-	TabItem bStart;
+	private TabItem bArea;
+	private TabItem bBarrier;
+	private TabItem bRows;
+	private TabItem bStart;
 	
-	Label barrierLabel;
-	Label barrierLabel1;
-	Label barrierLabel2;
-	Label barrierLabel3;
+	private Label barrierLabel;
+	private Label barrierLabel1;
+	private Label barrierLabel2;
+	private Label barrierLabel3;
 	
-	Image barriersImage;
-	Image barriersImage1;
-	Image barriersImage2;
-	Image barriersImage3;
+	private Image barriersImage;
+	private Image barriersImage1;
+	private Image barriersImage2;
+	private Image barriersImage3;
 	
-	Label desertBlokLabel;
-	Label desert1BlokLabel;
-	Label greenBlokLabel;
-	Label roadBlokLabel;
-	Label road1BlokLabel;
-	Label road2BlokLabel;
-	Label roadLabel;
-	Label road1Label;
-	Label road2Label;
-	Label roadHighLabel;
-	Label road1HighLabel;
-	Label road2HighLabel;
-	Label startLabel;
-	Label finishLabel;
+	private Label desertBlokLabel;
+	private Label desert1BlokLabel;
+	private Label greenBlokLabel;
+	private Label roadBlokLabel;
+	private Label road1BlokLabel;
+	private Label road2BlokLabel;
+	private Label roadLabel;
+	private Label road1Label;
+	private Label road2Label;
+	private Label roadHighLabel;
+	private Label road1HighLabel;
+	private Label road2HighLabel;
+	private Label startLabel;
+	private Label finishLabel;
 	
-	Image desertBlokImage;
-	Image desert1BlokImage;
-	Image greenBlokImage;
-	Image roadBlokImage;
-	Image road1BlokImage;
-	Image road2BlokImage;
-	Image roadImage;
-	Image road1Image;
-	Image road2Image;
-	Image roadHighImage;
-	Image road1HighImage;
-	Image road2HighImage;
-	Image startImage;
-	Image finishImage;
+	private Image desertBlokImage;
+	private Image desert1BlokImage;
+	private Image greenBlokImage;
+	private Image roadBlokImage;
+	private Image road1BlokImage;
+	private Image road2BlokImage;
+	private Image roadImage;
+	private Image road1Image;
+	private Image road2Image;
+	private Image roadHighImage;
+	private Image road1HighImage;
+	private Image road2HighImage;
+	private Image startImage;
+	private Image finishImage;
 	
-	Button hideGrid1;
-	Button hideGrid2;
-	Button saveMap;
-	Button saveMap2;
-	Button loadMap;
-	Button loadMap2;
-	Button clearMap;
-	Button clearMap2;
-	Button addRow;
+	private Button hideGrid1;
+	private Button hideGrid2;
+	private Button saveMap;
+	private Button saveMap2;
+	private Button loadMap;
+	private Button loadMap2;
+	private Button clearMap;
+	private Button clearMap2;
+	private Button addRow;
 	
-	Combo activateArea;
-	String [] areasSmall = {"desertBlokSmall","desert1BlokSmall","greenBlokSmall","roadBlokSmall","road1BlokSmall","road2BlokSmall","roadSmall","road1Small","road2Small","roadHighSmall","road1HighSmall","road2HighSmall"};
-	Image [] imagesAreaSmall = new Image[12];
+	private Combo activateArea;
+	private String [] areasSmall = {"desertBlokSmall","desert1BlokSmall","greenBlokSmall","roadBlokSmall","road1BlokSmall","road2BlokSmall","roadSmall","road1Small","road2Small","roadHighSmall","road1HighSmall","road2HighSmall"};
+	private Image [] imagesAreaSmall = new Image[12];
 	
-	Combo activateBarrier;
-	String [] barriersSmall = {"barriersSmall","barriers1Small","barriers2Small","barriers3Small"};
-	Image [] imagesBarriersSmall = new Image[4];
+	private Combo activateBarrier;
+	private String [] barriersSmall = {"barriersSmall","barriers1Small","barriers2Small","barriers3Small"};
+	private Image [] imagesBarriersSmall = new Image[4];
 	
-	Combo activateStart;
-	String [] startSmall = {"start","finish"};
-	Image [] imagesStartSmall = new Image[2];
+	private Combo activateStart;
+	private String [] startSmall = {"start","finish"};
+	private Image [] imagesStartSmall = new Image[2];
 	
-	Composite sc;
-	Canvas child;
+	private Composite sc;
+	private Canvas child;
 	
-	int width = 400;
-	int height = 641;
-	int rect = 20;
-	int barrierWidth = 10;
-	int barrierHeight = 60;
-	int startWidth = 400;
-	int startHeight = 30;
-	int row = height/rect;
-	int col = width/rect;
-	int addRows = 0;
+	private int width = 400;
+	private int height = 641;
+	private int rect = 20;
+	private int barrierWidth = 10;
+	private int barrierHeight = 60;
+	private int startWidth = 400;
+	private int startHeight = 30;
+	private int row = height/rect;
+	private int col = width/rect;
+	private int addRows = 0;
 	
-	Obstacle[] obstacleStart = new Obstacle[2];
+	private Obstacle[] obstacleStart = new Obstacle[2];
 	
-	int[][] imgGrid = new int[row][col];
+	private int[][] imgGrid = new int[row][col];
 	
-	List<Obstacle> obstacleList = new ArrayList<Obstacle>();
-	List<Image> barriersList = new ArrayList<Image>();
+	private List<Obstacle> obstacleList = new ArrayList<Obstacle>();
+	private List<Image> barriersList = new ArrayList<Image>();
 	
-	boolean mouseClick = false;
-	boolean changePosition = false;
-	boolean changeAngle = false;
-	boolean grid = true;
-	boolean testClick = false;
-	boolean test = false;
+	private boolean mouseClick = false;
+	private boolean changePosition = false;
+	private boolean changeAngle = false;
+	private boolean grid = true;
+	private boolean test = false;
 	
-	int xChange,yChange;
-	int indexArea;
-	int indexBarrier;
-	int indexStart;
-	int idBarrier;
-	int idStart;
-	int idBarrierAngle = -1;
-	int actualX;
-	double angle;
-	double xStr, yStr;
+	private int xChange,yChange;
+	private int indexArea;
+	private int indexBarrier;
+	private int indexStart;
+	private int idBarrier;
+	private int idStart;
+	private int idBarrierAngle = -1;
+	private int actualX;
 	
-	final Point origin;
-    final ScrollBar vBar;
+	private final Point origin;
+	private  final ScrollBar vBar;
 	
 	public Map(){
 		

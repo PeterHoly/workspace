@@ -2,7 +2,9 @@ package mapEditor;
 
 public class Editor {
 	
+	private static Map map;
+	
 	public static void main(String[] args) {
-		Map m = new Map();
+		map = new Map();
 	}
 }
